@@ -69,16 +69,34 @@ def generate_dossier(
     current_place: Place,
     out_dir: str | Path,
     settings: Settings = MODERN,
+    fmt: str = "both",
 ) -> Path:
-    """Write the complete dossier; returns its directory path."""
+    """Write the complete dossier; returns its directory path.
+
+    fmt: 'text' | 'json' | 'both'.  Text is the LLM-context view (compact,
+    astrologese); JSON is the pipeline view (full float precision, standard
+    tooling).  Both render from the same computed objects.
+    """
+    if fmt not in ("text", "json", "both"):
+        raise ValueError("fmt must be 'text', 'json', or 'both'")
+    want_text = fmt in ("text", "both")
+    want_json = fmt in ("json", "both")
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
     eph = default_ephemeris()
+
+    from .render import json_out as J
 
     natal_m, natal = _natal(subject, settings)
     now = from_utc(now_utc, current_place)
     name = subject.name
     files: dict[str, str] = {}
+
+    def emit(stem: str, text: str | None, jdict: dict | None) -> None:
+        if want_text and text is not None:
+            files[f"{stem}.txt"] = text
+        if want_json and jdict is not None:
+            files[f"{stem}.json"] = J.to_json(jdict)
 
     # ---- natal (modern + hellenistic view) ---------------------------------
     hour = None if natal.settings.unknown_time else planetary_hour(natal_m)
@@ -86,29 +104,37 @@ def generate_dossier(
     if natal.angles:
         targets |= {a: natal.angles[a] for a in ("ASC", "MC")}
     stars = star_hits(natal_m.jd_ut, targets, natal.settings.fixed_star_orb)
-    files["10_natal.txt"] = render_chart(natal, name, hour, stars)
+    emit("10_natal", render_chart(natal, name, hour, stars),
+         J.chart_to_dict(natal, name, hour, stars))
 
     hell_settings = HELLENISTIC.with_(unknown_time=natal.settings.unknown_time)
     hell = compute_chart(natal_m, hell_settings, eph, kind="natal-hellenistic")
-    files["11_natal_hellenistic.txt"] = render_chart(hell, name)
+    emit("11_natal_hellenistic", render_chart(hell, name),
+         J.chart_to_dict(hell, name))
 
     # ---- timed layers --------------------------------------------------------
-    files["20_transits.txt"] = render_transits(compute_transits(natal, now), name)
-    files["21_secondary.txt"] = render_progressed(
-        compute_progressed(natal, now, "secondary"), name)
-    files["22_tertiary.txt"] = render_progressed(
-        compute_progressed(natal, now, "tertiary"), name)
-    files["23_solar_arc.txt"] = render_solar_arc(
-        compute_solar_arc(natal, now), name)
-    files["30_solar_return.txt"] = render_return(
-        compute_return(natal, now, "SUN"), name)
-    files["31_lunar_return.txt"] = render_return(
-        compute_return(natal, now, "MOON"), name)
+    tr = compute_transits(natal, now)
+    emit("20_transits", render_transits(tr, name), J.transits_to_dict(tr, name))
+    sec = compute_progressed(natal, now, "secondary")
+    emit("21_secondary", render_progressed(sec, name),
+         J.progressed_to_dict(sec, name))
+    ter = compute_progressed(natal, now, "tertiary")
+    emit("22_tertiary", render_progressed(ter, name),
+         J.progressed_to_dict(ter, name))
+    sa = compute_solar_arc(natal, now)
+    emit("23_solar_arc", render_solar_arc(sa, name), J.solar_arc_to_dict(sa, name))
+    sr = compute_return(natal, now, "SUN")
+    emit("30_solar_return", render_return(sr, name), J.return_to_dict(sr, name))
+    lr = compute_return(natal, now, "MOON")
+    emit("31_lunar_return", render_return(lr, name), J.return_to_dict(lr, name))
     if natal.is_day is not None:
-        files["40_firdaria.txt"] = render_firdaria(firdaria(natal), natal, name)
+        fd = firdaria(natal)
+        emit("40_firdaria", render_firdaria(fd, natal, name),
+             J.firdaria_to_dict(fd, natal, name))
     if natal.angles is not None:
-        files["41_profections.txt"] = render_profections(
-            profections(natal, now), name)
+        pf = profections(natal, now)
+        emit("41_profections", render_profections(pf, name),
+             J.profections_to_dict(pf, name))
 
     # ---- meta + index ---------------------------------------------------------
     meta: list[str] = ["== ASTROTEXT DOSSIER-META v0 =="]
@@ -137,28 +163,32 @@ def generate_dossier(
 
     idx: list[str] = ["== ASTROTEXT DOSSIER-INDEX v0 =="]
     idx.append(f"subject={name}")
-    idx.append("format=docs/FORMAT.md | every file ends with '== END ==' "
-               "(discard truncated files)")
+    idx.append(f"formats={fmt} | text: docs/FORMAT.md, ends '== END ==' "
+               f"(discard truncated) | json: same data, full float precision")
     idx.append("")
     idx.append("-- READING ORDER (for interpreting agents) --")
     guide = {
-        "00_meta.txt": "inputs, settings, warnings, EN->ZH glossary — read FIRST; "
-                       "surface any warning= lines to the user",
-        "10_natal.txt": "the base chart: points/houses/aspects/dignities/lots/stars",
-        "11_natal_hellenistic.txt": "same instant, whole-sign + classical seven view",
-        "20_transits.txt": "sky now vs natal; every hit lists exact timestamps; "
-                           "Moon void-of-course status",
-        "21_secondary.txt": "secondary progressions (1 day = 1 year) + progressed angles",
-        "22_tertiary.txt": "tertiary progressions (1 day = 1 month)",
-        "23_solar_arc.txt": "solar-arc directed positions + hits on natal",
-        "30_solar_return.txt": "active solar return chart (cast at current place)",
-        "31_lunar_return.txt": "active lunar return chart (cast at current place)",
-        "40_firdaria.txt": "Persian time-lords, 75y majors + subs, dates",
-        "41_profections.txt": "annual/monthly profections, year lord, full table",
+        "00_meta": "inputs, settings, warnings, EN->ZH glossary — read FIRST; "
+                   "surface any warning= lines to the user",
+        "10_natal": "the base chart: points/houses/aspects/dignities/lots/stars",
+        "11_natal_hellenistic": "same instant, whole-sign + classical seven view",
+        "20_transits": "sky now vs natal; every hit lists exact timestamps; "
+                       "Moon void-of-course status",
+        "21_secondary": "secondary progressions (1 day = 1 year) + progressed angles",
+        "22_tertiary": "tertiary progressions (1 day = 1 month)",
+        "23_solar_arc": "solar-arc directed positions + hits on natal",
+        "30_solar_return": "active solar return chart (cast at current place)",
+        "31_lunar_return": "active lunar return chart (cast at current place)",
+        "40_firdaria": "Persian time-lords, 75y majors + subs, dates",
+        "41_profections": "annual/monthly profections, year lord, full table",
     }
-    for fname, desc in guide.items():
-        if fname in files:
-            idx.append(f"{fname} | {desc}")
+    for stem, desc in guide.items():
+        exts = [e for e in (".txt", ".json") if f"{stem}{e}" in files]
+        if exts:
+            line = f"{stem}{exts[0]} | {desc}"
+            if len(exts) > 1:
+                line += f" | also: {stem}{exts[1]}"
+            idx.append(line)
     idx.append("")
     idx.append("-- INTERPRETATION CONTRACT --")
     idx.append("all numbers are precomputed; do not re-derive positions or orbs")

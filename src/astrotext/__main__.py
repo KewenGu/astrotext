@@ -57,6 +57,8 @@ def main(argv: list[str] | None = None) -> int:
     d.add_argument("--cur-lon", required=True, type=float)
     d.add_argument("--cur-name", default=None)
     d.add_argument("--out", default="./dossiers")
+    d.add_argument("--format", choices=["text", "json", "both"], default="both",
+                   help="text=LLM-context view, json=pipeline view (full precision)")
 
     v = sub.add_parser("verify", help="run the verification report")
 
@@ -81,6 +83,7 @@ def main(argv: list[str] | None = None) -> int:
         now_utc=args.now.replace(tzinfo=dt.timezone.utc),
         current_place=Place(args.cur_lat, args.cur_lon, args.cur_name),
         out_dir=f"{args.out}/{slug}",
+        fmt=args.format,
     )
     n = len(list(out.glob("*.txt")))
     print(f"dossier written: {out}  ({n} files)")

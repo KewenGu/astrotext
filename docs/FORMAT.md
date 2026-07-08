@@ -62,6 +62,24 @@ so an agent can derive receptions and lordships without tables.
 `PLANET | A > B (final)` — final = self-ruling terminus; `(loop)` = closed
 cycle without a final dispositor.
 
+## The JSON view (v0)
+
+Every dossier data file has a `.json` sibling (`--format both`, the
+default; `text` / `json` narrow it).  Division of labor, measured on a
+real dossier (10 data files):
+
+| view | bytes | ~tokens | role |
+|---|---|---|---|
+| text v0 | 40.0 KB | ~11.1k | LLM-context reading: token-lean, astrologese-native, human-checkable |
+| json v0 | 99.4 KB (2.48x) | ~27.6k | pipelines/code: standard tooling, schema-checkable, FULL float precision |
+
+Rules: both views render from the same computed objects (neither is parsed
+from the other); JSON is `sort_keys` + compact separators + exact doubles,
+so it is byte-deterministic too; envelope keys `format: astrotext-json`,
+`format_version: 0`.  Feed TEXT to language models; hand JSON to code.
+If JSON must enter an LLM context, prefer extracting the needed section,
+not the whole file.
+
 ## Versioning
 
 Breaking changes bump `v0` -> `v1` in line 1; readers must check it.
