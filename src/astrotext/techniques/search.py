@@ -25,7 +25,7 @@ SEC = 1.0 / 86400.0  # one second in days
 
 
 def refine_root(g: Callable[[float], float], lo: float, hi: float,
-                tol_days: float = 0.2 * SEC, max_iter: int = 128) -> float:
+                tol_days: float = 0.05 * SEC, max_iter: int = 128) -> float:
     """Bisection on a bracketed sign change of a wrap-free local segment."""
     glo = g(lo)
     for _ in range(max_iter):
@@ -46,7 +46,7 @@ def angular_roots(
     t0: float,
     t1: float,
     coarse_step: float,
-    tol_days: float = 0.2 * SEC,
+    tol_days: float = 0.05 * SEC,
 ) -> list[float]:
     """All t in [t0, t1] where lon_of(t) == target (mod 360), ascending.
 

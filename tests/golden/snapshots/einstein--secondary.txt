@@ -1,0 +1,45 @@
+== ASTROTEXT SECONDARY-PROGRESSED v0 ==
+subject=Albert Einstein
+target-jd-ut=2461230.00000397 (2026-07-08 12:00Z)
+progressed-jd-ut=2407570.27024044 (1879-08-08 18:29:09Z)
+clock=1d=1yr(tropical 365.242198781d) age=147.3188yr
+natal-ref=1879-03-14 11:30:00 @ Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57 jd-ut=2407422.95142361
+
+-- PROGRESSED POINTS --
+# point | position | natal-house | lon | speed(prog-day) | tags
+p.SUN | 15Leo46'49" | H2 | 135.780351 | +0.959029 | -
+p.MOON | 01Tau21'03" | H11 | 31.350792 | +11.940817 | -
+p.MERCURY | 08Vir16'23" | H3 | 158.273118 | +0.135353 | -
+p.VENUS | 28Vir37'27" | H4 | 178.624221 | +0.689549 | -
+p.MARS | 09Tau22'56" | H11 | 39.382326 | +0.552565 | -
+p.JUPITER | 10Pis33'39" | H9 | 340.560911 | -0.107730 | R
+p.SATURN | 15Ari40'05" | H10 | 15.668032 | -0.019341 | R
+p.URANUS | 03Vir23'39" | H3 | 153.394155 | +0.060443 | -
+p.NEPTUNE | 12Tau03'45" | H11 | 42.062388 | +0.003800 | -
+p.PLUTO | 27Tau21'22" | H11 | 57.355995 | +0.006553 | -
+p.TRUE_NODE | 24Cap35'28" | H7 | 294.591136 | -0.021057 | R
+p.SOUTH_NODE_TRUE | 24Can35'28" | H1 | 114.591136 | -0.021057 | R
+p.CHIRON | 13Tau03'48" | H11 | 43.063239 | +0.009044 | -
+p.MEAN_APOGEE | 14Tau28'48" | H11 | 44.479900 | +0.111890 | -
+
+-- PROGRESSED ANGLES (method solar-arc-mc/P) --
+p.MC | 05Leo06'45" | 125.112579
+p.ASC | 27Lib20'36" | 207.343464
+p.ARMC | - | 127.469328
+
+-- PROGRESSED ANGLES (method chart/quotidian) --
+p.ASC | 10Aqu53'08" | 310.885523
+p.MC | 06Sag02'57" | 246.049140
+
+-- PROGRESSED->NATAL ASPECTS (majors, orb 1.0) --
+p.MOON | tri 120 | n.URANUS | -0.062 | -
+p.MERCURY | tri 120 | n.NEPTUNE | +0.401 | -
+p.NEPTUNE | sex 60 | n.ASC | -0.415 | -
+p.NEPTUNE | sex 60 | n.MC | -0.778 | -
+p.PLUTO | tri 120 | n.MARS | +0.442 | -
+p.PLUTO | squ 90 | n.JUPITER | -0.128 | -
+p.TRUE_NODE | tri 120 | n.PLUTO | +0.134 | -
+p.SOUTH_NODE_TRUE | sex 60 | n.PLUTO | -0.134 | -
+p.CHIRON | sex 60 | n.MC | +0.223 | -
+
+== END ==

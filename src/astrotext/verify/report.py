@@ -160,6 +160,43 @@ def chart_layer_cases() -> list[tuple[str, str, bool]]:
     return rows
 
 
+def timed_layer_cases() -> list[tuple[str, str, bool]]:
+    """M2: transit/progression/solar-arc snapshot + invariants."""
+    import sys
+    sys.path.insert(0, str(config.REPO_ROOT / "tests" / "golden"))
+    from fixtures import ALL, TIMED_SLUGS, build, build_timed  # type: ignore
+    from ..core.angles import angdiff, norm360
+    from ..techniques import compute_progressed, compute_solar_arc
+    from ..timespace import from_utc
+    from fixtures import TIMED_NOW_UTC, TIMED_PLACE  # type: ignore
+
+    snap_dir = config.REPO_ROOT / "tests" / "golden" / "snapshots"
+    rows: list[tuple[str, str, bool]] = []
+    now = from_utc(TIMED_NOW_UTC, TIMED_PLACE)
+    for fx in [f for f in ALL if f.slug in TIMED_SLUGS]:
+        try:
+            texts = build_timed(fx)
+            snaps_ok = all(
+                (snap_dir / f"{fx.slug}--{n}.txt").exists() and
+                (snap_dir / f"{fx.slug}--{n}.txt").read_text(encoding="utf-8") == t
+                for n, t in texts.items())
+            _, natal, _, _ = build(fx)
+            sec = compute_progressed(natal, now, "secondary")
+            sa = compute_solar_arc(natal, now)
+            sun_disp = norm360(sec.chart.points["SUN"].lon - natal.points["SUN"].lon)
+            inv_ok = abs(angdiff(sa.arc, sun_disp)) < 1e-9
+            age0 = compute_progressed(natal, natal.moment, "secondary")
+            inv_ok &= all(abs(angdiff(p.lon, natal.points[k].lon)) < 1e-9
+                          for k, p in age0.chart.points.items())
+            rows.append((fx.slug,
+                         f"snapshots={'=' if snaps_ok else 'DIFF'} "
+                         f"arc==dSun & age0==natal: {'ok' if inv_ok else 'FAIL'}",
+                         snaps_ok and inv_ok))
+        except Exception as exc:
+            rows.append((fx.slug, f"EXCEPTION {type(exc).__name__}: {exc}", False))
+    return rows
+
+
 def dignity_table_checks() -> list[tuple[str, bool]]:
     from ..core.dignities import BOUNDS_EGYPTIAN, DECANS_CHALDEAN, DOMICILE
     from collections import Counter
@@ -187,6 +224,7 @@ def build_report(path: str | None = None) -> bool:
     hou = compare_houses(eph, jds)
     ts = timespace_cases()
     m1 = chart_layer_cases()
+    m2 = timed_layer_cases()
     dig = dignity_table_checks()
 
     pos_ok = all(w["lon"] <= TOL_LON and w["lat"] <= TOL_LAT and w["speed"] <= TOL_SPEED
@@ -194,8 +232,9 @@ def build_report(path: str | None = None) -> bool:
     hou_ok = all(v <= TOL_CUSP for v in hou.values())
     ts_ok = all(r[3] for r in ts)
     m1_ok = all(r[2] for r in m1)
+    m2_ok = all(r[2] for r in m2)
     dig_ok = all(r[1] for r in dig)
-    all_ok = pos_ok and hou_ok and ts_ok and m1_ok and dig_ok
+    all_ok = pos_ok and hou_ok and ts_ok and m1_ok and m2_ok and dig_ok
 
     lines: list[str] = []
     a = lines.append
@@ -238,6 +277,13 @@ def build_report(path: str | None = None) -> bool:
     a("| fixture | status | ok |")
     a("|---|---|---|")
     for slug, status, ok in m1:
+        a(f"| {slug} | {status} | {'Y' if ok else 'FAIL'} |")
+    a("")
+    a("## M2 timed layer: transits / progressions / solar arc")
+    a("")
+    a("| fixture | status | ok |")
+    a("|---|---|---|")
+    for slug, status, ok in m2:
         a(f"| {slug} | {status} | {'Y' if ok else 'FAIL'} |")
     a("")
     a("## Classical table structure")

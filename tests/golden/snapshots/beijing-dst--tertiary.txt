@@ -1,0 +1,53 @@
+== ASTROTEXT TERTIARY-PROGRESSED v0 ==
+subject=Beijing DST-era summer birth
+target-jd-ut=2461230.00000397 (2026-07-08 12:00Z)
+progressed-jd-ut=2447836.56759189 (1989-11-06 01:37:20Z)
+clock=1d=1mo(tropical 27.321582241d) age=38.0632yr
+natal-ref=1988-06-15 14:30:00 @ Beijing (39.9042N 116.4074E) tz=Asia/Shanghai jd-ut=2447327.72916837
+
+-- PROGRESSED POINTS --
+# point | position | natal-house | lon | speed(prog-day) | tags
+p.SUN | 13Sco37'23" | H2 | 223.623070 | +1.003055 | -
+p.MOON | 07Aqu16'12" | H4 | 307.269894 | +13.049141 | -
+p.MERCURY | 10Sco43'31" | H2 | 220.725340 | +1.632671 | -
+p.VENUS | 00Cap39'21" | H3 | 270.655798 | +1.019727 | -
+p.MARS | 01Sco13'56" | H1 | 211.232184 | +0.670504 | -
+p.JUPITER | 10Can46'05" | H9 | 100.767955 | -0.027047 | R
+p.SATURN | 09Cap43'29" | H3 | 279.724856 | +0.082216 | -
+p.URANUS | 02Cap40'02" | H3 | 272.667196 | +0.044231 | -
+p.NEPTUNE | 10Cap10'30" | H3 | 280.175013 | +0.023993 | -
+p.PLUTO | 15Sco03'07" | H2 | 225.051825 | +0.040481 | -
+p.TRUE_NODE | 21Aqu47'47" | H5 | 321.796458 | -0.006197 | R
+p.SOUTH_NODE_TRUE | 21Leo47'47" | H11 | 141.796458 | -0.006197 | R
+p.CHIRON | 16Can31'26" | H10 | 106.523752 | -0.014873 | R
+p.MEAN_APOGEE | 00Sco08'43" | H1 | 210.145239 | +0.111903 | -
+
+-- PROGRESSED ANGLES (method chart/quotidian) --
+p.ASC | 16Sag36'18" | 256.605067
+p.MC | 06Lib31'55" | 186.531880
+
+-- PROGRESSED->NATAL ASPECTS (majors, orb 1.0) --
+p.MERCURY | con 0 | n.PLUTO | +0.639 | -
+p.MERCURY | tri 120 | n.MC | -0.889 | -
+p.JUPITER | tri 120 | n.PLUTO | -0.681 | -
+p.JUPITER | squ 90 | n.ASC | -0.673 | -
+p.JUPITER | con 0 | n.MC | +0.847 | -
+p.SATURN | con 0 | n.NEPTUNE | +0.508 | -
+p.SATURN | sex 60 | n.PLUTO | -0.362 | -
+p.SATURN | squ 90 | n.ASC | -0.370 | -
+p.URANUS | tri 120 | n.MEAN_APOGEE | -0.925 | -
+p.NEPTUNE | con 0 | n.NEPTUNE | +0.958 | -
+p.NEPTUNE | sex 60 | n.PLUTO | +0.088 | -
+p.NEPTUNE | squ 90 | n.ASC | +0.080 | -
+p.PLUTO | tri 120 | n.MARS | -0.301 | -
+p.TRUE_NODE | tri 120 | n.MERCURY | -0.583 | -
+p.TRUE_NODE | tri 120 | n.VENUS | -0.982 | -
+p.TRUE_NODE | squ 90 | n.JUPITER | +0.922 | -
+p.SOUTH_NODE_TRUE | sex 60 | n.MERCURY | +0.583 | -
+p.SOUTH_NODE_TRUE | sex 60 | n.VENUS | +0.982 | -
+p.SOUTH_NODE_TRUE | squ 90 | n.JUPITER | -0.922 | -
+p.MEAN_APOGEE | sex 60 | n.SATURN | -0.509 | -
+p.MEAN_APOGEE | sex 60 | n.URANUS | -0.888 | -
+p.MEAN_APOGEE | tri 120 | n.CHIRON | +0.720 | -
+
+== END ==

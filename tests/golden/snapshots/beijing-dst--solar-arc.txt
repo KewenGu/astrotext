@@ -1,0 +1,39 @@
+== ASTROTEXT SOLAR-ARC v0 ==
+subject=Beijing DST-era summer birth
+target-jd-ut=2461230.00000397 (2026-07-08 12:00Z)
+arc=36.310068 (secondary Sun, year=tropical)
+natal-ref=1988-06-15 14:30:00 @ Beijing (39.9042N 116.4074E) tz=Asia/Shanghai jd-ut=2447327.72916837
+
+-- DIRECTED POINTS (natal + arc) --
+# point | position | lon
+d.SUN | 00Leo38'35" | 120.643052
+d.MOON | 10Leo39'34" | 130.659549
+d.MERCURY | 27Can31'23" | 117.523173
+d.VENUS | 27Can07'28" | 117.124519
+d.MARS | 21Ari03'39" | 21.060706
+d.JUPITER | 29Gem01'43" | 89.028743
+d.SATURN | 05Aqu56'45" | 305.945838
+d.URANUS | 05Aqu34'01" | 305.567000
+d.NEPTUNE | 15Aqu31'38" | 315.527135
+d.PLUTO | 16Sag23'48" | 256.396707
+d.TRUE_NODE | 24Ari10'38" | 24.177236
+d.SOUTH_NODE_TRUE | 24Lib10'38" | 204.177236
+d.CHIRON | 05Leo44'08" | 125.735490
+d.MEAN_APOGEE | 09Lib54'09" | 189.902480
+d.ASC | 16Sco24'17" | 226.404672
+d.MC | 17Leo55'30" | 137.924864
+
+-- DIRECTED->NATAL ASPECTS (majors, orb 1.0) --
+d.MOON | squ 90 | n.PLUTO | -0.573 | -
+d.MOON | sex 60 | n.ASC | -0.565 | -
+d.MARS | sex 60 | n.MERCURY | +0.152 | -
+d.MARS | sex 60 | n.VENUS | -0.246 | -
+d.JUPITER | opp 180 | n.SATURN | -0.607 | -
+d.JUPITER | opp 180 | n.URANUS | -0.228 | -
+d.JUPITER | con 0 | n.CHIRON | +0.397 | -
+d.TRUE_NODE | sex 60 | n.SUN | +0.156 | -
+d.SOUTH_NODE_TRUE | tri 120 | n.SUN | -0.156 | -
+d.MEAN_APOGEE | squ 90 | n.NEPTUNE | -0.685 | -
+d.MEAN_APOGEE | con 0 | n.ASC | +0.192 | -
+
+== END ==

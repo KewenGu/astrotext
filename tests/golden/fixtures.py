@@ -131,3 +131,36 @@ def build(fx: Fixture):
         targets |= {a: c.angles[a] for a in ("ASC", "MC")}
     stars = star_hits(m.jd_ut, targets, fx.settings.fixed_star_orb)
     return m, c, hour, stars
+
+
+# ---- M2: timed reports (transits/progressions/solar arc) -------------------
+
+import datetime as _dt
+
+#: frozen "now" for timed snapshots — deterministic across runs
+TIMED_NOW_UTC = _dt.datetime(2026, 7, 8, 12, 0, tzinfo=_dt.timezone.utc)
+TIMED_PLACE = Place(40.7128, -74.0060, "New York NY", "America/New_York")
+TIMED_SLUGS = ("beijing-dst", "einstein")
+
+
+def build_timed(fx):
+    """fixture -> {report_name: rendered_text} at the frozen now-moment."""
+    from astrotext.render.timed import (
+        render_progressed, render_solar_arc, render_transits,
+    )
+    from astrotext.techniques import (
+        compute_progressed, compute_solar_arc, compute_transits,
+    )
+    from astrotext.timespace import from_utc
+
+    _, natal, _, _ = build(fx)
+    now = from_utc(TIMED_NOW_UTC, TIMED_PLACE)
+    out = {
+        "transits": render_transits(compute_transits(natal, now), fx.name),
+        "secondary": render_progressed(
+            compute_progressed(natal, now, "secondary"), fx.name),
+        "tertiary": render_progressed(
+            compute_progressed(natal, now, "tertiary"), fx.name),
+        "solar-arc": render_solar_arc(compute_solar_arc(natal, now), fx.name),
+    }
+    return out

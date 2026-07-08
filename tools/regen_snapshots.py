@@ -21,3 +21,11 @@ for fx in ALL:
     (snap_dir / f"{fx.slug}.txt").write_text(text, encoding="utf-8")
     print(f"{fx.slug:24s} {len(text.splitlines()):4d} lines  flags={len(c.flags)}")
 print(f"\n{len(ALL)} snapshots -> {snap_dir}")
+
+# M2 timed reports
+from fixtures import TIMED_SLUGS, build_timed  # noqa: E402
+for fx in [f for f in ALL if f.slug in TIMED_SLUGS]:
+    for name, text in build_timed(fx).items():
+        (snap_dir / f"{fx.slug}--{name}.txt").write_text(text, encoding="utf-8")
+        print(f"{fx.slug}--{name:12s} {len(text.splitlines()):4d} lines")
+print("timed snapshots done")

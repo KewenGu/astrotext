@@ -1,0 +1,36 @@
+== ASTROTEXT SOLAR-ARC v0 ==
+subject=Albert Einstein
+target-jd-ut=2461230.00000397 (2026-07-08 12:00Z)
+arc=142.272569 (secondary Sun, year=tropical)
+natal-ref=1879-03-14 11:30:00 @ Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57 jd-ut=2407422.95142361
+
+-- DIRECTED POINTS (natal + arc) --
+# point | position | lon
+d.SUN | 15Leo46'49" | 135.780351
+d.MOON | 06Tau47'56" | 36.798964
+d.MERCURY | 25Leo24'59" | 145.416522
+d.VENUS | 09Vir15'27" | 159.257622
+d.MARS | 19Gem11'13" | 79.186817
+d.JUPITER | 19Can45'24" | 109.756677
+d.SATURN | 26Leo27'45" | 146.462402
+d.URANUS | 23Cap33'40" | 293.561167
+d.NEPTUNE | 00Lib08'40" | 180.144535
+d.PLUTO | 16Lib59'53" | 196.998133
+d.TRUE_NODE | 25Gem00'14" | 85.003844
+d.SOUTH_NODE_TRUE | 25Sag00'14" | 265.003844
+d.CHIRON | 27Vir49'02" | 177.817263
+d.MEAN_APOGEE | 20Vir14'57" | 170.249295
+d.ASC | 03Sag55'12" | 243.920075
+d.MC | 05Leo06'45" | 125.112579
+
+-- DIRECTED->NATAL ASPECTS (majors, orb 1.0) --
+d.MERCURY | squ 90 | n.PLUTO | +0.691 | -
+d.URANUS | sex 60 | n.SUN | -0.053 | -
+d.PLUTO | opp 180 | n.VENUS | -0.013 | -
+d.CHIRON | tri 120 | n.MARS | -0.903 | -
+d.ASC | tri 120 | n.MERCURY | -0.776 | -
+d.ASC | tri 120 | n.SATURN | +0.270 | -
+d.MC | tri 120 | n.SATURN | +0.923 | -
+d.MC | squ 90 | n.CHIRON | -0.432 | -
+
+== END ==

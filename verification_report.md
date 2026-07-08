@@ -75,6 +75,13 @@
 | high-lat-ok | snapshot== roundtrip=ok | Y |
 | retro-heavy | snapshot== roundtrip=ok | Y |
 
+## M2 timed layer: transits / progressions / solar arc
+
+| fixture | status | ok |
+|---|---|---|
+| einstein | snapshots== arc==dSun & age0==natal: ok | Y |
+| beijing-dst | snapshots== arc==dSun & age0==natal: ok | Y |
+
 ## Classical table structure
 
 | check | ok |
