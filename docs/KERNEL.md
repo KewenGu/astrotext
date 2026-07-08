@@ -1,6 +1,6 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO (2026-07-08) · K1 DONE (2026-07-08) · K2 in progress.
+Status: K0 GO · K1 DONE · K2 DONE (all 2026-07-08) · next: K3.
 Owner doc for the V2 kernel swap.
 
 K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
@@ -21,6 +21,23 @@ because the SMH2016 spline supplementary data is unreachable
 per-year linear ΔT with ~1 ms Jan-1 sawtooth pre-1955, SWIEPH-vs-JPLEPH
 tidal flavours (utc_to_jd uses the latter), and the 2033 fallback where
 the frozen leap table yields to UT1 interpretation.
+
+K2 measured (65-instant seeded grid × 10 bodies, full span): lon/lat/
+RA/dec ≤0.0074″ for Sun+planets (gate 0.01″); Moon lon 0.030″ full-span
+/ ≤0.01″ 1850-2150 (DE431→DE440, documented); dist ≤5e-9 relative
+(Moon 4e-11 au absolute); lon speed vs the true derivative of SE's own
+positions ≤3.2e-7 °/day for planets (uniform ~3e-7 floor = SE's
+interpolated nutation rate), Moon ≤1.2e-5 (the 0.03″ divergence riding
+monthly terms).  Discoveries, all measured and gated accordingly: SE's
+*reported* speeds deviate from the derivative of SE's own apparent
+positions (Moon up to ~0.18″/day, matching its documented speed
+precision; uniform ~2e-5 °/day in lat even for the Sun) — our stencil
+speeds are the true derivative; SE's radial compression error scales
+with distance (~3e-9 relative).  Three-way check (§2) active: ours vs
+Skyfield 1.54 on the same DE440 ≤0.0002″ planets / 0.0013″ Moon (the
+TDB−TT term we document as negligible) — 30× tighter than either is to
+SE, isolating pipeline correctness from SE model/data differences.
+Perf: 11 µs/body-instant on shared-Frames grids (budget ≤50).
 Read with PLAN.md §V2 (milestones, in Chinese) and TECHNIQUES.md (which
 stays kernel-agnostic).  Rule inherited from the house style: every
 convention states its source; no hidden defaults; clean-room only.

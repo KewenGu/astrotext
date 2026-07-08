@@ -1,16 +1,21 @@
 #!/usr/bin/env python3
-"""Generate tests/kernel/fixtures/timescales.json — SE 2.10.03 truth values.
+"""Generate tests/kernel/fixtures/*.json — SE 2.10.03 truth values.
 
-Black-box fixture set for the kernel-v2 time-scale module (KERNEL.md §5):
-swe_utc_to_jd / swe_julday / swe_revjul / swe_deltat outputs on dates that
-exercise every era and edge the engine supports.  Tests then run WITHOUT
-Swiss Ephemeris: the kernel must reproduce these numbers.
+Black-box fixtures for the kernel-v2 modules (KERNEL.md §5, §11):
 
+* timescales.json — swe_utc_to_jd / swe_julday / swe_revjul / swe_deltat
+  on dates that exercise every era and edge the engine supports.
+* bodies.json — swe_calc (SWIEPH|SPEED, plus EQUATORIAL) for the ten
+  §4 bodies on a seeded instant grid spanning 1800-2399.
+
+Tests then run WITHOUT Swiss Ephemeris: the kernel must reproduce these.
 Run on a machine with the vendored pyswisseph importable (macOS: vendor/lib).
 """
 import json
 import sys
 from pathlib import Path
+
+import numpy as np
 
 ROOT = Path(__file__).resolve().parent.parent
 sys.path.insert(0, str(ROOT / "vendor" / "lib"))
@@ -72,6 +77,33 @@ JULDAY_CASES = [
 ]
 
 
+BODY_IPL = [("sun", 0), ("moon", 1), ("mercury", 2), ("venus", 3),
+            ("mars", 4), ("jupiter", 5), ("saturn", 6), ("uranus", 7),
+            ("neptune", 8), ("pluto", 9)]
+
+
+def gen_bodies() -> None:
+    rng = np.random.default_rng(42)
+    jds = np.sort(rng.uniform(2378497.0, 2597641.0, 20))   # 1800..2399 TT
+    cases = []
+    fl = swe.FLG_SWIEPH | swe.FLG_SPEED
+    for jd in jds:
+        for name, ipl in BODY_IPL:
+            ecl, _ = swe.calc(float(jd), ipl, fl)
+            equ, _ = swe.calc(float(jd), ipl, fl | swe.FLG_EQUATORIAL)
+            cases.append({
+                "body": name, "jd_tt": float(jd),
+                "lon": ecl[0], "lat": ecl[1], "dist": ecl[2],
+                "lon_speed": ecl[3], "lat_speed": ecl[4],
+                "dist_speed": ecl[5], "ra": equ[0], "dec": equ[1],
+            })
+    out = ROOT / "tests" / "kernel" / "fixtures" / "bodies.json"
+    out.write_text(json.dumps(
+        {"se_version": swe.version, "flags": "SWIEPH|SPEED", "cases": cases},
+        indent=1))
+    print(f"wrote {out} ({len(cases)} cases)")
+
+
 def main() -> None:
     out = {"se_version": swe.version, "utc_to_jd": [], "deltat": [],
            "julday": [], "revjul": []}
@@ -94,6 +126,7 @@ def main() -> None:
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(out, indent=1))
     print(f"wrote {OUT}")
+    gen_bodies()
 
 
 if __name__ == "__main__":
