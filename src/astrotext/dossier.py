@@ -41,7 +41,7 @@ from .techniques.profections import profections
 from .techniques.returns import compute_return
 from .timespace import Moment, Place, from_utc, resolve
 
-__all__ = ["Subject", "generate_dossier"]
+__all__ = ["Subject", "build_dossier", "generate_dossier"]
 
 
 @dataclass(frozen=True)
@@ -53,6 +53,7 @@ class Subject:
     calendar: str = "gregorian"
     fold: int = 0
     unknown_time: bool = False
+    notes: tuple[str, ...] = ()     # e.g. gazetteer resolution flags
 
 
 def _natal(subject: Subject, settings: Settings) -> tuple[Moment, Chart]:
@@ -63,15 +64,16 @@ def _natal(subject: Subject, settings: Settings) -> tuple[Moment, Chart]:
     return m, compute_chart(m, settings)
 
 
-def generate_dossier(
+def build_dossier(
     subject: Subject,
     now_utc: dt.datetime,
     current_place: Place,
-    out_dir: str | Path,
     settings: Settings = MODERN,
     fmt: str = "both",
-) -> Path:
-    """Write the complete dossier; returns its directory path.
+) -> dict[str, str]:
+    """Compute the complete dossier as {filename: content} without touching
+    the filesystem — the shared engine behind the CLI writer and the MCP
+    server.
 
     fmt: 'text' | 'json' | 'both'.  Text is the LLM-context view (compact,
     astrologese); JSON is the pipeline view (full float precision, standard
@@ -81,8 +83,6 @@ def generate_dossier(
         raise ValueError("fmt must be 'text', 'json', or 'both'")
     want_text = fmt in ("text", "both")
     want_json = fmt in ("json", "both")
-    out = Path(out_dir)
-    out.mkdir(parents=True, exist_ok=True)
     eph = default_ephemeris()
 
     from .render import json_out as J
@@ -171,9 +171,11 @@ def generate_dossier(
                 f"(used for: transit houses, return charts)")
     for line in natal.settings.describe():
         meta.append(f"set:{line}")
+    for note in subject.notes:
+        meta.append(f"warning={note}")
     for fl in natal.flags:
         meta.append(f"warning={fl}")
-    if not natal.flags:
+    if not (natal.flags or subject.notes):
         meta.append("warning=(none)")
     meta.append("")
     meta.append(render_glossary().rstrip("\n"))
@@ -222,6 +224,21 @@ def generate_dossier(
     idx.append("== END ==")
     files["index.txt"] = "\n".join(idx) + "\n"
 
+    return files
+
+
+def generate_dossier(
+    subject: Subject,
+    now_utc: dt.datetime,
+    current_place: Place,
+    out_dir: str | Path,
+    settings: Settings = MODERN,
+    fmt: str = "both",
+) -> Path:
+    """Write the complete dossier; returns its directory path."""
+    out = Path(out_dir)
+    out.mkdir(parents=True, exist_ok=True)
+    files = build_dossier(subject, now_utc, current_place, settings, fmt)
     for fname, text in files.items():
         (out / fname).write_text(text, encoding="utf-8")
     return out
