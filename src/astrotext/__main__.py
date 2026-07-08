@@ -70,6 +70,9 @@ def main(argv: list[str] | None = None) -> int:
 
     v = sub.add_parser("verify", help="run the verification report")
     sub.add_parser("mcp", help="run the MCP stdio server (tools for AI agents)")
+    h = sub.add_parser("http", help="run the HTTP facade (REST-ish, localhost)")
+    h.add_argument("--host", default="127.0.0.1")
+    h.add_argument("--port", type=int, default=8747)
 
     args = ap.parse_args(argv)
 
@@ -79,6 +82,9 @@ def main(argv: list[str] | None = None) -> int:
     if args.cmd == "mcp":
         from .mcp_server import main as mmain
         return mmain()
+    if args.cmd == "http":
+        from .http_server import serve
+        return serve(args.host, args.port)
 
     from .dossier import Subject, generate_dossier
     from .timespace import Place

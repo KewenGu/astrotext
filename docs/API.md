@@ -186,6 +186,28 @@ per-call (stateless); an LRU on the computed dossier makes repeated pulls
 for one subject instant.  MCP output is byte-identical to CLI files
 (pinned by tests).
 
+### HTTP facade  (`python -m astrotext http [--host 127.0.0.1] [--port 8747]`)
+
+Stdlib-only REST-ish layer over the same pipeline (no auth — binds
+localhost by default; reverse-proxy it if it must be reachable remotely).
+
+```
+GET  /v0/health
+GET  /v0/resolve-place?q=%E5%8C%97%E4%BA%AC&country=CN&limit=5
+POST /v0/chart     {"kind":"natal","subject":{"birth":"1988-06-15 14:30",
+                    "lat":39.9042,"lon":116.4074,"tz":"Asia/Shanghai"},
+                    "now"?:"YYYY-MM-DD HH:MM","current"?:{...},
+                    "format"?:"text"|"json"}
+POST /v0/dossier   {"subject":{...},"now":"...","current":{...},
+                    "include"?:["transits",...],"format"?:"text"|"json"}
+```
+
+Privacy rule baked into the design: birth data (personal!) travels in POST
+bodies only, never in URL query strings (queries end up in access logs);
+the only parameterized GET is place resolution.  format=text returns the
+exact bytes the CLI writes (pinned by tests); errors are
+`{"error": "..."}` with 400/404/413/500.  Request bodies are never logged.
+
 ---
 
 ## Stability contract
