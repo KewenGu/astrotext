@@ -1,0 +1,151 @@
+== ASTROTEXT NATAL v0 ==
+subject=Steve Jobs
+local=1955-02-24 19:15:00 calendar=gregorian
+place=San Francisco CA (37.7749N 122.4194W) tz=America/Los_Angeles
+utc=1955-02-25 03:15:00 offset=-08:00:00
+jd-ut=2435163.63541667 delta-t=+31.12s
+set:zodiac=tropical
+set:houses=P(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,URANUS,NEPTUNE,PLUTO,TRUE_NODE,SOUTH_NODE_TRUE,CHIRON,MEAN_APOGEE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10,ssx30:2/2,ssq45:2/2,sqq135:2/2,qcx150:2.5/2.5
+set:node=true
+set:unknown-time=false
+set:star-orb=1 antiscia-orb=1
+houses-used=P
+sect=night sun-altitude=-16.00
+obliquity=23.445384
+warning=(none)
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 05Pis44'53" | H6 | 335.748135 | +0.000225 | +1.006072 | -9.4056 | -
+MOON | 07Ari44'50" | H7 | 7.747330 | +5.046953 | +14.175588 | +7.7087 | -
+MERCURY | 14Aqu21'42" | H5 | 314.361729 | +2.107379 | -0.032971 | -14.5087 | R
+VENUS | 21Cap10'19" | H4 | 291.171871 | +1.717580 | +1.136677 | -20.0813 | -
+MARS | 29Ari05'26" | H8 | 29.090487 | +0.305497 | +0.701798 | +11.4394 | -
+JUPITER | 20Can30'29" | H10 | 110.507959 | +0.474946 | -0.063070 | +22.3492 | R
+SATURN | 21Sco09'46" | H3 | 231.162681 | +2.372920 | +0.007061 | -15.7634 | -
+URANUS | 24Can08'06" | H10 | 114.134963 | +0.542533 | -0.029232 | +21.8245 | R
+NEPTUNE | 28Lib03'05" | H2 | 208.051285 | +1.751421 | -0.014076 | -9.1476 | R
+PLUTO | 25Leo19'22" | H12 | 145.322697 | +10.544148 | -0.024357 | +22.9816 | R
+TRUE_NODE | 03Cap24'36" | H4 | 273.410023 | +0.000000 | -0.159369 | -23.4014 | R
+SOUTH_NODE_TRUE | 03Can24'36" | H10 | 93.410023 | -0.000000 | -0.159369 | +23.4014 | R
+CHIRON | 02Aqu19'56" | H5 | 302.332236 | +6.540267 | +0.075666 | -13.2678 | -
+MEAN_APOGEE | 28Sco31'19" | H3 | 238.521877 | -2.881334 | +0.111121 | -22.6445 | -
+
+-- ANGLES --
+ASC | 22Vir17'29" | 172.291253
+MC | 21Gem18'54" | 81.315115
+DSC | 22Pis17'29" | 352.291253
+IC | 21Sag18'54" | 261.315115
+VERTEX | 07Pis14'45" | 337.245845
+ARMC | 20Gem32'50" | 80.547102
+
+-- HOUSES (P) --
+H1 | 22Vir17'29" | 172.291253
+H2 | 18Lib14'34" | 198.242840
+H3 | 18Sco21'11" | 228.353194
+H4 | 21Sag18'54" | 261.315115
+H5 | 24Cap28'26" | 294.473962
+H6 | 25Aqu12'33" | 325.209037
+H7 | 22Pis17'29" | 352.291253
+H8 | 18Ari14'34" | 18.242840
+H9 | 18Tau21'11" | 48.353194
+H10 | 21Gem18'54" | 81.315115
+H11 | 24Can28'26" | 114.473962
+H12 | 25Leo12'33" | 145.209037
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | ssx 30 | MOON | +1.999 | S
+SUN | ssq 45 | VENUS | -0.424 | S
+SUN | sqq 135 | JUPITER | -0.240 | S
+SUN | tri 120 | NEPTUNE | +7.697 | S
+SUN | sex 60 | TRUE_NODE | +2.338 | S
+SUN | tri 120 | SOUTH_NODE_TRUE | -2.338 | S
+SUN | squ 90 | MEAN_APOGEE | +7.226 | S
+MOON | sqq 135 | SATURN | +1.585 | S
+MOON | squ 90 | TRUE_NODE | +4.337 | S
+MOON | squ 90 | SOUTH_NODE_TRUE | -4.337 | S
+MOON | sex 60 | CHIRON | +5.415 | S
+MERCURY | squ 90 | SATURN | -6.801 | S
+VENUS | opp 180 | JUPITER | -0.664 | S
+VENUS | sex 60 | SATURN | +0.009 | E
+VENUS | opp 180 | URANUS | -2.963 | A
+VENUS | squ 90 | NEPTUNE | -6.879 | A
+VENUS | tri 120 | ASC | -1.119 | -
+VENUS | qcx 150 | MC | +0.143 | -
+MARS | squ 90 | URANUS | -4.956 | S
+MARS | opp 180 | NEPTUNE | -1.039 | S
+MARS | tri 120 | PLUTO | -3.768 | S
+MARS | tri 120 | TRUE_NODE | -4.320 | A
+MARS | sex 60 | SOUTH_NODE_TRUE | +4.320 | A
+MARS | squ 90 | CHIRON | -3.242 | A
+MARS | qcx 150 | MEAN_APOGEE | +0.569 | S
+JUPITER | tri 120 | SATURN | +0.655 | S
+JUPITER | con 0 | URANUS | +3.627 | S
+JUPITER | sex 60 | ASC | +1.783 | -
+JUPITER | ssx 30 | MC | -0.807 | -
+SATURN | tri 120 | URANUS | -2.972 | A
+SATURN | squ 90 | PLUTO | -4.160 | A
+SATURN | con 0 | MEAN_APOGEE | +7.359 | S
+SATURN | sex 60 | ASC | -1.129 | -
+SATURN | qcx 150 | MC | -0.152 | -
+URANUS | squ 90 | NEPTUNE | +3.916 | S
+URANUS | ssx 30 | PLUTO | +1.188 | S
+URANUS | tri 120 | MEAN_APOGEE | +4.387 | S
+URANUS | sex 60 | ASC | -1.844 | -
+URANUS | ssx 30 | MC | +2.820 | -
+NEPTUNE | sex 60 | PLUTO | +2.729 | S
+NEPTUNE | tri 120 | SOUTH_NODE_TRUE | -5.359 | A
+NEPTUNE | squ 90 | CHIRON | +4.281 | S
+NEPTUNE | ssx 30 | MEAN_APOGEE | +0.471 | S
+PLUTO | squ 90 | MEAN_APOGEE | +3.199 | S
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | +0.000 | E
+TRUE_NODE | ssx 30 | CHIRON | -1.078 | A
+SOUTH_NODE_TRUE | qcx 150 | CHIRON | +1.078 | A
+CHIRON | sex 60 | MEAN_APOGEE | +3.810 | A
+ASC | squ 90 | MC | +0.976 | -
+
+-- DIGNITIES (classical seven, night chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | peregrine | +0 | JUPITER/VENUS/(VENUS,MARS,MOON)/VENUS/SATURN
+MOON | peregrine | +0 | MARS/SUN/(SUN,JUPITER,SATURN)/VENUS/MARS
+MERCURY | triplicity,decan | +4 | SATURN/-/(SATURN,MERCURY,JUPITER)/JUPITER/MERCURY
+VENUS | bound | +2 | SATURN/MARS/(VENUS,MOON,MARS)/VENUS/SUN
+MARS | domicile | +5 | MARS/SUN/(SUN,JUPITER,SATURN)/SATURN/VENUS
+JUPITER | exaltation,bound | +6 | MOON/JUPITER/(VENUS,MARS,MOON)/JUPITER/MOON
+SATURN | peregrine | +0 | MARS/-/(VENUS,MARS,MOON)/JUPITER/VENUS
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+(none)
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > JUPITER > MOON > MARS (final)
+MOON | MOON > MARS (final)
+MERCURY | MERCURY > SATURN > MARS (final)
+VENUS | VENUS > SATURN > MARS (final)
+MARS | MARS (final)
+JUPITER | JUPITER > MOON > MARS (final)
+SATURN | SATURN > MARS (final)
+
+-- LOTS --
+FORTUNE | 20Leo17'31" | 140.292058 | H11
+SPIRIT | 24Lib17'26" | 204.290448 | H2
+
+-- MOON --
+phase=New | waxing=yes | elongation=31.999 | illumination=0.076
+
+-- ANTISCIA (orb 1) --
+CHIRON | antiscia | MEAN_APOGEE | -0.854
+
+-- FIXED STARS (conjunctions, orb 1) --
+Capella | 21Gem14'16" | conj MC | -0.077
+Castor | 19Can37'28" | conj JUPITER | -0.883
+
+-- PLANETARY HOUR --
+day=JUPITER(Thursday) | hour=SATURN (no.14, night)
+
+== END ==

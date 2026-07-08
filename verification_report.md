@@ -50,3 +50,36 @@
 | 2000-01-01 12:00 UTC -> JD/deltaT sanity | jd_ut=2451545.00000411 dT=63.83s | jd~2451545.0 dT~63.8s | Y |
 | 1500-02-20 12:00 julian calendar, LMT lon 0 | jd_ut=2268983.000000 | jd_ut=2268983.000000 | Y |
 
+## M1 chart layer: golden fixtures (snapshot + round-trip)
+
+| fixture | status | ok |
+|---|---|---|
+| einstein | snapshot== roundtrip=ok | Y |
+| jobs | snapshot== roundtrip=ok | Y |
+| monroe | snapshot== roundtrip=ok | Y |
+| obama | snapshot== roundtrip=ok | Y |
+| freud | snapshot== roundtrip=ok | Y |
+| curie | snapshot== roundtrip=ok | Y |
+| hepburn | snapshot== roundtrip=ok | Y |
+| bruce-lee | snapshot== roundtrip=ok | Y |
+| beijing-dst | snapshot== roundtrip=ok | Y |
+| beijing-dst-ambiguous | snapshot== roundtrip=ok | Y |
+| polar | snapshot== roundtrip=ok | Y |
+| equator | snapshot== roundtrip=ok | Y |
+| sydney | snapshot== roundtrip=ok | Y |
+| midnight | snapshot== roundtrip=ok | Y |
+| lmt-1850 | snapshot== roundtrip=ok | Y |
+| julian-cal | snapshot== roundtrip=ok | Y |
+| unknown-time | snapshot== roundtrip=ok | Y |
+| hellenistic | snapshot== roundtrip=ok | Y |
+| high-lat-ok | snapshot== roundtrip=ok | Y |
+| retro-heavy | snapshot== roundtrip=ok | Y |
+
+## Classical table structure
+
+| check | ok |
+|---|---|
+| egyptian bounds: 12 signs x sum 30 x five planets once | Y |
+| decans: chaldean period-7, Aries I = Mars | Y |
+| domiciles: luminaries 1 sign, planets 2 signs | Y |
+

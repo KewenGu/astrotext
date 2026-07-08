@@ -1,0 +1,103 @@
+== ASTROTEXT NATAL v0 ==
+subject=Unknown birth time (noon chart)
+local=1985-10-10 12:00:00 calendar=gregorian
+place=Shanghai (31.2304N 121.4737E) tz=Asia/Shanghai
+utc=1985-10-10 04:00:00 offset=+08:00:00
+jd-ut=2446348.66667162 delta-t=+54.76s
+set:zodiac=tropical
+set:houses=P(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,URANUS,NEPTUNE,PLUTO,TRUE_NODE,SOUTH_NODE_TRUE,CHIRON,MEAN_APOGEE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10,ssx30:2/2,ssq45:2/2,sqq135:2/2,qcx150:2.5/2.5
+set:node=true
+set:unknown-time=true
+set:star-orb=1 antiscia-orb=1
+obliquity=23.443214
+warning=unknown-birth-time:houses/angles/lots suppressed; Moon moves ~13 deg/day — its position is a noon estimate
+warning=dignities-assume-day:triplicity rulers computed as day chart
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 16Lib47'41" | - | 196.794617 | +0.000178 | +0.988641 | -6.6007 | -
+MOON | 22Leo25'27" | - | 142.424284 | +5.118134 | +13.691124 | +18.8738 | -
+MERCURY | 29Lib01'53" | - | 209.031335 | -0.338605 | +1.570856 | -11.4484 | -
+VENUS | 22Vir06'55" | - | 172.115316 | +1.416416 | +1.233884 | +4.4298 | -
+MARS | 19Vir01'18" | - | 169.021648 | +1.207454 | +0.629792 | +5.4559 | -
+JUPITER | 07Aqu11'52" | - | 307.197860 | -0.869727 | +0.022428 | -19.3167 | -
+SATURN | 25Sco44'55" | - | 235.748585 | +1.873584 | +0.101118 | -17.3779 | -
+URANUS | 14Sag55'46" | - | 254.929436 | -0.045896 | +0.038767 | -22.6370 | -
+NEPTUNE | 01Cap03'31" | - | 271.058535 | +1.099476 | +0.015091 | -22.3395 | -
+PLUTO | 03Sco57'40" | - | 213.961211 | +16.119736 | +0.039012 | +2.3624 | -
+TRUE_NODE | 09Tau23'02" | - | 39.383937 | +0.000000 | -0.046667 | +14.6216 | R
+SOUTH_NODE_TRUE | 09Sco23'02" | - | 219.383937 | -0.000000 | -0.046667 | -14.6216 | R
+CHIRON | 14Gem27'08" | - | 74.452112 | -4.826675 | -0.021995 | +17.7417 | R
+MEAN_APOGEE | 14Tau26'35" | - | 44.442973 | +0.381103 | +0.110738 | +16.5387 | -
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | sex 60 | MOON | -5.630 | S
+SUN | sex 60 | URANUS | -1.865 | S
+SUN | tri 120 | CHIRON | +2.343 | S
+SUN | qcx 150 | MEAN_APOGEE | +2.352 | S
+MOON | ssx 30 | VENUS | -0.309 | S
+MOON | squ 90 | SATURN | +3.324 | A
+MOON | tri 120 | URANUS | -7.495 | S
+MOON | squ 90 | MEAN_APOGEE | +7.981 | S
+MERCURY | ssq 45 | URANUS | +0.898 | A
+MERCURY | sex 60 | NEPTUNE | +2.027 | A
+MERCURY | con 0 | PLUTO | +4.930 | A
+MERCURY | sqq 135 | CHIRON | -0.421 | A
+VENUS | con 0 | MARS | +3.094 | S
+VENUS | sqq 135 | JUPITER | +0.083 | A
+VENUS | sex 60 | SATURN | +3.633 | A
+MARS | squ 90 | URANUS | -4.092 | S
+MARS | ssq 45 | PLUTO | -0.060 | S
+MARS | squ 90 | CHIRON | +4.570 | S
+MARS | tri 120 | MEAN_APOGEE | +4.579 | S
+JUPITER | squ 90 | PLUTO | +3.237 | A
+JUPITER | squ 90 | TRUE_NODE | +2.186 | A
+JUPITER | squ 90 | SOUTH_NODE_TRUE | -2.186 | A
+URANUS | opp 180 | CHIRON | -0.477 | S
+URANUS | qcx 150 | MEAN_APOGEE | -0.486 | A
+NEPTUNE | sex 60 | PLUTO | -2.903 | S
+NEPTUNE | sqq 135 | MEAN_APOGEE | -1.616 | A
+PLUTO | opp 180 | TRUE_NODE | -5.423 | A
+PLUTO | con 0 | SOUTH_NODE_TRUE | +5.423 | A
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | +0.000 | E
+TRUE_NODE | con 0 | MEAN_APOGEE | +5.059 | S
+SOUTH_NODE_TRUE | opp 180 | MEAN_APOGEE | -5.059 | S
+CHIRON | ssx 30 | MEAN_APOGEE | +0.009 | E
+
+-- DIGNITIES (classical seven, day chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | fall,peregrine | -4 | VENUS/SATURN/(SATURN,MERCURY,JUPITER)/JUPITER/SATURN
+MOON | peregrine | +0 | SUN/-/(SUN,JUPITER,SATURN)/MERCURY/MARS
+MERCURY | peregrine | +0 | VENUS/SATURN/(SATURN,MERCURY,JUPITER)/MARS/JUPITER
+VENUS | triplicity,fall | -1 | MERCURY/MERCURY/(VENUS,MOON,MARS)/MARS/MERCURY
+MARS | triplicity | +3 | MERCURY/MERCURY/(VENUS,MOON,MARS)/JUPITER/VENUS
+JUPITER | triplicity | +3 | SATURN/-/(SATURN,MERCURY,JUPITER)/VENUS/VENUS
+SATURN | bound | +2 | MARS/-/(VENUS,MARS,MOON)/SATURN/VENUS
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+MERCURY <-> VENUS | domicile
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > VENUS > MERCURY > VENUS (loop)
+MOON | MOON > SUN > VENUS > MERCURY > VENUS (loop)
+MERCURY | MERCURY > VENUS > MERCURY (loop)
+VENUS | VENUS > MERCURY > VENUS (loop)
+MARS | MARS > MERCURY > VENUS > MERCURY (loop)
+JUPITER | JUPITER > SATURN > MARS > MERCURY > VENUS > MERCURY (loop)
+SATURN | SATURN > MARS > MERCURY > VENUS > MERCURY (loop)
+
+-- MOON --
+phase=Last Quarter | waxing=no | elongation=305.630 | illumination=0.209
+
+-- ANTISCIA (orb 1) --
+(none)
+
+-- FIXED STARS (conjunctions, orb 1) --
+Denebola | 21Vir24'42" | conj VENUS | -0.704
+
+== END ==

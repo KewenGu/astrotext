@@ -36,6 +36,11 @@ fi
 (cd vendor/src/swisseph && make -s swetest)
 cp vendor/src/swisseph/swetest vendor/lib/
 cp vendor/src/swisseph/ephe/* data/ephe/
+# extended range 1200-1799 (optional; some proxies block large blob fetches)
+(cd vendor/src/swisseph \
+  && git sparse-checkout add '/ephe/sepl_12.se1' '/ephe/semo_12.se1' '/ephe/seas_12.se1' \
+  && cp ephe/*_12.se1 ../../../data/ephe/) \
+  || echo "WARN: extended ephemeris (1200-1799) not fetched; engine range stays 1800-2399"
 
 # ---- pytest + deps, vendored as pure-python sources (no pip needed) ---------
 clone_tag () { [ -d "vendor/src/$2" ] || git clone --depth 1 --branch "$3" "https://github.com/$1/$2" "vendor/src/$2"; }

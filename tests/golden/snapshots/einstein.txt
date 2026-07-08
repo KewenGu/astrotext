@@ -1,0 +1,148 @@
+== ASTROTEXT NATAL v0 ==
+subject=Albert Einstein
+local=1879-03-14 11:30:00 calendar=gregorian
+place=Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57
+utc=1879-03-14 10:50:03 offset=+00:39:57
+jd-ut=2407422.95142361 delta-t=-2.93s
+set:zodiac=tropical
+set:houses=P(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,URANUS,NEPTUNE,PLUTO,TRUE_NODE,SOUTH_NODE_TRUE,CHIRON,MEAN_APOGEE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10,ssx30:2/2,ssq45:2/2,sqq135:2/2,qcx150:2.5/2.5
+set:node=true
+set:unknown-time=false
+set:star-orb=1 antiscia-orb=1
+houses-used=P
+sect=day sun-altitude=+38.30
+obliquity=23.456466
+warning=lmt-used:+00:39:57(lon +9.9876)
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 23Pis30'28" | H10 | 353.507782 | -0.000202 | +0.995957 | -2.5798 | -
+MOON | 14Sag31'35" | H6 | 254.526395 | -3.828814 | +13.918884 | -26.3610 | OOB
+MERCURY | 03Ari08'38" | H10 | 3.143953 | -0.389980 | +1.951886 | +0.8931 | -
+VENUS | 16Ari59'06" | H10 | 16.985053 | -0.692378 | +1.231828 | +6.0379 | -
+MARS | 26Cap54'51" | H7 | 296.914248 | -0.859881 | +0.728651 | -21.6333 | -
+JUPITER | 27Aqu29'03" | H9 | 327.484108 | -0.766284 | +0.227369 | -13.0744 | -
+SATURN | 04Ari11'23" | H10 | 4.189833 | -2.155806 | +0.123577 | -0.3121 | -
+URANUS | 01Vir17'19" | H3 | 151.288598 | +0.798757 | -0.039558 | +11.7706 | R
+NEPTUNE | 07Tau52'19" | H11 | 37.871965 | -1.740051 | +0.028792 | +12.4974 | -
+PLUTO | 24Tau43'32" | H11 | 54.725564 | -13.694011 | +0.012130 | +5.6561 | -
+TRUE_NODE | 02Aqu43'53" | H8 | 302.731275 | +0.000000 | -0.019303 | -19.5633 | R
+SOUTH_NODE_TRUE | 02Leo43'53" | H2 | 122.731275 | -0.000000 | -0.019303 | +19.5633 | R
+CHIRON | 05Tau32'41" | H11 | 35.544694 | -1.051145 | +0.052499 | +12.3882 | -
+MEAN_APOGEE | 27Ari58'36" | H11 | 27.976726 | +5.135831 | +0.112090 | +15.5513 | -
+
+-- ANGLES --
+ASC | 11Can38'51" | 101.647506
+MC | 12Pis50'24" | 342.840009
+DSC | 11Cap38'51" | 281.647506
+IC | 12Vir50'24" | 162.840009
+VERTEX | 27Sco54'21" | 237.905739
+ARMC | 14Pis11'03" | 344.184197
+
+-- HOUSES (P) --
+H1 | 11Can38'51" | 101.647506
+H2 | 28Can37'04" | 118.617904
+H3 | 17Leo48'30" | 137.808321
+H4 | 12Vir50'24" | 162.840009
+H5 | 18Lib20'00" | 198.333260
+H6 | 03Sag06'38" | 243.110432
+H7 | 11Cap38'51" | 281.647506
+H8 | 28Cap37'04" | 298.617904
+H9 | 17Aqu48'30" | 317.808321
+H10 | 12Pis50'24" | 342.840009
+H11 | 18Ari20'00" | 18.333260
+H12 | 03Gem06'38" | 63.110432
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | con 0 | MERCURY | +9.636 | S
+SUN | sex 60 | MARS | -3.406 | A
+SUN | ssq 45 | NEPTUNE | -0.636 | S
+SUN | sex 60 | PLUTO | +1.218 | A
+MOON | tri 120 | VENUS | +2.459 | A
+MOON | sqq 135 | MEAN_APOGEE | -1.550 | S
+MOON | qcx 150 | ASC | +2.879 | -
+MOON | squ 90 | MC | -1.686 | -
+MERCURY | con 0 | SATURN | +1.046 | A
+MERCURY | qcx 150 | URANUS | -1.855 | S
+MERCURY | sex 60 | TRUE_NODE | +0.413 | S
+MERCURY | tri 120 | SOUTH_NODE_TRUE | -0.413 | S
+VENUS | sqq 135 | URANUS | -0.696 | S
+MARS | ssx 30 | JUPITER | +0.570 | A
+MARS | tri 120 | PLUTO | -2.189 | S
+MARS | con 0 | TRUE_NODE | +5.817 | A
+MARS | opp 180 | SOUTH_NODE_TRUE | -5.817 | A
+MARS | squ 90 | MEAN_APOGEE | +1.062 | A
+MARS | ssq 45 | MC | +0.926 | -
+JUPITER | opp 180 | URANUS | -3.804 | A
+JUPITER | squ 90 | PLUTO | -2.759 | S
+JUPITER | sex 60 | MEAN_APOGEE | +0.493 | A
+JUPITER | sqq 135 | ASC | -0.837 | -
+SATURN | sex 60 | TRUE_NODE | +1.459 | S
+SATURN | tri 120 | SOUTH_NODE_TRUE | -1.459 | S
+SATURN | ssx 30 | CHIRON | +1.355 | A
+URANUS | tri 120 | NEPTUNE | -6.583 | S
+URANUS | squ 90 | PLUTO | +6.563 | A
+URANUS | qcx 150 | TRUE_NODE | +1.443 | S
+URANUS | ssx 30 | SOUTH_NODE_TRUE | -1.443 | S
+URANUS | tri 120 | CHIRON | -4.256 | S
+URANUS | tri 120 | MEAN_APOGEE | +3.312 | A
+NEPTUNE | squ 90 | TRUE_NODE | +5.141 | S
+NEPTUNE | squ 90 | SOUTH_NODE_TRUE | -5.141 | S
+NEPTUNE | con 0 | CHIRON | +2.327 | A
+PLUTO | ssq 45 | ASC | +1.922 | -
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | +0.000 | E
+TRUE_NODE | squ 90 | CHIRON | +2.813 | S
+TRUE_NODE | squ 90 | MEAN_APOGEE | -4.755 | A
+SOUTH_NODE_TRUE | squ 90 | CHIRON | -2.813 | S
+SOUTH_NODE_TRUE | squ 90 | MEAN_APOGEE | +4.755 | A
+CHIRON | con 0 | MEAN_APOGEE | +7.568 | A
+MEAN_APOGEE | ssq 45 | MC | +0.137 | -
+ASC | tri 120 | MC | -1.193 | -
+
+-- DIGNITIES (classical seven, day chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | peregrine | +0 | JUPITER/VENUS/(VENUS,MARS,MOON)/MARS/MARS
+MOON | decan | +1 | JUPITER/-/(SUN,JUPITER,SATURN)/VENUS/MOON
+MERCURY | peregrine | +0 | MARS/SUN/(SUN,JUPITER,SATURN)/JUPITER/MARS
+VENUS | detriment,peregrine | -5 | MARS/SUN/(SUN,JUPITER,SATURN)/MERCURY/SUN
+MARS | exaltation,triplicity,bound | +9 | SATURN/MARS/(VENUS,MOON,MARS)/MARS/SUN
+JUPITER | triplicity | +3 | SATURN/-/(SATURN,MERCURY,JUPITER)/SATURN/MOON
+SATURN | triplicity,fall | -1 | MARS/SUN/(SUN,JUPITER,SATURN)/JUPITER/MARS
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+SUN <-> VENUS | exaltation
+MARS <-> SATURN | domicile
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > JUPITER > SATURN > MARS > SATURN (loop)
+MOON | MOON > JUPITER > SATURN > MARS > SATURN (loop)
+MERCURY | MERCURY > MARS > SATURN > MARS (loop)
+VENUS | VENUS > MARS > SATURN > MARS (loop)
+MARS | MARS > SATURN > MARS (loop)
+JUPITER | JUPITER > SATURN > MARS > SATURN (loop)
+SATURN | SATURN > MARS > SATURN (loop)
+
+-- LOTS --
+FORTUNE | 02Ari39'58" | 2.666118 | H10
+SPIRIT | 20Lib37'44" | 200.628893 | H5
+
+-- MOON --
+phase=Disseminating | waxing=no | elongation=261.019 | illumination=0.578
+
+-- ANTISCIA (orb 1) --
+URANUS | antiscia | MEAN_APOGEE | +0.735
+
+-- FIXED STARS (conjunctions, orb 1) --
+Algol | 24Tau29'06" | conj PLUTO | -0.241
+Sirius | 12Can25'25" | conj ASC | +0.776
+Achernar | 13Pis35'20" | conj MC | +0.749
+
+-- PLANETARY HOUR --
+day=VENUS(Friday) | hour=MARS (no.6, day)
+
+== END ==

@@ -1,0 +1,151 @@
+== ASTROTEXT NATAL v0 ==
+subject=Quito equator birth
+local=1975-03-21 06:00:00 calendar=gregorian
+place=Quito, Ecuador (0.1807S 78.4678W) tz=America/Guayaquil
+utc=1975-03-21 11:00:00 offset=-05:00:00
+jd-ut=2442492.95833910 delta-t=+45.69s
+set:zodiac=tropical
+set:houses=P(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,URANUS,NEPTUNE,PLUTO,TRUE_NODE,SOUTH_NODE_TRUE,CHIRON,MEAN_APOGEE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10,ssx30:2/2,ssq45:2/2,sqq135:2/2,qcx150:2.5/2.5
+set:node=true
+set:unknown-time=false
+set:star-orb=1 antiscia-orb=1
+houses-used=P
+sect=night sun-altitude=-5.31
+obliquity=23.441554
+warning=(none)
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 00Ari12'33" | H1 | 0.209228 | -0.000159 | +0.993133 | +0.0831 | -
+MOON | 08Can02'31" | H4 | 98.041978 | -2.920242 | +13.717007 | +20.2825 | -
+MERCURY | 07Pis00'50" | H12 | 337.013780 | -2.135374 | +1.473043 | -10.9194 | -
+VENUS | 01Tau53'06" | H2 | 31.885077 | +0.063268 | +1.212057 | +12.1895 | -
+MARS | 13Aqu46'12" | H11 | 313.769864 | -1.114891 | +0.758158 | -17.7622 | -
+JUPITER | 00Ari40'06" | H1 | 0.668444 | -1.072637 | +0.242242 | -0.7182 | -
+SATURN | 11Can59'27" | H4 | 101.990835 | -0.236115 | +0.013350 | +22.6654 | -
+URANUS | 01Sco40'19" | H8 | 211.672077 | +0.561414 | -0.034118 | -11.5296 | R
+NEPTUNE | 11Sag46'57" | H9 | 251.782419 | +1.574920 | -0.003850 | -20.6412 | R
+PLUTO | 08Lib06'39" | H7 | 188.110722 | +17.328575 | -0.027431 | +12.6908 | R
+TRUE_NODE | 03Sag03'23" | H9 | 243.056359 | +0.000000 | -0.014978 | -20.7709 | R
+SOUTH_NODE_TRUE | 03Gem03'23" | H3 | 63.056359 | -0.000000 | -0.014978 | +20.7709 | R
+CHIRON | 22Ari33'13" | H1 | 22.553747 | +0.617185 | +0.056257 | +9.3494 | -
+MEAN_APOGEE | 04Pis55'48" | H12 | 334.929951 | +5.145168 | +0.112083 | -4.9109 | -
+
+-- ANGLES --
+ASC | 24Pis25'39" | 354.427585
+MC | 25Sag17'55" | 265.298724
+DSC | 24Vir25'39" | 174.427585
+IC | 25Gem17'55" | 85.298724
+VERTEX | 00Lib02'27" | 180.040849
+ARMC | 24Sag52'41" | 264.877963
+
+-- HOUSES (P) --
+H1 | 24Pis25'39" | 354.427585
+H2 | 26Ari47'25" | 26.790347
+H3 | 27Tau08'38" | 57.143815
+H4 | 25Gem17'55" | 85.298724
+H5 | 23Can04'10" | 113.069439
+H6 | 22Leo33'17" | 142.554806
+H7 | 24Vir25'39" | 174.427585
+H8 | 26Lib47'25" | 206.790347
+H9 | 27Sco08'38" | 237.143815
+H10 | 25Sag17'55" | 265.298724
+H11 | 23Cap04'10" | 293.069439
+H12 | 22Aqu33'17" | 322.554806
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | squ 90 | MOON | +7.833 | S
+SUN | ssx 30 | VENUS | +1.676 | S
+SUN | ssq 45 | MARS | +1.439 | S
+SUN | con 0 | JUPITER | +0.459 | A
+SUN | qcx 150 | URANUS | -1.463 | A
+SUN | opp 180 | PLUTO | -7.901 | A
+SUN | tri 120 | TRUE_NODE | -2.847 | A
+SUN | sex 60 | SOUTH_NODE_TRUE | +2.847 | A
+MOON | tri 120 | MERCURY | +1.028 | S
+MOON | squ 90 | JUPITER | +7.374 | S
+MOON | con 0 | SATURN | +3.949 | A
+MOON | tri 120 | URANUS | -6.370 | S
+MOON | squ 90 | PLUTO | +0.069 | A
+MOON | tri 120 | MEAN_APOGEE | +3.112 | S
+MERCURY | tri 120 | SATURN | +4.977 | A
+MERCURY | tri 120 | URANUS | +5.342 | S
+MERCURY | squ 90 | NEPTUNE | -4.769 | A
+MERCURY | qcx 150 | PLUTO | -1.097 | A
+MERCURY | squ 90 | TRUE_NODE | +3.957 | S
+MERCURY | squ 90 | SOUTH_NODE_TRUE | -3.957 | S
+MERCURY | ssq 45 | CHIRON | +0.540 | A
+MERCURY | con 0 | MEAN_APOGEE | +2.084 | S
+VENUS | ssx 30 | JUPITER | +1.217 | S
+VENUS | opp 180 | URANUS | -0.213 | S
+VENUS | qcx 150 | TRUE_NODE | -1.171 | A
+VENUS | ssx 30 | SOUTH_NODE_TRUE | +1.171 | A
+VENUS | sex 60 | MEAN_APOGEE | -3.045 | A
+MARS | ssq 45 | JUPITER | +1.899 | A
+MARS | qcx 150 | SATURN | -1.779 | S
+MARS | sex 60 | NEPTUNE | +1.987 | S
+MARS | tri 120 | PLUTO | +5.659 | S
+JUPITER | qcx 150 | URANUS | -1.004 | A
+JUPITER | opp 180 | PLUTO | -7.442 | A
+JUPITER | tri 120 | TRUE_NODE | -2.388 | A
+JUPITER | sex 60 | SOUTH_NODE_TRUE | +2.388 | A
+SATURN | qcx 150 | NEPTUNE | -0.208 | S
+SATURN | squ 90 | PLUTO | -3.880 | S
+URANUS | ssx 30 | TRUE_NODE | +1.384 | S
+URANUS | qcx 150 | SOUTH_NODE_TRUE | -1.384 | S
+URANUS | tri 120 | MEAN_APOGEE | +3.258 | S
+NEPTUNE | sex 60 | PLUTO | +3.672 | S
+NEPTUNE | squ 90 | MEAN_APOGEE | -6.852 | A
+PLUTO | tri 120 | SOUTH_NODE_TRUE | +5.054 | A
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | -0.000 | E
+TRUE_NODE | squ 90 | MEAN_APOGEE | +1.874 | S
+SOUTH_NODE_TRUE | squ 90 | MEAN_APOGEE | -1.874 | S
+CHIRON | ssx 30 | ASC | -1.874 | -
+CHIRON | tri 120 | MC | -2.745 | -
+ASC | squ 90 | MC | -0.871 | -
+
+-- DIGNITIES (classical seven, night chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | exaltation | +4 | MARS/SUN/(SUN,JUPITER,SATURN)/JUPITER/MARS
+MOON | domicile,triplicity | +8 | MOON/JUPITER/(VENUS,MARS,MOON)/VENUS/VENUS
+MERCURY | detriment,fall,peregrine | -9 | JUPITER/VENUS/(VENUS,MARS,MOON)/VENUS/SATURN
+VENUS | domicile,bound | +7 | VENUS/MOON/(VENUS,MOON,MARS)/VENUS/MERCURY
+MARS | peregrine | +0 | SATURN/-/(SATURN,MERCURY,JUPITER)/JUPITER/MERCURY
+JUPITER | triplicity,bound | +5 | MARS/SUN/(SUN,JUPITER,SATURN)/JUPITER/MARS
+SATURN | detriment,peregrine | -5 | MOON/JUPITER/(VENUS,MARS,MOON)/VENUS/MERCURY
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+(none)
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > MARS > SATURN > MOON (final)
+MOON | MOON (final)
+MERCURY | MERCURY > JUPITER > MARS > SATURN > MOON (final)
+VENUS | VENUS (final)
+MARS | MARS > SATURN > MOON (final)
+JUPITER | JUPITER > MARS > SATURN > MOON (final)
+SATURN | SATURN > MOON (final)
+
+-- LOTS --
+FORTUNE | 16Sag35'41" | 256.594835 | H9
+SPIRIT | 02Can15'37" | 92.260335 | H4
+
+-- MOON --
+phase=First Quarter | waxing=yes | elongation=97.833 | illumination=0.568
+
+-- ANTISCIA (orb 1) --
+SUN | contra-antiscia | JUPITER | -0.878
+MERCURY | contra-antiscia | CHIRON | +0.432
+
+-- FIXED STARS (conjunctions, orb 1) --
+(none)
+
+-- PLANETARY HOUR --
+day=JUPITER(Thursday) | hour=SUN (no.24, night)
+
+== END ==

@@ -1,0 +1,151 @@
+== ASTROTEXT NATAL v0 ==
+subject=Beijing DST-era summer birth
+local=1988-06-15 14:30:00 calendar=gregorian
+place=Beijing (39.9042N 116.4074E) tz=Asia/Shanghai
+utc=1988-06-15 05:30:00 offset=+09:00:00
+jd-ut=2447327.72916837 delta-t=+56.04s
+set:zodiac=tropical
+set:houses=P(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,URANUS,NEPTUNE,PLUTO,TRUE_NODE,SOUTH_NODE_TRUE,CHIRON,MEAN_APOGEE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10,ssx30:2/2,ssq45:2/2,sqq135:2/2,qcx150:2.5/2.5
+set:node=true
+set:unknown-time=false
+set:star-orb=1 antiscia-orb=1
+houses-used=P
+sect=day sun-altitude=+67.05
+obliquity=23.443078
+warning=(none)
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 24Gem19'59" | H9 | 84.332984 | +0.000090 | +0.955436 | +23.3218 | -
+MOON | 04Can20'58" | H9 | 94.349481 | +4.802894 | +12.707380 | +28.1717 | OOB
+MERCURY | 21Gem12'47" | H9 | 81.213105 | -3.763087 | -0.539107 | +19.3967 | R
+VENUS | 20Gem48'52" | H9 | 80.814451 | -1.356287 | -0.616042 | +21.7718 | R
+MARS | 14Pis45'02" | H5 | 344.750638 | -2.988259 | +0.588470 | -8.7617 | -
+JUPITER | 22Tau43'07" | H8 | 52.718675 | -0.901614 | +0.219340 | +17.5821 | -
+SATURN | 29Sag38'09" | H3 | 269.635770 | +1.145687 | -0.073405 | -22.2969 | R
+URANUS | 29Sag15'25" | H3 | 269.256932 | -0.211239 | -0.040581 | -23.6522 | R,OOB
+NEPTUNE | 09Cap13'01" | H3 | 279.217067 | +0.995696 | -0.025816 | -22.1294 | R
+PLUTO | 10Sco05'12" | H2 | 220.086639 | +16.430850 | -0.017914 | +0.7899 | R
+TRUE_NODE | 17Pis52'02" | H6 | 347.867168 | +0.000000 | -0.206286 | -4.7965 | R
+SOUTH_NODE_TRUE | 17Vir52'02" | H12 | 167.867168 | -0.000000 | -0.206286 | +4.7965 | R
+CHIRON | 29Gem25'32" | H9 | 89.425422 | -5.591015 | +0.092847 | +17.8509 | -
+MEAN_APOGEE | 03Vir35'33" | H11 | 153.592412 | +1.315369 | +0.110872 | +11.4173 | -
+
+-- ANGLES --
+ASC | 10Lib05'41" | 190.094604
+MC | 11Can36'53" | 101.614796
+DSC | 10Ari05'41" | 10.094604
+IC | 11Cap36'53" | 281.614796
+VERTEX | 27Ari31'26" | 27.523821
+ARMC | 12Can37'39" | 102.627595
+
+-- HOUSES (P) --
+H1 | 10Lib05'41" | 190.094604
+H2 | 07Sco01'49" | 217.030389
+H3 | 07Sag56'28" | 247.941240
+H4 | 11Cap36'53" | 281.614796
+H5 | 14Aqu54'05" | 314.901496
+H6 | 14Pis46'53" | 344.781492
+H7 | 10Ari05'41" | 10.094604
+H8 | 07Tau01'49" | 37.030389
+H9 | 07Gem56'28" | 67.941240
+H10 | 11Can36'53" | 101.614796
+H11 | 14Leo54'05" | 134.901496
+H12 | 14Vir46'53" | 164.781492
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | con 0 | MERCURY | +3.120 | S
+SUN | con 0 | VENUS | +3.519 | S
+SUN | ssx 30 | JUPITER | +1.614 | S
+SUN | opp 180 | SATURN | -5.303 | A
+SUN | opp 180 | URANUS | -4.924 | A
+SUN | sqq 135 | PLUTO | +0.754 | A
+SUN | squ 90 | TRUE_NODE | +6.466 | S
+SUN | squ 90 | SOUTH_NODE_TRUE | -6.466 | S
+SUN | con 0 | CHIRON | +5.092 | A
+MOON | opp 180 | SATURN | -4.714 | S
+MOON | opp 180 | URANUS | -5.093 | S
+MOON | opp 180 | NEPTUNE | -4.868 | A
+MOON | tri 120 | PLUTO | +5.737 | A
+MOON | con 0 | CHIRON | +4.924 | S
+MOON | sex 60 | MEAN_APOGEE | -0.757 | S
+MERCURY | con 0 | VENUS | +0.399 | S
+MERCURY | squ 90 | MARS | +6.462 | A
+MERCURY | ssx 30 | JUPITER | -1.506 | S
+MERCURY | squ 90 | TRUE_NODE | +3.346 | A
+MERCURY | squ 90 | SOUTH_NODE_TRUE | -3.346 | A
+VENUS | squ 90 | MARS | +6.064 | A
+VENUS | ssx 30 | JUPITER | -1.904 | S
+VENUS | squ 90 | TRUE_NODE | +2.947 | A
+VENUS | squ 90 | SOUTH_NODE_TRUE | -2.947 | A
+MARS | tri 120 | PLUTO | +4.664 | S
+MARS | con 0 | TRUE_NODE | +3.117 | A
+MARS | opp 180 | SOUTH_NODE_TRUE | -3.117 | A
+JUPITER | sqq 135 | NEPTUNE | -1.498 | A
+JUPITER | sex 60 | TRUE_NODE | +4.852 | S
+JUPITER | tri 120 | SOUTH_NODE_TRUE | -4.852 | S
+JUPITER | sqq 135 | ASC | +2.376 | -
+SATURN | con 0 | URANUS | +0.379 | A
+SATURN | opp 180 | CHIRON | -0.210 | A
+SATURN | tri 120 | MEAN_APOGEE | -3.957 | S
+URANUS | opp 180 | CHIRON | -0.168 | S
+URANUS | tri 120 | MEAN_APOGEE | -4.335 | S
+NEPTUNE | sex 60 | PLUTO | -0.870 | S
+NEPTUNE | tri 120 | MEAN_APOGEE | +5.625 | A
+NEPTUNE | squ 90 | ASC | -0.878 | -
+NEPTUNE | opp 180 | MC | -2.398 | -
+PLUTO | ssx 30 | ASC | -0.008 | E
+PLUTO | tri 120 | MC | -1.528 | -
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | +0.000 | E
+CHIRON | sex 60 | MEAN_APOGEE | +4.167 | S
+ASC | squ 90 | MC | -1.520 | -
+
+-- DIGNITIES (classical seven, day chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | decan | +1 | MERCURY/-/(SATURN,MERCURY,JUPITER)/SATURN/SUN
+MOON | domicile,triplicity | +8 | MOON/JUPITER/(VENUS,MARS,MOON)/MARS/VENUS
+MERCURY | domicile | +5 | MERCURY/-/(SATURN,MERCURY,JUPITER)/MARS/SUN
+VENUS | peregrine | +0 | MERCURY/-/(SATURN,MERCURY,JUPITER)/MARS/SUN
+MARS | peregrine | +0 | JUPITER/VENUS/(VENUS,MARS,MOON)/JUPITER/JUPITER
+JUPITER | peregrine | +0 | VENUS/MOON/(VENUS,MOON,MARS)/SATURN/SATURN
+SATURN | triplicity,decan | +4 | JUPITER/-/(SUN,JUPITER,SATURN)/MARS/SATURN
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+MOON <-> JUPITER | exaltation
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > MERCURY (final)
+MOON | MOON (final)
+MERCURY | MERCURY (final)
+VENUS | VENUS > MERCURY (final)
+MARS | MARS > JUPITER > VENUS > MERCURY (final)
+JUPITER | JUPITER > VENUS > MERCURY (final)
+SATURN | SATURN > JUPITER > VENUS > MERCURY (final)
+
+-- LOTS --
+FORTUNE | 20Lib06'40" | 200.111101 | H1
+SPIRIT | 00Lib04'41" | 180.078107 | H12
+
+-- MOON --
+phase=New | waxing=yes | elongation=10.016 | illumination=0.008
+
+-- ANTISCIA (orb 1) --
+MERCURY | contra-antiscia | NEPTUNE | -0.430
+VENUS | contra-antiscia | NEPTUNE | -0.032
+SATURN | contra-antiscia | CHIRON | +0.939
+
+-- FIXED STARS (conjunctions, orb 1) --
+Capella | 21Gem41'29" | conj MERCURY | +0.478
+Capella | 21Gem41'29" | conj VENUS | +0.877
+Betelgeuse | 28Gem35'18" | conj CHIRON | -0.837
+Achernar | 15Pis09'00" | conj MARS | +0.399
+
+-- PLANETARY HOUR --
+day=MERCURY(Wednesday) | hour=MERCURY (no.8, day)
+
+== END ==

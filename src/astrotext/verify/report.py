@@ -132,18 +132,70 @@ def timespace_cases() -> list[tuple[str, str, str, bool]]:
     return rows
 
 
+def chart_layer_cases() -> list[tuple[str, str, bool]]:
+    """M1: snapshot equality + parse round-trip per golden fixture."""
+    import sys
+    from pathlib import Path
+    sys.path.insert(0, str(config.REPO_ROOT / "tests" / "golden"))
+    from fixtures import ALL, build  # type: ignore
+    from ..render import parse, render_chart
+
+    snap_dir = config.REPO_ROOT / "tests" / "golden" / "snapshots"
+    rows: list[tuple[str, str, bool]] = []
+    for fx in ALL:
+        try:
+            m, c, hour, stars = build(fx)
+            text = render_chart(c, fx.name, hour, stars)
+            snap = snap_dir / f"{fx.slug}.txt"
+            snap_ok = snap.exists() and snap.read_text(encoding="utf-8") == text
+            doc = parse(text)
+            rt_ok = (len(doc["sections"]["POINTS"]) ==
+                     len([k for k in c.settings.points if k in c.points])
+                     and doc["warnings"] == list(c.flags))
+            ok = snap_ok and rt_ok
+            rows.append((fx.slug, f"snapshot={'=' if snap_ok else 'DIFF'} "
+                                  f"roundtrip={'ok' if rt_ok else 'FAIL'}", ok))
+        except Exception as exc:  # a fixture must never crash
+            rows.append((fx.slug, f"EXCEPTION {type(exc).__name__}: {exc}", False))
+    return rows
+
+
+def dignity_table_checks() -> list[tuple[str, bool]]:
+    from ..core.dignities import BOUNDS_EGYPTIAN, DECANS_CHALDEAN, DOMICILE
+    from collections import Counter
+    checks: list[tuple[str, bool]] = []
+    ok = all(b[-1][0] == 30 and
+             sorted(p for _, p in b) == sorted(["MERCURY", "VENUS", "MARS",
+                                                "JUPITER", "SATURN"])
+             for b in BOUNDS_EGYPTIAN)
+    checks.append(("egyptian bounds: 12 signs x sum 30 x five planets once", ok))
+    flat = [DECANS_CHALDEAN[i][j] for i in range(12) for j in range(3)]
+    checks.append(("decans: chaldean period-7, Aries I = Mars",
+                   flat[0] == "MARS" and all(a == b for a, b in zip(flat, flat[7:]))))
+    cnt = Counter(DOMICILE)
+    checks.append(("domiciles: luminaries 1 sign, planets 2 signs",
+                   cnt["SUN"] == 1 and cnt["MOON"] == 1 and
+                   all(cnt[p] == 2 for p in ("MERCURY", "VENUS", "MARS",
+                                             "JUPITER", "SATURN"))))
+    return checks
+
+
 def build_report(path: str | None = None) -> bool:
     eph = Ephemeris()
     jds = _jd_grid()
     pos = compare_positions(eph, jds)
     hou = compare_houses(eph, jds)
     ts = timespace_cases()
+    m1 = chart_layer_cases()
+    dig = dignity_table_checks()
 
     pos_ok = all(w["lon"] <= TOL_LON and w["lat"] <= TOL_LAT and w["speed"] <= TOL_SPEED
                  for w in pos.values())
     hou_ok = all(v <= TOL_CUSP for v in hou.values())
     ts_ok = all(r[3] for r in ts)
-    all_ok = pos_ok and hou_ok and ts_ok
+    m1_ok = all(r[2] for r in m1)
+    dig_ok = all(r[1] for r in dig)
+    all_ok = pos_ok and hou_ok and ts_ok and m1_ok and dig_ok
 
     lines: list[str] = []
     a = lines.append
@@ -180,6 +232,20 @@ def build_report(path: str | None = None) -> bool:
     a("|---|---|---|---|")
     for desc, got, exp, ok in ts:
         a(f"| {desc} | {got} | {exp} | {'Y' if ok else 'FAIL'} |")
+    a("")
+    a("## M1 chart layer: golden fixtures (snapshot + round-trip)")
+    a("")
+    a("| fixture | status | ok |")
+    a("|---|---|---|")
+    for slug, status, ok in m1:
+        a(f"| {slug} | {status} | {'Y' if ok else 'FAIL'} |")
+    a("")
+    a("## Classical table structure")
+    a("")
+    a("| check | ok |")
+    a("|---|---|")
+    for desc, ok in dig:
+        a(f"| {desc} | {'Y' if ok else 'FAIL'} |")
     a("")
 
     out = path or str(config.REPO_ROOT / "verification_report.md")

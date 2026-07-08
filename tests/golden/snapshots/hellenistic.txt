@@ -1,0 +1,117 @@
+== ASTROTEXT NATAL v0 ==
+subject=Hellenistic profile (whole sign, seven)
+local=1988-06-15 14:30:00 calendar=gregorian
+place=Beijing (39.9042N 116.4074E) tz=Asia/Shanghai
+utc=1988-06-15 05:30:00 offset=+09:00:00
+jd-ut=2447327.72916837 delta-t=+56.04s
+set:zodiac=tropical
+set:houses=W(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,TRUE_NODE,SOUTH_NODE_TRUE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10
+set:node=true
+set:unknown-time=false
+set:star-orb=1 antiscia-orb=1
+houses-used=W
+sect=day sun-altitude=+67.05
+obliquity=23.443078
+warning=(none)
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 24Gem19'59" | H9 | 84.332984 | +0.000090 | +0.955436 | +23.3218 | -
+MOON | 04Can20'58" | H10 | 94.349481 | +4.802894 | +12.707380 | +28.1717 | OOB
+MERCURY | 21Gem12'47" | H9 | 81.213105 | -3.763087 | -0.539107 | +19.3967 | R
+VENUS | 20Gem48'52" | H9 | 80.814451 | -1.356287 | -0.616042 | +21.7718 | R
+MARS | 14Pis45'02" | H6 | 344.750638 | -2.988259 | +0.588470 | -8.7617 | -
+JUPITER | 22Tau43'07" | H8 | 52.718675 | -0.901614 | +0.219340 | +17.5821 | -
+SATURN | 29Sag38'09" | H3 | 269.635770 | +1.145687 | -0.073405 | -22.2969 | R
+TRUE_NODE | 17Pis52'02" | H6 | 347.867168 | +0.000000 | -0.206286 | -4.7965 | R
+SOUTH_NODE_TRUE | 17Vir52'02" | H12 | 167.867168 | -0.000000 | -0.206286 | +4.7965 | R
+
+-- ANGLES --
+ASC | 10Lib05'41" | 190.094604
+MC | 11Can36'53" | 101.614796
+DSC | 10Ari05'41" | 10.094604
+IC | 11Cap36'53" | 281.614796
+VERTEX | 27Ari31'26" | 27.523821
+ARMC | 12Can37'39" | 102.627595
+
+-- HOUSES (W) --
+H1 | 00Lib00'00" | 180.000000
+H2 | 00Sco00'00" | 210.000000
+H3 | 00Sag00'00" | 240.000000
+H4 | 00Cap00'00" | 270.000000
+H5 | 00Aqu00'00" | 300.000000
+H6 | 00Pis00'00" | 330.000000
+H7 | 00Ari00'00" | 0.000000
+H8 | 00Tau00'00" | 30.000000
+H9 | 00Gem00'00" | 60.000000
+H10 | 00Can00'00" | 90.000000
+H11 | 00Leo00'00" | 120.000000
+H12 | 00Vir00'00" | 150.000000
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | con 0 | MERCURY | +3.120 | S
+SUN | con 0 | VENUS | +3.519 | S
+SUN | opp 180 | SATURN | -5.303 | A
+SUN | squ 90 | TRUE_NODE | +6.466 | S
+SUN | squ 90 | SOUTH_NODE_TRUE | -6.466 | S
+MOON | opp 180 | SATURN | -4.714 | S
+MERCURY | con 0 | VENUS | +0.399 | S
+MERCURY | squ 90 | MARS | +6.462 | A
+MERCURY | squ 90 | TRUE_NODE | +3.346 | A
+MERCURY | squ 90 | SOUTH_NODE_TRUE | -3.346 | A
+VENUS | squ 90 | MARS | +6.064 | A
+VENUS | squ 90 | TRUE_NODE | +2.947 | A
+VENUS | squ 90 | SOUTH_NODE_TRUE | -2.947 | A
+MARS | con 0 | TRUE_NODE | +3.117 | A
+MARS | opp 180 | SOUTH_NODE_TRUE | -3.117 | A
+JUPITER | sex 60 | TRUE_NODE | +4.852 | S
+JUPITER | tri 120 | SOUTH_NODE_TRUE | -4.852 | S
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | +0.000 | E
+ASC | squ 90 | MC | -1.520 | -
+
+-- DIGNITIES (classical seven, day chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | decan | +1 | MERCURY/-/(SATURN,MERCURY,JUPITER)/SATURN/SUN
+MOON | domicile,triplicity | +8 | MOON/JUPITER/(VENUS,MARS,MOON)/MARS/VENUS
+MERCURY | domicile | +5 | MERCURY/-/(SATURN,MERCURY,JUPITER)/MARS/SUN
+VENUS | peregrine | +0 | MERCURY/-/(SATURN,MERCURY,JUPITER)/MARS/SUN
+MARS | peregrine | +0 | JUPITER/VENUS/(VENUS,MARS,MOON)/JUPITER/JUPITER
+JUPITER | peregrine | +0 | VENUS/MOON/(VENUS,MOON,MARS)/SATURN/SATURN
+SATURN | triplicity,decan | +4 | JUPITER/-/(SUN,JUPITER,SATURN)/MARS/SATURN
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+MOON <-> JUPITER | exaltation
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > MERCURY (final)
+MOON | MOON (final)
+MERCURY | MERCURY (final)
+VENUS | VENUS > MERCURY (final)
+MARS | MARS > JUPITER > VENUS > MERCURY (final)
+JUPITER | JUPITER > VENUS > MERCURY (final)
+SATURN | SATURN > JUPITER > VENUS > MERCURY (final)
+
+-- LOTS --
+FORTUNE | 20Lib06'40" | 200.111101 | H1
+SPIRIT | 00Lib04'41" | 180.078107 | H1
+
+-- MOON --
+phase=New | waxing=yes | elongation=10.016 | illumination=0.008
+
+-- ANTISCIA (orb 1) --
+(none)
+
+-- FIXED STARS (conjunctions, orb 1) --
+Capella | 21Gem41'29" | conj MERCURY | +0.478
+Capella | 21Gem41'29" | conj VENUS | +0.877
+Achernar | 15Pis09'00" | conj MARS | +0.399
+
+-- PLANETARY HOUR --
+day=MERCURY(Wednesday) | hour=MERCURY (no.8, day)
+
+== END ==
