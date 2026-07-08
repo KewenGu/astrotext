@@ -1,6 +1,26 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: PLANNED (K0 not started).  Owner doc for the V2 kernel swap.
+Status: K0 GO (2026-07-08) · K1 DONE (2026-07-08) · K2 in progress.
+Owner doc for the V2 kernel swap.
+
+K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
+identical TT): Sun ≤0.0020″, Mars ≤0.0014″ lon; lat ≤0.005″ (bounds the
+SE-Vondrák-vs-IAU2006 frame gap); Moon ≤0.0025″ near J2000 growing to
+0.030″ at the span edges — the secular DE431(SE data)→DE440 lunar
+divergence, not pipeline error (profile in the session log; ≪1″ display).
+Perf: 15.6 µs/body-instant amortized (13 bodies, vectorized grid; budget
+≤50 µs).  → GO.
+
+K1 measured (tools/verify_kernel.py, 20 000 random dates): ΔT parity
+≤0.25 ms span-wide / ≤0.16 ms in the 1900-2050 fixture band (accept 50 /
+10 ms); utc_to_jd ≤0.21 ms (accept 10 ms).  Implementation notes vs the
+plan below: ΔT ships as a dense black-box parity grid of SE 2.10.03
+(data/kernel/se_deltat_parity.csv; §11 sanctions black-box outputs)
+because the SMH2016 spline supplementary data is unreachable
+(UKHO WAF-blocked, RSPA paywalled); measured SE behaviours replicated:
+per-year linear ΔT with ~1 ms Jan-1 sawtooth pre-1955, SWIEPH-vs-JPLEPH
+tidal flavours (utc_to_jd uses the latter), and the 2033 fallback where
+the frozen leap table yields to UT1 interpretation.
 Read with PLAN.md §V2 (milestones, in Chinese) and TECHNIQUES.md (which
 stays kernel-agnostic).  Rule inherited from the house style: every
 convention states its source; no hidden defaults; clean-room only.

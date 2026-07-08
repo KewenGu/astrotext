@@ -8,3 +8,8 @@ dossier/
 build/
 dist/
 vendor/lib/
+data/kernel/*.bsp
+data/kernel/fetch.log
+vendor/sdists/
+_to_delete/
+dossiers/
