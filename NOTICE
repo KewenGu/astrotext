@@ -1,0 +1,23 @@
+AstroText — plain-text astrology chart engine for AI agents
+Copyright (C) 2026 Kewen Gu
+
+This project is licensed under the GNU Affero General Public License v3.0
+(see LICENSE). It builds upon and distributes components of:
+
+  Swiss Ephemeris — Copyright (C) Astrodienst AG, Switzerland
+    https://www.astro.com/swisseph/  (AGPL-3.0, or commercial license from
+    Astrodienst). The ephemeris data files under data/ephe/ (sepl_18.se1,
+    semo_18.se1, seas_18.se1, sefstars.txt) originate from
+    https://github.com/aloistr/swisseph and are redistributed under AGPL-3.0.
+
+  pyswisseph — Copyright (C) Stanislas Marquis
+    https://github.com/astrorigin/pyswisseph  (AGPL-3.0). Built from source
+    at install time by tools/vendor.sh (pinned commits in vendor/PINS.txt);
+    its sources are not committed to this repository.
+
+  pytest / pluggy / iniconfig — MIT licensed; pure-Python sources vendored
+    under vendor/py/ for use in network-restricted environments.
+
+Commercial use note: distributing this software as part of a closed-source
+or commercial product requires either AGPL compliance or a Swiss Ephemeris
+professional license from Astrodienst.

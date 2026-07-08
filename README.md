@@ -14,7 +14,9 @@
 
 [Swiss Ephemeris](https://www.astro.com/swisseph/) via `pyswisseph`, both **built from source** (this project runs in network-restricted environments; see `vendor/`). The same engine and data files power astro.com, so agreement with astro.com is a design target, not a coincidence.
 
-> **License note:** Swiss Ephemeris is AGPL (or commercial license from Astrodienst). This repository is for private use; commercial distribution would require an Astrodienst license or an engine swap (the `ephem` layer isolates it).
+> **License:** AGPL-3.0 (see LICENSE and NOTICE) — inherited from Swiss Ephemeris.
+> Commercial closed-source distribution would require an Astrodienst license or an
+> engine swap (the `ephem` layer isolates it).
 
 ## Layout
 
