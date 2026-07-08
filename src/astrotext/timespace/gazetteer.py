@@ -8,13 +8,18 @@ Columns: name, asciiname, alternatenames('|'-separated), lat, lon,
 country_code, country_name, admin1, population, timezone.
 
 Matching (deterministic, no fuzzy magic):
-  1. case-insensitive exact match on name / asciiname (eager index);
-  2. on miss, case-insensitive exact match on alternate names (lazy index —
+  1. curated zh-exonym supplement (纽约/罗马/河内... — checked first, see
+     zh_exonyms.py for why it must precede the alternate index);
+  2. case-insensitive exact match on name / asciiname (eager index);
+  3. on miss, case-insensitive exact match on alternate names (lazy index —
      this is where 北京 / 上海 / नई दिल्ली resolve);
-  3. ranking: population descending; a runner-up with >= 1/10 of the top
+  4. CJK admin-suffix normalization: GeoNames often stores 江阴市 while
+     users type 江阴 — on a CJK miss we retry with 市/县/区/镇 appended
+     (and stripped, for the reverse case), in that fixed order;
+  5. ranking: population descending; a runner-up with >= 1/10 of the top
      population triggers an ambiguity flag listing the top candidates
      (pass country='CN' etc. to disambiguate).
-Misses raise with a clear instruction to pass lat/lon/tz directly.
+Misses raise with guidance (pinyin/English names also work: 'Jiangyin').
 """
 from __future__ import annotations
 
@@ -130,6 +135,13 @@ def _load() -> _Gazetteer:
     return _Gazetteer(data_path())
 
 
+_CJK_SUFFIXES = ("市", "县", "区", "镇")
+
+
+def _has_cjk(s: str) -> bool:
+    return any("\u4e00" <= ch <= "\u9fff" for ch in s)
+
+
 def lookup(query: str, country: str | None = None, limit: int = 5
            ) -> list[GazetteerHit]:
     """Ranked matches (population desc). ``country`` is an ISO-2 code or
@@ -151,22 +163,39 @@ def lookup(query: str, country: str | None = None, limit: int = 5
         stages = gz.find_staged(query)
         label = None
 
-    for idxs, how in stages:
-        hits = []
-        for i in idxs:
-            n, a, _alts, lat, lon, code, ctry, adm1, pop, tz = gz.rows[i]
-            if country and country.lower() not in (code.lower(), ctry.lower()):
-                continue
-            if label:
-                matched = label
-            elif how == "name" and n.lower() != query.strip().lower():
-                matched = "ascii"
-            else:
-                matched = how
-            hits.append(GazetteerHit(n, a, lat, lon, tz, ctry, adm1, pop, matched))
+    def collect(stage_list, matched_label: str | None, q: str) -> list[GazetteerHit]:
+        for idxs, how in stage_list:
+            hits = []
+            for i in idxs:
+                n, a, _alts, lat, lon, code, ctry, adm1, pop, tz = gz.rows[i]
+                if country and country.lower() not in (code.lower(), ctry.lower()):
+                    continue
+                if matched_label:
+                    matched = matched_label
+                elif how == "name" and n.lower() != q.strip().lower():
+                    matched = "ascii"
+                else:
+                    matched = how
+                hits.append(GazetteerHit(n, a, lat, lon, tz, ctry, adm1, pop, matched))
+            if hits:
+                hits.sort(key=lambda h: (-h.population, h.country, h.name))
+                return hits[:limit]
+        return []
+
+    hits = collect(stages, label, query)
+    if hits or not _has_cjk(query):
+        return hits
+
+    # CJK admin-suffix normalization: try 江阴 -> 江阴市/县/区/镇, and the
+    # stripped form for suffixed input whose row only carries the bare name.
+    q = query.strip()
+    variants = [(q + suf, f"alternate(zh-suffix:+{suf})") for suf in _CJK_SUFFIXES]
+    if len(q) > 2 and q.endswith(_CJK_SUFFIXES):
+        variants.append((q[:-1], f"alternate(zh-suffix:-{q[-1]})"))
+    for vq, vlabel in variants:
+        hits = collect(gz.find_staged(vq), vlabel, vq)
         if hits:
-            hits.sort(key=lambda h: (-h.population, h.country, h.name))
-            return hits[:limit]
+            return hits
     return []
 
 
@@ -180,7 +209,8 @@ def resolve_place(query: str, country: str | None = None
         raise PlaceNotFound(
             f"no gazetteer entry for {query!r}"
             + (f" in {country}" if country else "")
-            + "; check spelling, add country=, or pass lat/lon/tz directly")
+            + "; check spelling, add country=, try the pinyin/English name "
+              "(e.g. 'Jiangyin'), or pass lat/lon/tz directly")
     top = hits[0]
     flags: list[str] = [f"place-resolved:{query!r} -> {top.label()} "
                         f"({top.lat:.4f},{top.lon:.4f} tz={top.tz} "

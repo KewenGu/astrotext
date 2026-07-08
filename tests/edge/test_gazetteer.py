@@ -90,3 +90,26 @@ def test_resolved_place_is_chartable():
     c = compute_chart(m)
     assert len(c.points) > 0
     assert any(f.startswith("place-resolved") for f in flags)
+
+
+def test_cjk_admin_suffix_normalization():
+    """GeoNames stores 江阴市; users type 江阴. Regression for the
+    county-level-city miss (Jiangyin, pop 1.78M)."""
+    h = lookup("江阴")[0]
+    assert h.name == "Jiangyin" and h.admin1 == "Jiangsu"
+    assert h.tz == "Asia/Shanghai"
+    assert "zh-suffix:+市" in h.matched_on
+    # suffixed input still resolves (directly, no normalization needed)
+    h2 = lookup("江阴市")[0]
+    assert h2.name == "Jiangyin"
+    # a sweep of county-level cities users actually type
+    for q, name in [("昆山", "Kunshan"), ("义乌", "Yiwu"), ("慈溪", "Cixi"),
+                    ("浦东", "Pudong"), ("石家庄", "Shijiazhuang")]:
+        assert lookup(q)[0].name == name, q
+
+
+def test_suffix_normalization_only_for_cjk():
+    """Latin misses must NOT get suffix retries (or spurious matches)."""
+    with pytest.raises(PlaceNotFound):
+        resolve_place("Xyzzy Nonexistent Town 12345")
+    assert lookup("Xyzzy Nonexistent") == []
