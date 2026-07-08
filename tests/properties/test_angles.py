@@ -62,3 +62,28 @@ def test_zodiac_helpers():
         s = sign_index(lon)
         assert 0 <= s <= 11
         assert abs(30 * s + deg_in_sign(lon) - norm360(lon)) < 1e-9
+
+
+def test_canonical_signed_zero_formatting():
+    """Cross-compiler ulp differences flip the sign of ~zero values (the
+    node-node opposition orb); the text view must render ONE canonical
+    form. Regression for the macOS -0.000/+0.000 snapshot mismatch."""
+    from astrotext.render.text import sf
+    for tiny in (0.0, -0.0, 1e-16, -1e-16, 4.9e-4, -4.9e-4):
+        assert sf(tiny, 3) == "+0.000", tiny
+    assert sf(-5.1e-4, 3) == "-0.001"
+    assert sf(-0.0005001, 3) == "-0.001"
+    assert sf(0.0006, 3) == "+0.001"
+    assert sf(-1e-18, 6) == "+0.000000"
+    # legitimately nonzero values keep their sign at display precision
+    assert sf(-0.000557, 6) == "-0.000557"
+
+
+def test_no_negative_zero_in_snapshots():
+    import re
+    from pathlib import Path
+    snap_dir = Path(__file__).parents[1] / "golden" / "snapshots"
+    bad = re.compile(r"-0\.0+(?:\s|\||$)")  # -0.000 style fields
+    offenders = [p.name for p in snap_dir.glob("*.txt")
+                 if bad.search(p.read_text(encoding="utf-8"))]
+    assert not offenders, offenders

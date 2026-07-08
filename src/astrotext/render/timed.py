@@ -9,7 +9,7 @@ import swisseph as swe
 
 from ..techniques.progressions import ProgressedReport, SolarArcReport
 from ..techniques.transits import TransitReport
-from .text import FORMAT_VERSION, dms
+from .text import FORMAT_VERSION, dms, sf
 
 __all__ = ["render_transits", "render_progressed", "render_solar_arc", "jd_to_iso"]
 
@@ -71,7 +71,7 @@ def render_transits(rep: TransitReport, subject: str | None = None) -> str:
         sky_h = f"H{p.house}" if p.house else "-"
         nat_h = f"H{nh}" if nh else "-"
         L.append(f"t.{k} | {dms(p.lon)} | {nat_h} | {sky_h} | {p.lon:.6f} | "
-                 f"{p.lon_speed:+.6f} | {tags}")
+                 f"{sf(p.lon_speed, 6)} | {tags}")
 
     L.append("")
     L.append("-- TRANSIT->NATAL ASPECTS --")
@@ -80,7 +80,7 @@ def render_transits(rep: TransitReport, subject: str | None = None) -> str:
         for h in rep.hits:
             exacts = "; ".join(jd_to_iso(j) for j in h.exact_jds) or "(none in window)"
             L.append(f"t.{h.t_point} | {h.aspect.abbr} {h.aspect.angle:g} | "
-                     f"n.{h.n_point} | {h.orb_signed:+.3f} | {h.phase} | {exacts}")
+                     f"n.{h.n_point} | {sf(h.orb_signed, 3)} | {h.phase} | {exacts}")
     else:
         L.append("(none)")
 
@@ -185,7 +185,7 @@ def render_progressed(rep: ProgressedReport, subject: str | None = None) -> str:
         nh = rep.natal_wheel_houses.get(k)
         tags = "R" if p.retrograde else "-"
         L.append(f"p.{k} | {dms(p.lon)} | {'H%d' % nh if nh else '-'} | "
-                 f"{p.lon:.6f} | {p.lon_speed:+.6f} | {tags}")
+                 f"{p.lon:.6f} | {sf(p.lon_speed, 6)} | {tags}")
 
     if rep.angles_sa is not None:
         L.append("")
@@ -204,7 +204,7 @@ def render_progressed(rep: ProgressedReport, subject: str | None = None) -> str:
     if rep.hits:
         for h in rep.hits:
             L.append(f"{h.p1} | {h.aspect.abbr} {h.aspect.angle:g} | n.{h.p2} | "
-                     f"{h.orb_signed:+.3f} | {h.phase}")
+                     f"{sf(h.orb_signed, 3)} | {h.phase}")
     else:
         L.append("(none)")
     L.append("")
@@ -231,7 +231,7 @@ def render_solar_arc(rep: SolarArcReport, subject: str | None = None) -> str:
     if rep.hits:
         for h in rep.hits:
             L.append(f"{h.p1} | {h.aspect.abbr} {h.aspect.angle:g} | n.{h.p2} | "
-                     f"{h.orb_signed:+.3f} | -")
+                     f"{sf(h.orb_signed, 3)} | -")
     else:
         L.append("(none)")
     L.append("")

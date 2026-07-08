@@ -38,6 +38,15 @@ data: an interpreting agent must surface them (e.g. ambiguous birth times).
 * Phases: `A` applying, `S` separating, `E` exact (<1'), `-` not defined
   (angles have no speed).
 * Tags column: `R` retrograde, `OOB` out-of-bounds declination, `-` none.
+* **Canonical zero**: signed fields that round to zero at display precision
+  always render `+0.000` (never `-0.000`).  Rationale: compilers/libms
+  differ in the last ulp (the node-node opposition orb is 180 deg +- 1ulp),
+  and IEEE-754 keeps the sign of -0.0 through rounding — without
+  canonicalization the same chart renders differently on Linux vs macOS.
+* Platform stability: the TEXT view is stable across platforms at display
+  precision (values live far from rounding boundaries except the
+  canonicalized zeros); the JSON view carries full-precision doubles and
+  is therefore stable per build, not across compilers.
 
 ## Sections (NATAL)
 

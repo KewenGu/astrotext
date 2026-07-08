@@ -6,7 +6,7 @@ from ..techniques.vedic.nakshatra import Nakshatra
 from ..techniques.vedic.sidereal import GRAHA_ORDER, VedicChart
 from ..techniques.vedic.vargas import VARGA_NAMES, vargottama
 from ..techniques.vedic.vimshottari import DASHA_YEARS, DashaPeriod
-from .text import FORMAT_VERSION
+from .text import FORMAT_VERSION, sf
 from .timed import jd_to_iso
 
 __all__ = ["render_vedic_rashi", "render_vargas", "render_vimshottari"]
@@ -54,7 +54,7 @@ def render_vedic_rashi(vc: VedicChart, subject: str | None = None) -> str:
             "R(always)" if k in ("RAHU", "KETU") else "-")
         house = f"H{g.house}" if g.house else "-"
         L.append(f"{k} | {_sid_dms(g.lon)} | {house} | {_nak_label(g.nak)} | "
-                 f"{g.nak.lord} | {g.lon:.6f} | {g.lon_speed:+.6f} | {tags}")
+                 f"{g.nak.lord} | {g.lon:.6f} | {sf(g.lon_speed, 6)} | {tags}")
 
     if vc.lagna is not None:
         L.append("")

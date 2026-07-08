@@ -21,9 +21,20 @@ from ..core.stars import StarHit
 from ..core.zodiac import SIGNS_ABBR
 from ..ephem.points import REGISTRY
 
-__all__ = ["dms", "render_chart"]
+__all__ = ["dms", "sf", "render_chart"]
 
 FORMAT_VERSION = "v0"
+
+
+def sf(x: float, nd: int) -> str:
+    """Signed fixed-point with CANONICAL ZERO.
+
+    Cross-compiler float differences flip the sign of +-1ulp values (the
+    node-node opposition orb is exactly 180 deg +- 1ulp), and IEEE keeps
+    -0.0 through rounding — so Linux rendered '-0.000' where macOS
+    rendered '+0.000'. Adding +0.0 after rounding folds -0.0 to +0.0,
+    making the text view platform-stable at display precision."""
+    return f"{round(x, nd) + 0.0:+.{nd}f}"
 
 
 def dms(lon: float) -> str:
@@ -87,8 +98,8 @@ def render_chart(chart: Chart, subject: str | None = None,
         tags = tags.strip(",") or "-"
         house = f"H{pt.house}" if pt.house else "-"
         L.append(
-            f"{k} | {dms(pt.lon)} | {house} | {pt.lon:.6f} | {pt.lat:+.6f} | "
-            f"{pt.lon_speed:+.6f} | {pt.dec:+.4f} | {tags}"
+            f"{k} | {dms(pt.lon)} | {house} | {pt.lon:.6f} | {sf(pt.lat, 6)} | "
+            f"{sf(pt.lon_speed, 6)} | {sf(pt.dec, 4)} | {tags}"
         )
 
     # ---- angles & houses ------------------------------------------------------
@@ -110,7 +121,7 @@ def render_chart(chart: Chart, subject: str | None = None,
     if chart.aspects:
         for h in chart.aspects:
             L.append(f"{h.p1} | {h.aspect.abbr} {h.aspect.angle:g} | {h.p2} | "
-                     f"{h.orb_signed:+.3f} | {h.phase}")
+                     f"{sf(h.orb_signed, 3)} | {h.phase}")
     else:
         L.append("(none)")
 
@@ -174,7 +185,7 @@ def render_chart(chart: Chart, subject: str | None = None,
     L.append(f"-- ANTISCIA (orb {chart.settings.antiscia_orb:g}) --")
     if chart.antiscia:
         for p1, kind, p2, delta in chart.antiscia:
-            L.append(f"{p1} | {kind} | {p2} | {delta:+.3f}")
+            L.append(f"{p1} | {kind} | {p2} | {sf(delta, 3)}")
     else:
         L.append("(none)")
 
@@ -184,7 +195,7 @@ def render_chart(chart: Chart, subject: str | None = None,
         L.append(f"-- FIXED STARS (conjunctions, orb {chart.settings.fixed_star_orb:g}) --")
         if stars:
             for h in stars:
-                L.append(f"{h.star} | {dms(h.star_lon)} | conj {h.target} | {h.delta:+.3f}")
+                L.append(f"{h.star} | {dms(h.star_lon)} | conj {h.target} | {sf(h.delta, 3)}")
         else:
             L.append("(none)")
 
