@@ -106,6 +106,26 @@ dossier/<person>/
 每个里程碑：跑 `make verify` 看全绿 + 读 verification_report.md + 我把样例档案（可用你提供的真实出生数据）发给你试读；M4 你在 astro.com 做最终抽查签收；M5 印度层用同一套流程（参照源换 Jyotish 权威软件/表）。
 
 
+
+## V2 计划 — 换核:Swiss Ephemeris → DE440 + ERFA(详见 docs/KERNEL.md)
+
+**动机**:做 AI agent 的 provider,内核必须宽松许可。市面上不存在高精度 MIT/Apache 占星引擎(flatlib/kerykeion/immanuel 全是 SE 包装)——自有内核即护城河。SE 行星本质是 JPL DE 的 ~0.001″ 压缩,直读 DE440 + ERFA 归算,物理相同、精度不降。
+
+**决策**:生产内核 = jplephem(MIT) + pyerfa(BSD) + de440.bsp 节选(public domain, 1799–2400, ~40MB, 脚本拉取不入仓);Chiron 用 Horizons SPK;恒星用 Hipparcos。swetest 降级为 dev-only 参照并新增 Skyfield 第三方 → 验证升级为三方异源互证。SE 保留为可选 `backend="swiss"`(dev profile,AGPL 标注,不进发行物)。K8 整仓 AGPL→Apache-2.0。
+
+**红线**:格式 v1 契约、技法语义、公共 API/CLI/MCP/HTTP 全部不动;engine → 2.0.0。手写部分(分宫全套、ΔT、平均交点/Lilith、ayanamsa 常数)一律 clean-room:只用公开文献 + SE 手册(描述文档)+ 黑盒输出,不开 SE 源码。
+
+**里程碑**(每片自带验证 + push;验收细则、公差预算、风险表见 KERNEL.md):
+- K0 探针:de440+pyerfa 跑通 太阳/月亮/火星 视黄经 vs swetest(≤0.01″)+ 性能实测 → 定生死
+- K1 时间与坐标基建(ΔT 对齐 SE ≤0.01s@fixtures——ARMC 15″/s 是硬约束)
+- K2 行星管线(lon/lat/dist/speed/RA/dec 全网格 ≤0.01″)
+- K3 派生点(真/平交点、Lilith、Chiron)
+- K4 分宫(8 制式 + 四轴 + 极地语义,vs swetest ≤0.001″)
+- K5 恒星制(4 ayanamsa,vs swetest -sid ≤0.01″)
+- K6 恒星 + 行星时(日出日落 ±1s)
+- K7 切换验收:backend 开关、三方 verify、快照 diff 报告(预期 ≥95% 逐字节不变,余者末位 ±1″ 且逐条解释)、档案 ≤5s、2.0.0-rc
+- K8 许可切换:vendor 拆分、Apache-2.0、NOTICE/README、发布 2.0.0
+
 ---
 
 ## 进度记录（跨会话交接）
@@ -144,3 +164,7 @@ dossier/<person>/
 - 20+timed+vedic 黄金快照重生成(diff 仅第一行)、sample 档案重出;**323 测试全绿(6.6s)**、`make verify` PASS(engine 1.0.0)。全部在用户 Mac 本地环境执行(云端 GitHub 403,无法 vendor)。
 - 文档:FORMAT.md 定稿为 v1(normative; frozen)、API.md 稳定性契约更新、README Status 更新、新增 CHANGELOG.md(1.0.0)。
 - 待用户:git commit + push(建议单 commit:"Freeze text format at v1; engine 1.0.0")。注:_to_delete/ 目录为本会话产生的垃圾箱(stale index.lock、跑批脚本与日志),可整体删除。
+
+### Session 2(续)— 同日 · V2 换核计划定稿
+- 换核动机与路线定稿:**DE440 + jplephem + pyerfa 自有归算管线**,swetest 降级 dev-only 参照 + 新增 Skyfield 三方互证;SE 变可选 backend;K8 后整仓 Apache-2.0。完整 normative spec 落在 **docs/KERNEL.md**(管线、时间尺度、分宫 clean-room、公差预算、K0–K8、风险表),PLAN.md 本文件加 V2 总览章节。
+- **下一步:K0 探针**(用户 Mac 一次性 venv:jplephem+pyerfa+de440 节选,3 天体 × ~20 时刻 vs swetest,拿误差与 µs/call 实数)。
