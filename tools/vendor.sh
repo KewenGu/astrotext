@@ -19,8 +19,17 @@ INICONFIG_TAG=v2.1.0
 # ---- pyswisseph (C extension, built with system gcc) ------------------------
 if [ ! -d vendor/src/pyswisseph ]; then
   git clone --depth 1 "$PYSWISSEPH_REPO" vendor/src/pyswisseph
-  (cd vendor/src/pyswisseph && git submodule update --init --depth 1)
 fi
+# --recursive matters: swephelp nests a sqlite3 submodule. On systems
+# without libsqlite3-dev (typical macOS), setup.py falls back to compiling
+# swephelp/sqlite3/sqlite3.c — which only exists after a recursive init.
+# Runs outside the clone guard so it also heals checkouts made by older
+# versions of this script. If the recursive fetch fails (offline/proxied
+# environments), fall back to non-recursive: the build still succeeds
+# wherever pkg-config finds a system libsqlite3-dev.
+(cd vendor/src/pyswisseph && git submodule update --init --recursive --depth 1) \
+  || { echo "WARN: recursive submodule fetch failed; falling back (needs system libsqlite3-dev)"; \
+       (cd vendor/src/pyswisseph && git submodule update --init --depth 1) || true; }
 (cd vendor/src/pyswisseph && python3 setup.py -q build_ext --inplace)
 cp vendor/src/pyswisseph/swisseph.cpython-*.so vendor/lib/
 
