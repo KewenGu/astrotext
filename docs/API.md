@@ -162,14 +162,24 @@ transits, progressions x3, returns x2, firdaria, profections, vedic x3.
 ### CLI
 
 ```bash
-python -m astrotext dossier --name X --birth "1988-06-15 14:30" \
+./astrotext dossier --name X --birth "1988-06-15 14:30" \
     --birth-place 北京 --now "2026-07-08 12:00" --cur-place 纽约 \
     [--lat/--lon/--tz ...] [--format text|json|both] [--unknown-time]
-python -m astrotext verify     # regenerate verification_report.md
-python -m astrotext mcp        # stdio MCP server
+./astrotext verify     # regenerate verification_report.md
+./astrotext mcp        # stdio MCP server
+./astrotext http       # REST facade on 127.0.0.1:8747
 ```
 
-### MCP server  (`python -m astrotext mcp`)
+(`./astrotext` = repo-root launcher that sets PYTHONPATH/SE_EPHE_PATH;
+`python3 -m astrotext` works too if you export those yourself.)
+
+### MCP server  (`./astrotext mcp`)
+
+Client config is one line — the launcher carries the environment:
+
+```json
+{ "astrotext": { "command": "/path/to/astrotext-repo/astrotext", "args": ["mcp"] } }
+```
 
 Zero-dependency stdio JSON-RPC (MCP 2024-11-05).  Tools:
 

@@ -26,10 +26,17 @@ make vendor    # one-time: clone + build pyswisseph, swetest, ephemeris, pytest
 make test      # 321 tests
 make verify    # regenerate verification_report.md against reference sources
 
-python3 -m astrotext dossier \
+./astrotext dossier \
   --name "Sample" --birth "1988-06-15 14:30" --birth-place 北京 \
   --now "2026-07-08 12:00" --cur-place 纽约 --out ./dossiers
 ```
+
+`./astrotext` is a zero-install launcher that wires the vendored module
+paths (`src`, `vendor/py`, `vendor/lib`) and `SE_EPHE_PATH` before
+dispatching to the CLI — nothing is installed into your Python. If you
+prefer `python3 -m astrotext`, export those paths yourself. Note the C
+extension is built per Python version: run `./astrotext` with the same
+python (venv or not) that ran `make vendor`.
 
 That command resolves both place names offline (170k GeoNames places with
 Chinese aliases), applies the historical timezone database (including
@@ -53,9 +60,9 @@ these are thin shells over the same `build_dossier()`:
 | facade | entry | for |
 |---|---|---|
 | Python library | `astrotext.dossier.build_dossier(...)` | your own code |
-| CLI | `python3 -m astrotext dossier\|verify\|mcp\|http` | shell / cron |
-| MCP server (stdio) | `python3 -m astrotext mcp` | AI agents (3 tools) |
-| HTTP | `python3 -m astrotext http` → `POST /v0/chart` | services |
+| CLI | `./astrotext dossier\|verify\|mcp\|http` | shell / cron |
+| MCP server (stdio) | `./astrotext mcp` | AI agents (3 tools) |
+| HTTP | `./astrotext http` → `POST /v0/chart` | services |
 
 All number-changing knobs (house system, node type, orbs, ayanamsa, dasha
 depth, ...) are explicit settings — passable per request on REST/MCP,

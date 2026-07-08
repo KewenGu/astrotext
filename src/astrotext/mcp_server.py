@@ -5,8 +5,10 @@ transport: JSON-RPC 2.0, one JSON object per line on stdin/stdout
 (protocol revision 2024-11-05; also answers newer clients that send a
 different protocolVersion by echoing our supported one).
 
-Run:  python -m astrotext mcp
+Run:  ./astrotext mcp   (the repo-root launcher sets all paths)
 Client config (e.g. Claude Code / desktop):
+  { "command": "<repo>/astrotext", "args": ["mcp"] }
+or, without the launcher:
   { "command": "python3", "args": ["-m", "astrotext", "mcp"],
     "env": { "PYTHONPATH": "<repo>/src:<repo>/vendor/py:<repo>/vendor/lib",
              "SE_EPHE_PATH": "<repo>/data/ephe" } }

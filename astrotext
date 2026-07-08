@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+# astrotext launcher — zero-install: wires the vendored module paths and
+# ephemeris data, then dispatches to the CLI. Usage: ./astrotext --help
+set -euo pipefail
+ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+export PYTHONPATH="$ROOT/src:$ROOT/vendor/py:$ROOT/vendor/lib${PYTHONPATH:+:$PYTHONPATH}"
+export SE_EPHE_PATH="${SE_EPHE_PATH:-$ROOT/data/ephe}"
+
+if ! python3 -c "import swisseph" 2>/dev/null; then
+  {
+    echo "astrotext: compiled swisseph module not found for $(python3 -V 2>&1)."
+    echo "Run 'make vendor' first — and with the SAME python you are running"
+    echo "now: the C extension is built per Python version, so if you built"
+    echo "inside a venv, run ./astrotext with that venv active (or rebuild)."
+  } >&2
+  exit 1
+fi
+exec python3 -m astrotext "$@"
