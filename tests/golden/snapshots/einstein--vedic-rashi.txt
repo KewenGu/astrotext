@@ -1,0 +1,68 @@
+== ASTROTEXT VEDIC-RASHI v0 ==
+subject=Albert Einstein
+local=1879-03-14 11:30:00 calendar=gregorian
+place=Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57
+utc=1879-03-14 10:50:03 jd-ut=2407422.95142361
+ayanamsa-value=22.170106
+set:ayanamsa=lahiri
+set:node=mean(Ketu=Rahu+180)
+set:houses=whole-sign-from-Lagna
+set:karakas=8-scheme
+set:dasha-year=365.25d
+set:vargas=D1,D2,D3,D4,D7,D9,D10,D12,D16,D20,D24,D27,D30,D40,D45,D60
+warning=lmt-used:+00:39:57(lon +9.9876)
+
+-- GRAHAS (sidereal) --
+# graha | position | house | nakshatra-pada | nak-lord | lon | speed | tags
+SUN | 01Pis20'01" | H10 | Purva Bhadrapada-4 | JUPITER | 331.333541 | +0.995893 | -
+MOON | 22Sco21'08" | H6 | Jyeshtha-2 | MERCURY | 232.352154 | +13.918820 | -
+MARS | 04Cap44'24" | H8 | Uttara Ashadha-3 | SUN | 274.740007 | +0.728588 | -
+MERCURY | 10Pis58'11" | H10 | Uttara Bhadrapada-3 | SATURN | 340.969712 | +1.951823 | -
+JUPITER | 05Aqu18'36" | H9 | Dhanishta-4 | MARS | 305.309868 | +0.227305 | -
+VENUS | 24Pis48'39" | H10 | Revati-3 | MERCURY | 354.810812 | +1.231765 | -
+SATURN | 12Pis00'56" | H10 | Uttara Bhadrapada-3 | SATURN | 342.015592 | +0.123513 | -
+RAHU | 09Cap18'22" | H8 | Uttara Ashadha-4 | SUN | 279.306121 | -0.052992 | R(always)
+KETU | 09Can18'22" | H2 | Pushya-2 | SATURN | 99.306121 | -0.052992 | R(always)
+
+-- LAGNA & BHAVAS (whole sign) --
+LAGNA | 19Gem28'24" | 79.473265 | Ardra-4 | RAHU
+H1 | Gem | -
+H2 | Can | KETU
+H3 | Leo | -
+H4 | Vir | -
+H5 | Lib | -
+H6 | Sco | MOON
+H7 | Sag | -
+H8 | Cap | MARS,RAHU
+H9 | Aqu | JUPITER
+H10 | Pis | SUN,MERCURY,VENUS,SATURN
+H11 | Ari | -
+H12 | Tau | -
+
+-- PANCHANGA --
+tithi=Krishna Saptami (no.22, 75.2% elapsed) | paksha=Krishna
+karana=Bava (no.44) | yoga=Siddhi (no.16)
+moon-nakshatra=Jyeshtha-2 | lord=MERCURY
+
+-- CHARA KARAKAS (8-scheme) --
+# karaka | graha | advancement-deg (Rahu reversed)
+AK | VENUS | 24.8108
+AmK | MOON | 22.3522
+BK | RAHU | 20.6939
+MK | SATURN | 12.0156
+PiK | MERCURY | 10.9697
+PuK | JUPITER | 5.3099
+GK | MARS | 4.7400
+DK | SUN | 1.3335
+
+-- GRAHA DRISHTI (whole-sign; 7th all, Mars 4/8, Jup 5/9, Sat 3/10) --
+# graha | aspected-signs | grahas-in-them
+SUN | Vir | -
+MOON | Tau | -
+MARS | Ari,Can,Leo | KETU
+MERCURY | Vir | -
+JUPITER | Gem,Leo,Lib | -
+VENUS | Vir | -
+SATURN | Tau,Vir,Sag | -
+
+== END ==

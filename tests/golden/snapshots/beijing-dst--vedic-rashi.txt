@@ -1,0 +1,68 @@
+== ASTROTEXT VEDIC-RASHI v0 ==
+subject=Beijing DST-era summer birth
+local=1988-06-15 14:30:00 calendar=gregorian
+place=Beijing (39.9042N 116.4074E) tz=Asia/Shanghai
+utc=1988-06-15 05:30:00 jd-ut=2447327.72916837
+ayanamsa-value=23.695808
+set:ayanamsa=lahiri
+set:node=mean(Ketu=Rahu+180)
+set:houses=whole-sign-from-Lagna
+set:karakas=8-scheme
+set:dasha-year=365.25d
+set:vargas=D1,D2,D3,D4,D7,D9,D10,D12,D16,D20,D24,D27,D30,D40,D45,D60
+warning=(none)
+
+-- GRAHAS (sidereal) --
+# graha | position | house | nakshatra-pada | nak-lord | lon | speed | tags
+SUN | 00Gem38'11" | H10 | Mrigashira-3 | MARS | 60.636269 | +0.955354 | -
+MOON | 10Gem39'10" | H10 | Ardra-2 | RAHU | 70.652765 | +12.707297 | -
+MARS | 21Aqu03'14" | H6 | Purva Bhadrapada-1 | JUPITER | 321.053922 | +0.588388 | -
+MERCURY | 27Tau30'59" | H9 | Mrigashira-2 | MARS | 57.516389 | -0.539190 | R
+JUPITER | 29Ari01'19" | H8 | Krittika-1 | SUN | 29.021960 | +0.219257 | -
+VENUS | 27Tau07'04" | H9 | Mrigashira-2 | MARS | 57.117735 | -0.616125 | R
+SATURN | 05Sag56'21" | H4 | Mula-2 | KETU | 245.939054 | -0.073488 | R
+RAHU | 24Aqu40'09" | H6 | Purva Bhadrapada-2 | JUPITER | 324.669114 | -0.052992 | R(always)
+KETU | 24Leo40'09" | H12 | Purva Phalguni-4 | VENUS | 144.669114 | -0.052992 | R(always)
+
+-- LAGNA & BHAVAS (whole sign) --
+LAGNA | 16Vir23'52" | 166.397888 | Hasta-2 | MOON
+H1 | Vir | -
+H2 | Lib | -
+H3 | Sco | -
+H4 | Sag | SATURN
+H5 | Cap | -
+H6 | Aqu | MARS,RAHU
+H7 | Pis | -
+H8 | Ari | JUPITER
+H9 | Tau | MERCURY,VENUS
+H10 | Gem | SUN,MOON
+H11 | Can | -
+H12 | Leo | KETU
+
+-- PANCHANGA --
+tithi=Shukla Pratipada (no.1, 83.5% elapsed) | paksha=Shukla
+karana=Bava (no.2) | yoga=Ganda (no.10)
+moon-nakshatra=Ardra-2 | lord=RAHU
+
+-- CHARA KARAKAS (8-scheme) --
+# karaka | graha | advancement-deg (Rahu reversed)
+AK | JUPITER | 29.0220
+AmK | MERCURY | 27.5164
+BK | VENUS | 27.1177
+MK | MARS | 21.0539
+PiK | MOON | 10.6528
+PuK | SATURN | 5.9391
+GK | RAHU | 5.3309
+DK | SUN | 0.6363
+
+-- GRAHA DRISHTI (whole-sign; 7th all, Mars 4/8, Jup 5/9, Sat 3/10) --
+# graha | aspected-signs | grahas-in-them
+SUN | Sag | SATURN
+MOON | Sag | SATURN
+MARS | Tau,Leo,Vir | MERCURY,VENUS,KETU
+MERCURY | Sco | -
+JUPITER | Leo,Lib,Sag | SATURN,KETU
+VENUS | Sco | -
+SATURN | Gem,Vir,Aqu | SUN,MOON,MARS,RAHU
+
+== END ==

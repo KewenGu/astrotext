@@ -197,6 +197,57 @@ def timed_layer_cases() -> list[tuple[str, str, bool]]:
     return rows
 
 
+def vedic_layer_cases() -> list[tuple[str, str, bool]]:
+    """M5: sidereal vs swetest -sid1, plus structural invariants."""
+    import random
+    import subprocess
+
+    from ..core.angles import angdiff
+    from ..ephem.engine import Ephemeris
+    from ..techniques.vedic import DASHA_YEARS, varga_sign, vargottama
+
+    rows: list[tuple[str, str, bool]] = []
+    eph = Ephemeris()
+    eph.configure_sidereal("lahiri")
+    rng = random.Random(SEED)
+    worst = 0.0
+    import swisseph as swe
+    jds = [2451545.0] + [rng.uniform(swe.julday(1850, 1, 5, 0),
+                                     swe.julday(2200, 12, 25, 0))
+                         for _ in range(10)]
+    import re
+    num = re.compile(r"^(\w[\w ]*?)\s+(-?\d+\.\d+)")
+    names = {"Sun": "SUN", "Moon": "MOON", "Mercury": "MERCURY",
+             "Venus": "VENUS", "Mars": "MARS", "Jupiter": "JUPITER",
+             "Saturn": "SATURN"}
+    for jd in jds:
+        out = subprocess.run(
+            [str(config.swetest_bin()), f"-edir{config.ephe_path()}",
+             f"-bj{jd!r}", "-ut", "-p0123456", "-sid1", "-fPlbs", "-head"],
+            capture_output=True, text=True, timeout=60).stdout
+        for line in out.splitlines():
+            m = num.match(line)
+            if m and m.group(1).strip() in names:
+                ours = eph.state(jd, names[m.group(1).strip()], sidereal=True).lon
+                worst = max(worst, abs(angdiff(ours, float(m.group(2)))))
+    rows.append(("sidereal positions vs swetest -sid1 (Lahiri)",
+                 f"max|delta|={worst:.2e} deg over {len(jds)} instants x 7 grahas",
+                 worst <= TOL_LON))
+
+    ok_v = True
+    for _ in range(300):
+        lon = rng.uniform(0, 360)
+        for d in (1, 2, 3, 4, 7, 9, 10, 12, 16, 20, 24, 27, 30, 40, 45, 60):
+            s, _p = varga_sign(lon, d)
+            ok_v &= 0 <= s <= 11
+        ok_v &= vargottama(lon) == (varga_sign(lon, 1)[0] == varga_sign(lon, 9)[0])
+    rows.append(("16 vargas: valid signs + vargottama definition",
+                 "300 random longitudes x 16 charts", ok_v))
+    rows.append(("vimshottari lord years sum", f"{sum(DASHA_YEARS.values())}",
+                 sum(DASHA_YEARS.values()) == 120))
+    return rows
+
+
 def dignity_table_checks() -> list[tuple[str, bool]]:
     from ..core.dignities import BOUNDS_EGYPTIAN, DECANS_CHALDEAN, DOMICILE
     from collections import Counter
@@ -225,6 +276,7 @@ def build_report(path: str | None = None) -> bool:
     ts = timespace_cases()
     m1 = chart_layer_cases()
     m2 = timed_layer_cases()
+    m5 = vedic_layer_cases()
     dig = dignity_table_checks()
 
     pos_ok = all(w["lon"] <= TOL_LON and w["lat"] <= TOL_LAT and w["speed"] <= TOL_SPEED
@@ -233,8 +285,9 @@ def build_report(path: str | None = None) -> bool:
     ts_ok = all(r[3] for r in ts)
     m1_ok = all(r[2] for r in m1)
     m2_ok = all(r[2] for r in m2)
+    m5_ok = all(r[2] for r in m5)
     dig_ok = all(r[1] for r in dig)
-    all_ok = pos_ok and hou_ok and ts_ok and m1_ok and m2_ok and dig_ok
+    all_ok = pos_ok and hou_ok and ts_ok and m1_ok and m2_ok and m5_ok and dig_ok
 
     lines: list[str] = []
     a = lines.append
@@ -285,6 +338,13 @@ def build_report(path: str | None = None) -> bool:
     a("|---|---|---|")
     for slug, status, ok in m2:
         a(f"| {slug} | {status} | {'Y' if ok else 'FAIL'} |")
+    a("")
+    a("## M5 vedic layer")
+    a("")
+    a("| check | detail | ok |")
+    a("|---|---|---|")
+    for name, detail, ok in m5:
+        a(f"| {name} | {detail} | {'Y' if ok else 'FAIL'} |")
     a("")
     a("## Classical table structure")
     a("")

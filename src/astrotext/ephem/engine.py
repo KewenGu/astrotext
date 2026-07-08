@@ -58,13 +58,51 @@ class BodyState:
 class Ephemeris:
     """One engine per process. ``ephe_path`` defaults to the repo data dir."""
 
+    #: supported sidereal modes (name -> Swiss Ephemeris SIDM id)
+    SIDEREAL_MODES = {
+        "lahiri": swe.SIDM_LAHIRI,
+        "krishnamurti": swe.SIDM_KRISHNAMURTI,
+        "raman": swe.SIDM_RAMAN,
+        "fagan-bradley": swe.SIDM_FAGAN_BRADLEY,
+    }
+
     def __init__(self, ephe_path: str | Path | None = None, strict_files: bool = True):
         self.ephe_path = Path(ephe_path) if ephe_path else config.ephe_path()
         swe.set_ephe_path(str(self.ephe_path))
         self.se_version: str = swe.version
         self.strict_files = strict_files
+        self.sidereal_mode: str | None = None
         if strict_files:
             self._assert_data_files()
+
+    # -- sidereal ------------------------------------------------------------
+    def configure_sidereal(self, mode: str = "lahiri") -> None:
+        """Select the ayanamsa for all subsequent sidereal=True calls.
+
+        swe.set_sid_mode is process-global but only affects computations
+        that pass FLG_SIDEREAL, so tropical work is untouched.  One process
+        should stick to ONE ayanamsa (dossiers do).
+        """
+        key = mode.lower()
+        if key not in self.SIDEREAL_MODES:
+            raise ValueError(f"unknown ayanamsa {mode!r}; "
+                             f"known: {', '.join(self.SIDEREAL_MODES)}")
+        swe.set_sid_mode(self.SIDEREAL_MODES[key], 0.0, 0.0)
+        self.sidereal_mode = key
+
+    def ayanamsa(self, jd_ut: float) -> float:
+        """Ayanamsa value (degrees) of the configured mode at an instant."""
+        if self.sidereal_mode is None:
+            raise RuntimeError("call configure_sidereal() first")
+        return swe.get_ayanamsa_ut(jd_ut)
+
+    def _sid_flag(self, sidereal: bool) -> int:
+        if not sidereal:
+            return 0
+        if self.sidereal_mode is None:
+            raise RuntimeError("sidereal computation requested before "
+                               "configure_sidereal()")
+        return swe.FLG_SIDEREAL
 
     # -- internals -----------------------------------------------------------
     def _assert_data_files(self) -> None:
@@ -86,18 +124,22 @@ class Ephemeris:
         return xx
 
     # -- public --------------------------------------------------------------
-    def state(self, jd_ut: float, key: str, extra_flags: int = 0) -> BodyState:
+    def state(self, jd_ut: float, key: str, extra_flags: int = 0,
+              sidereal: bool = False) -> BodyState:
         """Compute a point by registry key (Swiss-Ephemeris-backed keys only;
         derived points like SOUTH_NODE_* are assembled in the core layer).
 
         ``extra_flags`` are OR-ed into the Swiss Ephemeris flag word — e.g.
         FLG_J2000|FLG_NONUT for the fixed-frame longitudes used by
-        precession-corrected returns."""
+        precession-corrected returns.  ``sidereal=True`` uses the ayanamsa
+        set via configure_sidereal (native FLG_SIDEREAL — NOT a manual
+        subtraction, which would be off by ~nutation)."""
         p = get_point(key)
         if p.se_id is None:
             raise ValueError(f"{key} is a derived point; compute {p.derived_from} instead")
-        ecl = self._calc(jd_ut, p.se_id, BASE_FLAGS | extra_flags)
-        equ = self._calc(jd_ut, p.se_id, BASE_FLAGS | extra_flags | swe.FLG_EQUATORIAL)
+        flags = BASE_FLAGS | extra_flags | self._sid_flag(sidereal)
+        ecl = self._calc(jd_ut, p.se_id, flags)
+        equ = self._calc(jd_ut, p.se_id, flags | swe.FLG_EQUATORIAL)
         return BodyState(
             key=key, jd_ut=jd_ut,
             lon=ecl[0], lat=ecl[1], dist_au=ecl[2],
@@ -108,14 +150,16 @@ class Ephemeris:
     def states(self, jd_ut: float, keys: tuple[str, ...] = SE_POINTS) -> dict[str, BodyState]:
         return {k: self.state(jd_ut, k) for k in keys}
 
-    def houses(self, jd_ut: float, lat: float, lon: float, hsys: str = "P"
+    def houses(self, jd_ut: float, lat: float, lon: float, hsys: str = "P",
+               sidereal: bool = False
                ) -> tuple[tuple[float, ...], dict[str, float]]:
         """House cusps (1..12) and named angles for a house system letter.
 
         Raises on polar failure (Placidus/Koch beyond polar circles); the
         core layer decides the fallback policy.
         """
-        cusps, ascmc = swe.houses_ex(jd_ut, lat, lon, hsys.encode("ascii"))
+        cusps, ascmc = swe.houses_ex(jd_ut, lat, lon, hsys.encode("ascii"),
+                                     self._sid_flag(sidereal))
         angles = {
             "ASC": ascmc[0], "MC": ascmc[1], "ARMC": ascmc[2],
             "VERTEX": ascmc[3], "EQUATORIAL_ASC": ascmc[4],

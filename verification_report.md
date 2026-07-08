@@ -82,6 +82,14 @@
 | einstein | snapshots== arc==dSun & age0==natal: ok | Y |
 | beijing-dst | snapshots== arc==dSun & age0==natal: ok | Y |
 
+## M5 vedic layer
+
+| check | detail | ok |
+|---|---|---|
+| sidereal positions vs swetest -sid1 (Lahiri) | max|delta|=4.89e-08 deg over 11 instants x 7 grahas | Y |
+| 16 vargas: valid signs + vargottama definition | 300 random longitudes x 16 charts | Y |
+| vimshottari lord years sum | 120 | Y |
+
 ## Classical table structure
 
 | check | ok |

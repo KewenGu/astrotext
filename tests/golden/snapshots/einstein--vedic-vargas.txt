@@ -1,0 +1,29 @@
+== ASTROTEXT VEDIC-VARGAS v0 ==
+subject=Albert Einstein
+local=1879-03-14 11:30:00 calendar=gregorian
+place=Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57
+utc=1879-03-14 10:50:03 jd-ut=2407422.95142361
+ayanamsa-value=22.170106
+set:ayanamsa=lahiri
+set:node=mean(Ketu=Rahu+180)
+set:houses=whole-sign-from-Lagna
+set:karakas=8-scheme
+set:dasha-year=365.25d
+set:vargas=D1,D2,D3,D4,D7,D9,D10,D12,D16,D20,D24,D27,D30,D40,D45,D60
+warning=lmt-used:+00:39:57(lon +9.9876)
+
+-- DIVISIONAL CHART MATRIX (cell = sign in D<n>) --
+# rules per varga: docs/TECHNIQUES.md (BPHS); VG = vargottama (D1==D9)
+# graha | D1 | D2 | D3 | D4 | D7 | D9 | D10 | D12 | D16 | D20 | D24 | D27 | D30 | D40 | D45 | D60
+SUN | Pis | Can | Pis | Pis | Vir | Can | Sco | Pis | Sag | Leo | Leo | Aqu | Tau | Sco | Aqu | Tau
+MOON | Sco | Leo | Can | Tau | Lib | Cap | Aqu | Can | Can | Aqu | Sag | Vir | Cap | Pis | Tau | Can
+MARS | Cap | Can | Cap | Cap | Leo | Aqu | Lib | Aqu | Gem | Can | Lib | Sco | Tau | Ari | Sco | Lib
+MERCURY | Pis | Can | Can | Gem | Sco | Lib | Aqu | Can | Tau | Pis | Pis | Lib | Vir | Sag | Ari | Sag
+JUPITER | Aqu | Leo | Aqu | Aqu | Pis | Sco | Pis | Ari | Lib | Pis | Sag | Aqu | Aqu | Sco | Pis | Sag
+VENUS | Pis | Leo | Sco | Sag | Aqu | Aqu | Can | Sag | Cap | Sag | Aqu | Sco | Cap | Can | Cap | Ari
+SATURN | Pis | Can | Can | Gem | Sco | Lib | Pis | Can | Gem | Ari | Ari | Sco | Pis | Aqu | Gem | Pis
+RAHU | Cap | Can | Cap | Ari | Vir | Pis | Sag | Ari | Leo | Lib | Aqu | Pis | Vir | Lib | Tau | Can
+KETU | Can | Can | Can | Lib | Pis | Vir | Gem | Lib | Leo | Lib | Aqu | Vir | Vir | Lib | Tau | Cap
+LAGNA | Gem | Can | Lib | Sag | Lib | Pis | Sag | Cap | Lib | Leo | Sco | Pis | Gem | Tau | Tau | Leo
+
+== END ==

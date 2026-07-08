@@ -76,7 +76,32 @@ No hidden defaults (design axiom).  [M2+] marks not-yet-implemented layers.
 * Profections: annual whole-sign from ASC, 1 sign/year; monthly option;
   year lord = domicile ruler of profected sign.
 
-## [M5] Vedic layer
+## Vedic layer (M5)
 
-Sidereal (ayanamsa options, Lahiri default), nakshatras + padas, vargas
-(D1/D9/D10 first), Vimshottari dasha from natal Moon nakshatra.
+* **Sidereal core**: Swiss Ephemeris NATIVE sidereal mode (`FLG_SIDEREAL`
+  after `set_sid_mode`).  A manual "tropical minus get_ayanamsa_ut" is
+  forbidden: it differs by ~nutation (measured 3-14 arcsec).  Ayanamsa
+  knob: Lahiri (default) / Krishnamurti / Raman / Fagan-Bradley.
+  Cross-verified bit-level against `swetest -sid1`.
+* **Grahas**: Sun..Saturn + Rahu/Ketu.  Nodes default MEAN (traditional
+  mainstream; 'true' knob); Ketu = Rahu + 180.  Whole-sign bhavas from the
+  sidereal Lagna.
+* **Nakshatras**: 27 x 13deg20', Ashwini at 0 sidereal Aries; 4 padas;
+  Vimshottari lords (Ketu Venus Sun Moon Mars Rahu Jupiter Saturn Mercury).
+* **Panchanga**: tithi (12 deg), karana (Kimstughna + 7 movable x 8 +
+  Shakuni/Chatushpada/Naga), yoga (sum/13deg20', 27 names), vara.  Sidereal
+  longitudes (tithi/karana are ayanamsa-invariant; yoga is not).
+* **Shodashavarga**: all 16 divisional charts per BPHS (rules and
+  commonly-confused start-sign tables documented in vargas.py; D2 =
+  Parashara hora, only Leo/Cancer).  Vargottama = same sign in D1 and D9.
+* **Chara karakas**: 8-scheme (with Rahu reversed: 30 - deg); AK AmK BK MK
+  PiK PuK GK DK by descending advancement; 7-scheme knob; ties flagged.
+* **Graha drishti**: whole-sign; 7th for all, Mars 4/8, Jupiter 5/9,
+  Saturn 3/10; nodes cast none by default (tradition varies — knob later).
+* **Vimshottari**: 120y; lord years Ketu7 Venus20 Sun6 Moon10 Mars7 Rahu18
+  Jupiter16 Saturn19 Mercury17; first lord = Moon's nakshatra lord, balance
+  = unelapsed fraction x years; sub-periods proportional starting from the
+  parent's lord; 3 levels rendered (819 periods); year = 365.25d (knob).
+  Deeper levels (sookshma+) and other dashas (Yogini, Chara): backlog.
+* Backlog: shadbala, ashtakavarga, yogas catalog, bhava chalit (Sripati),
+  KP sub-lords, muhurta tools.

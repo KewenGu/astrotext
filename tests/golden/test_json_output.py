@@ -52,7 +52,7 @@ def test_dossier_formats(tmp_path):
                             tmp_path / "b", fmt="both")
     txts = {p.name for p in both.glob("*.txt")}
     jsons = {p.name for p in both.glob("*.json")}
-    assert len(jsons) == 10  # every data file has a json sibling
+    assert len(jsons) == 13  # every data file has a json sibling
     assert {n.replace(".json", ".txt") for n in jsons} <= txts
     for p in both.glob("*.json"):
         json.loads(p.read_text(encoding="utf-8"))  # all valid
@@ -60,7 +60,7 @@ def test_dossier_formats(tmp_path):
     jonly = generate_dossier(SUBJECT, TIMED_NOW_UTC, TIMED_PLACE,
                              tmp_path / "j", fmt="json")
     assert {p.name for p in jonly.glob("*.txt")} == {"index.txt", "00_meta.txt"}
-    assert len({p.name for p in jonly.glob("*.json")}) == 10
+    assert len({p.name for p in jonly.glob("*.json")}) == 13
 
     tonly = generate_dossier(SUBJECT, TIMED_NOW_UTC, TIMED_PLACE,
                              tmp_path / "t", fmt="text")

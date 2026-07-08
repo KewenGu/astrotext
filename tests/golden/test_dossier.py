@@ -20,6 +20,7 @@ EXPECTED = [
     "20_transits.txt", "21_secondary.txt", "22_tertiary.txt",
     "23_solar_arc.txt", "30_solar_return.txt", "31_lunar_return.txt",
     "40_firdaria.txt", "41_profections.txt",
+    "50_vedic_rashi.txt", "51_vedic_vargas.txt", "52_vedic_vimshottari.txt",
 ]
 
 

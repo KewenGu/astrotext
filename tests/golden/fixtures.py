@@ -176,4 +176,19 @@ def build_timed(fx):
         "firdaria": render_firdaria(firdaria(natal), natal, fx.name),
         "profections": render_profections(profections(natal, now), fx.name),
     }
+    from astrotext.render.vedic import (
+        render_vargas, render_vedic_rashi, render_vimshottari,
+    )
+    from astrotext.techniques.vedic import (
+        compute_vedic_chart, varga_table, vimshottari,
+    )
+    m2 = build(fx)[0]
+    vc = compute_vedic_chart(m2)
+    vlons = {k: vc.grahas[k].lon for k in vc.grahas}
+    if vc.lagna is not None:
+        vlons["LAGNA"] = vc.lagna
+    out["vedic-rashi"] = render_vedic_rashi(vc, fx.name)
+    out["vedic-vargas"] = render_vargas(vc, varga_table(vlons, vc.settings.vargas), fx.name)
+    out["vedic-vimshottari"] = render_vimshottari(
+        vimshottari(vc.grahas["MOON"].lon, m2.jd_ut), vc, now.jd_ut, fx.name)
     return out

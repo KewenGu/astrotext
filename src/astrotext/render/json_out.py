@@ -230,3 +230,74 @@ def to_json(d: dict[str, Any]) -> str:
     """Deterministic JSON: sorted keys, compact separators, exact floats."""
     return json.dumps(d, ensure_ascii=False, sort_keys=True,
                       separators=(",", ":")) + "\n"
+
+
+# ---- vedic layer -------------------------------------------------------------
+
+def _nak_dict(n) -> dict[str, Any]:
+    return {"index": n.index, "name": n.name, "pada": n.pada,
+            "lord": n.lord, "deg_in_nak": n.deg_in_nak, "fraction": n.fraction}
+
+
+def vedic_chart_to_dict(vc, subject: str | None = None) -> dict[str, Any]:
+    d: dict[str, Any] = dict(_ENVELOPE)
+    d["kind"] = "vedic-rashi"
+    if subject:
+        d["subject"] = subject
+    d["moment"] = _moment(vc.moment)
+    d["settings"] = {line.split("=", 1)[0]: line.split("=", 1)[1]
+                     for line in vc.settings.describe()}
+    d["ayanamsa_value"] = vc.ayanamsa_value
+    d["warnings"] = list(vc.flags)
+    d["grahas"] = {
+        k: {"lon": g.lon, "lat": g.lat, "lon_speed": g.lon_speed,
+            "retrograde": g.retrograde, "sign": g.sign, "sign_deg": g.sign_deg,
+            "house": g.house, "nakshatra": _nak_dict(g.nak)}
+        for k, g in vc.grahas.items()
+    }
+    d["lagna"] = ({"lon": vc.lagna, "sign": vc.lagna_sign,
+                   "nakshatra": _nak_dict(vc.lagna_nak)}
+                  if vc.lagna is not None else None)
+    p = vc.panchanga
+    d["panchanga"] = {"tithi_index": p.tithi_index, "tithi": p.tithi,
+                      "paksha": p.paksha, "tithi_fraction": p.tithi_fraction,
+                      "karana_index": p.karana_index, "karana": p.karana,
+                      "yoga_index": p.yoga_index, "yoga": p.yoga}
+    d["karakas"] = [{"karaka": k, "graha": g, "advancement": a}
+                    for k, g, a in vc.karakas]
+    d["drishti"] = vc.drishti
+    return d
+
+
+def vargas_to_dict(vc, table, subject: str | None = None) -> dict[str, Any]:
+    d: dict[str, Any] = dict(_ENVELOPE)
+    d["kind"] = "vedic-vargas"
+    if subject:
+        d["subject"] = subject
+    d["natal_jd_ut"] = vc.moment.jd_ut
+    d["ayanamsa_value"] = vc.ayanamsa_value
+    d["vargas"] = list(vc.settings.vargas)
+    d["signs"] = {g: {f"D{dv}": s for dv, s in row.items()}
+                  for g, row in table.items()}
+    d["vargottama"] = sorted(g for g, row in table.items()
+                             if 1 in row and 9 in row and row[1] == row[9])
+    return d
+
+
+def vimshottari_to_dict(periods, vc, now_jd: float | None = None,
+                        subject: str | None = None) -> dict[str, Any]:
+    d: dict[str, Any] = dict(_ENVELOPE)
+    d["kind"] = "vedic-vimshottari"
+    if subject:
+        d["subject"] = subject
+    d["natal_jd_ut"] = vc.moment.jd_ut
+    d["moon_nakshatra"] = _nak_dict(vc.grahas["MOON"].nak)
+    d["dasha_year_days"] = vc.settings.dasha_year_days
+    if now_jd is not None:
+        d["now_jd_ut"] = now_jd
+        d["current_lineage"] = [p.lord for p in periods
+                                if p.start_jd <= now_jd < p.end_jd]
+    d["periods"] = [{"level": p.level, "lords": list(p.lords),
+                     "start_jd": p.start_jd, "end_jd": p.end_jd}
+                    for p in periods]
+    return d

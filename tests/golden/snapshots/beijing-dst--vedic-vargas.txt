@@ -1,0 +1,29 @@
+== ASTROTEXT VEDIC-VARGAS v0 ==
+subject=Beijing DST-era summer birth
+local=1988-06-15 14:30:00 calendar=gregorian
+place=Beijing (39.9042N 116.4074E) tz=Asia/Shanghai
+utc=1988-06-15 05:30:00 jd-ut=2447327.72916837
+ayanamsa-value=23.695808
+set:ayanamsa=lahiri
+set:node=mean(Ketu=Rahu+180)
+set:houses=whole-sign-from-Lagna
+set:karakas=8-scheme
+set:dasha-year=365.25d
+set:vargas=D1,D2,D3,D4,D7,D9,D10,D12,D16,D20,D24,D27,D30,D40,D45,D60
+warning=(none)
+
+-- DIVISIONAL CHART MATRIX (cell = sign in D<n>) --
+# rules per varga: docs/TECHNIQUES.md (BPHS); VG = vargottama (D1==D9)
+# graha | D1 | D2 | D3 | D4 | D7 | D9 | D10 | D12 | D16 | D20 | D24 | D27 | D30 | D40 | D45 | D60
+SUN | Gem | Leo | Gem | Gem | Gem | Lib | Gem | Gem | Sag | Leo | Leo | Lib | Ari | Ari | Sag | Can
+MOON | Gem | Leo | Lib | Vir | Leo | Cap | Vir | Lib | Tau | Pis | Ari | Can | Sag | Gem | Pis | Pis
+MARS | Aqu | Can | Lib | Leo | Gem | Ari | Vir | Lib | Can | Aqu | Sag | Ari | Gem | Leo | Pis | Leo
+MERCURY | Tau | Leo | Cap | Aqu | Tau | Vir | Lib | Ari | Lib | Gem | Tau | Can | Sco | Lib | Cap | Sag
+JUPITER | Ari | Can | Sag | Cap | Lib | Sag | Cap | Pis | Can | Sco | Can | Gem | Lib | Gem | Sco | Aqu
+VENUS | Tau | Leo | Cap | Aqu | Tau | Vir | Lib | Pis | Lib | Gem | Ari | Can | Sco | Lib | Sag | Sco
+SATURN | Sag | Leo | Sag | Sag | Cap | Tau | Cap | Aqu | Pis | Sco | Sag | Vir | Aqu | Sco | Leo | Sco
+RAHU | Aqu | Can | Lib | Sco | Can | Tau | Lib | Sco | Vir | Ari | Pis | Leo | Gem | Sag | Vir | Pis
+KETU | Leo | Can | Ari | Tau | Cap | Sco | Ari | Tau | Vir | Ari | Pis | Aqu | Gem | Sag | Vir | Vir
+LAGNA | Vir | Leo | Cap | Pis | Gem | Tau | Lib | Pis | Leo | Gem | Leo | Vir | Pis | Can | Sag | Tau
+
+== END ==

@@ -136,6 +136,26 @@ def generate_dossier(
         emit("41_profections", render_profections(pf, name),
              J.profections_to_dict(pf, name))
 
+    # ---- vedic layer -----------------------------------------------------------
+    from .render.vedic import (
+        render_vargas, render_vedic_rashi, render_vimshottari,
+    )
+    from .techniques.vedic import compute_vedic_chart, varga_table, vimshottari
+
+    vc = compute_vedic_chart(natal_m, unknown_time=natal.settings.unknown_time)
+    emit("50_vedic_rashi", render_vedic_rashi(vc, name),
+         J.vedic_chart_to_dict(vc, name))
+    vlons = {k: vc.grahas[k].lon for k in vc.grahas}
+    if vc.lagna is not None:
+        vlons["LAGNA"] = vc.lagna
+    vtable = varga_table(vlons, vc.settings.vargas)
+    emit("51_vedic_vargas", render_vargas(vc, vtable, name),
+         J.vargas_to_dict(vc, vtable, name))
+    vd = vimshottari(vc.grahas["MOON"].lon, natal_m.jd_ut,
+                     vc.settings.dasha_year_days)
+    emit("52_vedic_vimshottari", render_vimshottari(vd, vc, now.jd_ut, name),
+         J.vimshottari_to_dict(vd, vc, now.jd_ut, name))
+
     # ---- meta + index ---------------------------------------------------------
     meta: list[str] = ["== ASTROTEXT DOSSIER-META v0 =="]
     meta.append(f"subject={name}")
@@ -181,6 +201,10 @@ def generate_dossier(
         "31_lunar_return": "active lunar return chart (cast at current place)",
         "40_firdaria": "Persian time-lords, 75y majors + subs, dates",
         "41_profections": "annual/monthly profections, year lord, full table",
+        "50_vedic_rashi": "sidereal D1: grahas/nakshatras/Lagna/whole-sign "
+                          "bhavas/panchanga/karakas/drishti",
+        "51_vedic_vargas": "all 16 divisional charts as a sign matrix (+VG)",
+        "52_vedic_vimshottari": "120y dasha timeline, 3 levels, current marked",
     }
     for stem, desc in guide.items():
         exts = [e for e in (".txt", ".json") if f"{stem}{e}" in files]
