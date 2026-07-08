@@ -115,6 +115,40 @@ def gen_bodies() -> None:
     print(f"wrote {out} ({len(cases)} cases)")
 
 
+HOUSE_SYSTEMS = ("P", "K", "O", "R", "C", "A", "W", "B")
+
+
+def gen_houses() -> None:
+    rng = np.random.default_rng(4242)
+    cases = []
+    lats = (0.0, 31.911, -48.4, 59.93, -59.93, 66.99, -66.99)
+    for _ in range(6):
+        armc = float(rng.uniform(0.0, 360.0))
+        eps = float(rng.uniform(23.42, 23.46))
+        for lat in lats:
+            for s in HOUSE_SYSTEMS:
+                try:
+                    c, a = swe.houses_armc(armc, lat, eps, s.encode())
+                    cases.append({"armc": armc, "eps": eps, "lat": lat,
+                                  "system": s, "cusps": list(c),
+                                  "asc": a[0], "mc": a[1], "vertex": a[3],
+                                  "eq_asc": a[4]})
+                except Exception:
+                    cases.append({"armc": armc, "eps": eps, "lat": lat,
+                                  "system": s, "raises": True})
+    chain = []
+    for _ in range(8):
+        jd_ut = float(rng.uniform(2378497.0, 2597641.0))
+        lon = float(rng.uniform(-180.0, 180.0))
+        c, a = swe.houses_ex(jd_ut, 10.0, lon, b"O", 0)
+        chain.append({"jd_ut": jd_ut, "lon": lon, "armc": a[2]})
+    out = ROOT / "tests" / "kernel" / "fixtures" / "houses.json"
+    out.write_text(json.dumps(
+        {"se_version": swe.version, "cases": cases, "armc_chain": chain},
+        indent=1))
+    print(f"wrote {out} ({len(cases)} cases + {len(chain)} chain)")
+
+
 def main() -> None:
     out = {"se_version": swe.version, "utc_to_jd": [], "deltat": [],
            "julday": [], "revjul": []}
@@ -138,6 +172,7 @@ def main() -> None:
     OUT.write_text(json.dumps(out, indent=1))
     print(f"wrote {OUT}")
     gen_bodies()
+    gen_houses()
 
 
 if __name__ == "__main__":

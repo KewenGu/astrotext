@@ -265,6 +265,87 @@ def k3_points(rng, n_instants=65) -> tuple[list[str], list[str]]:
     return out, fails
 
 
+def k4_houses(rng, n_configs=40) -> tuple[list[str], list[str]]:
+    """K4 gate: 8 systems + angles vs swe_houses_armc at identical
+    (armc, eps, lat) — pure formula parity, ≤0.001″ (KERNEL.md §7).
+    The ARMC time-chain (gst06a vs SE sidtime) is gated separately at
+    ≤0.02″ ≈ 1.3 ms of time — the K1/K2 frame-model gap."""
+    from astrotext.kernel import houses as kh
+    from astrotext.kernel import timescales as kts
+    lats = (0.0, 31.911, -31.911, 48.4, -48.4, 59.93, -59.93, 66.99, -66.99)
+    out, fails = [], []
+    worst = {s: 0.0 for s in kh.SYSTEMS}
+    worst_ang = 0.0
+    n_polar = 0
+    for _ in range(n_configs):
+        armc = rng.uniform(0.0, 360.0)
+        eps = rng.uniform(23.42, 23.46)
+        for lat in lats:
+            se_c = se_a = None
+            for sysl in kh.SYSTEMS:
+                se_fail = ours_fail = False
+                try:
+                    se_c, se_a = swe.houses_armc(armc, lat, eps,
+                                                 sysl.encode())
+                except Exception:
+                    se_fail = True
+                try:
+                    ours = kh.cusps(armc, eps, lat, sysl)
+                except kh.PolarHousesError:
+                    ours_fail = True
+                if se_fail or ours_fail:
+                    if se_fail != ours_fail:
+                        fails.append(f"{sysl}@lat{lat}: polar mismatch "
+                                     f"(se_fail={se_fail})")
+                    else:
+                        n_polar += 1
+                    continue
+                d = max(abs(_wrap_asec(ours[i] - se_c[i])) for i in range(12))
+                worst[sysl] = max(worst[sysl], d)
+                ang = kh.angles(armc, eps, lat)
+                for i, k in ((0, "ASC"), (1, "MC"), (2, "ARMC"),
+                             (3, "VERTEX"), (4, "EQUATORIAL_ASC")):
+                    ref = ang[k]
+                    if k == "MC" and sysl in ("R", "C"):
+                        ref = ours[9]      # R/C report the flipped MC
+                    worst_ang = max(worst_ang,
+                                    abs(_wrap_asec(ref - se_a[i])))
+    for sysl in kh.SYSTEMS:
+        if worst[sysl] > 0.001:
+            fails.append(f"{sysl}: {worst[sysl]:.6f}\"")
+    if worst_ang > 0.001:
+        fails.append(f"angles: {worst_ang:.6f}\"")
+    out.append("houses formula parity (vs swe_houses_armc, "
+               f"{n_configs} configs × {len(lats)} lats): " +
+               " ".join(f"{s}={worst[s]:.6f}\"" for s in kh.SYSTEMS))
+    out.append(f"angles ≤{worst_ang:.6f}\"  (gate 0.001\"); "
+               f"polar-raise agreement on {n_polar} configs")
+    # --- ARMC time chain: gst06a vs SE sidtime ------------------------
+    # SE's long-term sidereal-time splice deviates from IAU-2006 GST by
+    # −0.36″@1800 … +1.79″@2100 … −8.5″@2399, ~0 only in its calibrated
+    # 1900-2050 era.  Ours matches Skyfield's independent IAU
+    # implementation to ≤0.0005″ across the full span (three-way, see
+    # KERNEL.md status) — the deviation is SE's, so the tight gate
+    # applies to the modern window and a loose documented one outside.
+    worst_mod = worst_all = 0.0
+    for _ in range(300):
+        jd_ut = rng.uniform(JD0, JD1)
+        lon = rng.uniform(-180.0, 180.0)
+        se_c, se_a = swe.houses_ex(jd_ut, 10.0, lon, b"O", 0)
+        jd_tt = kts.ut1_to_tt(jd_ut, "swieph")
+        ours = kh.armc_deg(jd_ut, jd_tt, lon)
+        d = abs(_wrap_asec(ours - se_a[2]))
+        worst_all = max(worst_all, d)
+        if 2410000.0 < jd_ut < 2469807.5:      # ~1886..2050
+            worst_mod = max(worst_mod, d)
+    out.append(f"ARMC time-chain vs SE: 1886-2050 max|d|={worst_mod:.5f}\" "
+               f"(gate 0.02\"); full-span {worst_all:.3f}\" (gate 10\", "
+               f"SE's long-term sidtime splice — ours ≡ Skyfield ≤0.0005\")")
+    if worst_mod > 0.02 or worst_all > 10.0:
+        fails.append(f"armc chain: mod {worst_mod:.5f}\" all {worst_all:.3f}\"")
+    return out, fails
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260708)
@@ -281,9 +362,12 @@ def main() -> None:
     lines += [f"K2: {'PASS' if not k2_fails else 'FAIL ' + str(k2_fails)}", ""]
     k3_lines, k3_fails = k3_points(rng)
     lines += k3_lines
-    lines += [f"K3: {'PASS' if not k3_fails else 'FAIL ' + str(k3_fails)}"]
+    lines += [f"K3: {'PASS' if not k3_fails else 'FAIL ' + str(k3_fails)}", ""]
+    k4_lines, k4_fails = k4_houses(rng)
+    lines += k4_lines
+    lines += [f"K4: {'PASS' if not k4_fails else 'FAIL ' + str(k4_fails)}"]
     print("\n".join(lines))
-    if k2_fails or k3_fails:
+    if k2_fails or k3_fails or k4_fails:
         raise SystemExit(1)
 
 

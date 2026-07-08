@@ -1,7 +1,7 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO · K1 DONE · K2 DONE · K3 DONE (all 2026-07-08) · next: K4.
-Owner doc for the V2 kernel swap.
+Status: K0 GO · K1 DONE · K2 DONE · K3 DONE · K4 DONE (all 2026-07-08)
+· next: K5.  Owner doc for the V2 kernel swap.
 
 K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
 identical TT): Sun ≤0.0020″, Mars ≤0.0014″ lon; lat ≤0.005″ (bounds the
@@ -54,6 +54,21 @@ type-21 SPKs are unreadable by jplephem): vs SE's older solution
 difference (ours is the newer fit), gated and documented.  §6's naive
 0.01″/0.5″/0.05″ targets are superseded by these measured, attributed
 gates in tools/verify_kernel.py.
+
+K4 measured (40 seeded configs × 9 latitudes incl. ±66.99): all eight
+systems and all angles match swe_houses_armc to the last printed digit
+(0.000000″; Placidus 0.0003″ = iteration tail) — formula parity is
+exact.  Polar semantics replicated byte-for-byte: P/K raise at
+|φ| ≥ 90−ε (SE's uniform rule, fires even when the MC's own AD
+exists); the ASC is the horizon∩ecliptic intersection in the *eastern
+hemisphere* (fixed cross-product orientation flips 180° inside the
+polar circles); R/C take the above-horizon meridian intersection as
+cusp 10 while O/A/W/B keep the RA=θ point (measured per-system
+convention).  ARMC time chain: ≤0.0014″ vs SE within 1886-2050; SE's
+long-term sidereal-time splice then deviates (−0.36″@1800, +1.79″@2100,
+−8.5″@2399) — ours matches Skyfield's independent IAU-2006/2000A GAST
+to ≤0.0005″ across the full span, so the far-era gap is SE's model,
+gated at 10″ with this attribution.
 Read with PLAN.md §V2 (milestones, in Chinese) and TECHNIQUES.md (which
 stays kernel-agnostic).  Rule inherited from the house style: every
 convention states its source; no hidden defaults; clean-room only.

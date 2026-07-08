@@ -185,3 +185,11 @@ dossier/<person>/
 - **发现**:SE 平交点 1955 前…(ΔT 同款)无;新发现=SE 手册明示 Lilith 需投影(de Gravelaine 星历即因未投影而差数角分)。
 - 测试 385(kernel)全绿;verify_kernel K1+K2+K3 全 PASS(Skyfield 段已在 Mac .venv 补装);fixtures 三份(timescales/bodies/points)。
 - **下一步 K4 分宫**:ARMC=gst06a+东经、8 制式 vs swetest ≤0.001″、极地语义 byte-for-byte;然后 K5 恒星制。
+
+### Session 3(续)— 同日 · K4 完成(kernel/houses.py)
+- **实现**:纯向量几何 clean-room(天顶/北点/东点向量 + 大圆相交,不解三角恒等式);8 制式全部落地:闭式 ASC/MC/Vertex/EqAsc/Equal/Whole/Porphyry/Regiomontanus/Campanus,Koch=MC 半日弧对称位移的上升点(黑盒解出 θ±k·SA_d/3,k=1,2),Alcabitius=ASC 半弧时圆投影,Placidus=定点迭代(收敛阈 1e-11°)。
+- **验收**:40 配置 × 9 纬度(含 ±66.99):8 制式与 swe_houses_armc **逐位一致(0.000000″)**,Placidus 0.0003″(迭代尾);四轴同精度。
+- **极地语义逐条测定并复刻**:P/K 在 |φ|≥90−ε 一律 raise(SE 即便 MC 的 AD 存在也拒绝);ASC=黄道-地平交点取**东半球**者(固定叉积方向在极圈内会翻 180°);**R/C 的第 10 宫取子午圈交点的地平线上方者,而 O/A/W/B 保留 RA=θ 点**(逐制式实测)。
+- **ARMC 时间链**:1886–2050 内对 SE ≤0.0014″;跨度边缘 SE 长期恒星时拼接自身偏离(1800:−0.36″、2100:+1.79″、2399:−8.5″)——**我方与 Skyfield 独立实现全跨度一致 ≤0.0005″**,故差异归 SE 模型,按窗口 gate(10″)记录。
+- 测试 735(kernel)全绿;fixtures 四份;verify_kernel K1–K4 全 PASS。
+- **下一步 K5 恒星制**:4 ayanamsa(lahiri/krishnamurti/raman/fagan-bradley)定义常数(t0, ayan_t0)自 SE 手册,vs swetest -sid ≤0.01″;注意 TECHNIQUES.md 已记录的 ~14″ 章动坑。
