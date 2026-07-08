@@ -104,3 +104,21 @@ dossier/<person>/
 ## 验证方式（怎么确认这个计划做完了）
 
 每个里程碑：跑 `make verify` 看全绿 + 读 verification_report.md + 我把样例档案（可用你提供的真实出生数据）发给你试读；M4 你在 astro.com 做最终抽查签收；M5 印度层用同一套流程（参照源换 Jyotish 权威软件/表）。
+
+
+---
+
+## 进度记录（跨会话交接）
+
+### Session 1 — 2026-07-08
+- **M0 完成**：源码构建体系（PyPI 被屏蔽 → 全部 GitHub vendored）、时空管线（中国历史时制全过）、L0 与 swetest 逐位一致（≤5e-8°）。
+- **M1 完成**：本命层全套 + 文本格式 v0 + round-trip 解析 + 20 黄金案例快照；古典表格经独立子代理对抗性复核，零错误。
+- **M2 完成**：行运（全部精确时刻，逆行 1-3 根全列）、次限/三限/小限推运、太阳弧、推进四轴两法；修正 progressed_moment 的 UT1/UTC 往返漂移（~0.2s）。
+- **M3 完成**：通用回归（日返/月返/行星返照、岁差修正变体）、法达（昼夜序+节点两变体）、小限（以真实日返为年界）、行运月亮空亡。
+- **M4 完成**：档案生成器 + CLI（`python -m astrotext dossier ...`）→ 12 文件个人文本数据库；270 测试全绿；`make verify` PASS。
+- **未完成/下一步**：
+  1. **推送 GitHub**：等用户建仓 `KewenGu/astrotext` 并把仓库加进会话 sources；本地 4 个 commit 待推。
+  2. **M5 印度层**：sidereal/ayanamsa（SE 原生支持，engine.state 已有 extra_flags 通道）、27宿+pada、D1/D9/D10、Vimshottari（从月亮宿主起 120 年）。
+  3. **UAT**：用户在 astro.com 抽查 2-3 个真实案例（行星到分、宫头到分、返照时刻到分钟）；名人 fixtures 的出生数据凭记忆，需对 Astro-Databank 复核。
+  4. **待办小项**：GeoNames 离线地名库（中文别名）；三限 Troinski II 变体考证；VOC 现代变体开关；次限四轴对 astro.com 缺省的最终对齐（UAT 时定）；1200-1799 星历文件（会话内 GitHub 被限流，vendor.sh 已有自愈逻辑）。
+- **环境备忘**：PyPI/npm 403；GitHub git 协议会话中途也变 403（vendor 需重试或换会话）；`make vendor` 从锁定 commit 重建一切。
