@@ -79,25 +79,36 @@ JULDAY_CASES = [
 
 BODY_IPL = [("sun", 0), ("moon", 1), ("mercury", 2), ("venus", 3),
             ("mars", 4), ("jupiter", 5), ("saturn", 6), ("uranus", 7),
-            ("neptune", 8), ("pluto", 9)]
+            ("neptune", 8), ("pluto", 9), ("chiron", 15)]
+
+POINT_IPL = [("mean_node", 10), ("true_node", 11), ("mean_apogee", 12)]
+
+
+def _calc_case(name, ipl, jd, fl):
+    ecl, _ = swe.calc(float(jd), ipl, fl)
+    equ, _ = swe.calc(float(jd), ipl, fl | swe.FLG_EQUATORIAL)
+    return {
+        "body": name, "jd_tt": float(jd),
+        "lon": ecl[0], "lat": ecl[1], "dist": ecl[2],
+        "lon_speed": ecl[3], "lat_speed": ecl[4],
+        "dist_speed": ecl[5], "ra": equ[0], "dec": equ[1],
+    }
 
 
 def gen_bodies() -> None:
     rng = np.random.default_rng(42)
     jds = np.sort(rng.uniform(2378497.0, 2597641.0, 20))   # 1800..2399 TT
-    cases = []
     fl = swe.FLG_SWIEPH | swe.FLG_SPEED
-    for jd in jds:
-        for name, ipl in BODY_IPL:
-            ecl, _ = swe.calc(float(jd), ipl, fl)
-            equ, _ = swe.calc(float(jd), ipl, fl | swe.FLG_EQUATORIAL)
-            cases.append({
-                "body": name, "jd_tt": float(jd),
-                "lon": ecl[0], "lat": ecl[1], "dist": ecl[2],
-                "lon_speed": ecl[3], "lat_speed": ecl[4],
-                "dist_speed": ecl[5], "ra": equ[0], "dec": equ[1],
-            })
+    cases = [_calc_case(name, ipl, jd, fl)
+             for jd in jds for name, ipl in BODY_IPL]
     out = ROOT / "tests" / "kernel" / "fixtures" / "bodies.json"
+    out.write_text(json.dumps(
+        {"se_version": swe.version, "flags": "SWIEPH|SPEED", "cases": cases},
+        indent=1))
+    print(f"wrote {out} ({len(cases)} cases)")
+    cases = [_calc_case(name, ipl, jd, fl)
+             for jd in jds for name, ipl in POINT_IPL]
+    out = ROOT / "tests" / "kernel" / "fixtures" / "points.json"
     out.write_text(json.dumps(
         {"se_version": swe.version, "flags": "SWIEPH|SPEED", "cases": cases},
         indent=1))

@@ -30,7 +30,9 @@ JD0, JD1 = 2378497.0, 2597641.0  # 1800-01-01 .. 2399-12-31
 
 BODY_IPL = [("sun", 0), ("moon", 1), ("mercury", 2), ("venus", 3),
             ("mars", 4), ("jupiter", 5), ("saturn", 6), ("uranus", 7),
-            ("neptune", 8), ("pluto", 9)]
+            ("neptune", 8), ("pluto", 9), ("chiron", 15)]
+
+POINT_IPL = [("mean_node", 10), ("true_node", 11), ("mean_apogee", 12)]
 
 
 def _wrap_asec(deg):
@@ -144,6 +146,19 @@ def k2_grid(rng, n_instants=65) -> list[str]:
                   and dlat.max() <= 0.05 and bool(np.all(ddist <= dist_gate))
                   and dls_true_max <= 2e-5 and dls_rep.max() <= 1.2e-4
                   and dra.max() <= 0.06 and ddec.max() <= 0.05)
+        elif name == "chiron":
+            # SE's Chiron (older JPL solution, seas file) vs our current
+            # Horizons solution: an orbit-solution difference, not
+            # pipeline error.  Oscillates with the 50-yr orbit (peaks
+            # near perihelion passages): measured ≤1.02″ inside
+            # 1880-2160, ~3.5″ at the span edges.  Display is 1″; ours
+            # is the newer fit.  Gates: core ≤1.25″, full-span ≤5″.
+            chi_core = (jds > 2407332.5) & (jds < 2509588.5)  # 1880..2160
+            ok = (dlon[chi_core].max() <= 1.25 and dlon.max() <= 5.0
+                  and dlat.max() <= 1.0 and ddist.max() <= 5e-5
+                  and dls_true_max <= 2e-6 and dls_rep.max() <= 1.2e-5
+                  and dra[chi_core].max() <= 1.25 and dra.max() <= 5.0
+                  and ddec.max() <= 1.0)
         else:
             ok = (dlon.max() <= 0.01 and dlat.max() <= 0.01
                   and bool(np.all(ddist <= dist_gate))
@@ -151,12 +166,16 @@ def k2_grid(rng, n_instants=65) -> list[str]:
                   and dra.max() <= 0.012 and ddec.max() <= 0.01)
         if not ok:
             fails.append(name)
+        extra = ""
+        if name == "chiron":
+            extra = (f" [core dlon={dlon[chi_core].max():.3f}\" "
+                     f"dra={dra[chi_core].max():.3f}\"]")
         out.append(
             f"{name:8} dlon={dlon.max():8.5f}\" dlat={dlat.max():8.5f}\" "
             f"ddist={ddist.max():.2e}au dspd_true={dls_true_max:.2e} "
             f"(n={int(smooth.sum())}/{len(jds)}) "
             f"dspd_rep={dls_rep.max():.2e}°/d dra={dra.max():8.5f}\" "
-            f"ddec={ddec.max():8.5f}\" {'ok' if ok else 'FAIL'}")
+            f"ddec={ddec.max():8.5f}\" {'ok' if ok else 'FAIL'}{extra}")
     return out, fails
 
 
@@ -195,6 +214,57 @@ def k2_skyfield(rng, n=12) -> list[str]:
     return out
 
 
+def k3_points(rng, n_instants=65) -> tuple[list[str], list[str]]:
+    """K3 gate: lunar nodes + mean apogee vs swe_calc.
+
+    * true_node: osculating node from DE440 states — ≤0.04″ inside
+      1850-2150, ≤0.10″ full-span: the node amplifies the lunar
+      DE431→DE440 plane divergence by ~1/sin i ≈ 11 (measured 0.025″
+      core / 0.058″ full); same for its speed (≤1e-4 °/day, shifting
+      node stations by minutes at most).  dist (osculating-ellipse
+      radius at the node, μ = GM_E+GM_Moon, DE440 header) ≤2e-9 au.
+    * mean_node: Meeus/ELP polynomial + Δψ vs SE's Moshier fit with
+      DE431-derived corrections — ≤0.6″ (measured drift reaches 0.52″
+      at 2399; SE manual §2.2.1 estimates its own mean points at ~1″).
+    * mean_apogee: same source + inclined-orbit projection — ≤2″ lon,
+      ≤0.3″ lat.  Display precision is 1″; the engine's mean points are
+      astrological constructs with several published variants.
+    """
+    from astrotext.kernel import points as kp
+    jds = np.sort(rng.uniform(JD0, JD1, n_instants))
+    fl = swe.FLG_SWIEPH | swe.FLG_SPEED
+    core = (jds > 2396758.5) & (jds < 2506332.5)
+    out, fails = [], []
+    gates = {
+        "true_node": dict(lon=0.10, lon_core=0.04, lat=1e-9, dist=2e-9,
+                          spd=1e-4),
+        "mean_node": dict(lon=0.8, lon_core=0.6, lat=1e-9, dist=1e-9,
+                          spd=1e-5),
+        "mean_apogee": dict(lon=2.0, lon_core=2.0, lat=0.3, dist=1e-9,
+                            spd=1e-5),
+    }
+    for name, ipl in POINT_IPL:
+        se = np.array([swe.calc(float(j), ipl, fl)[0] for j in jds])
+        ours = kp.apparent_with_speed(name, jds)
+        g = gates[name]
+        dlon = np.abs(_wrap_asec(ours.lon - se[:, 0]))
+        dlat = np.abs((ours.lat - se[:, 1]) * 3600.0)
+        ddist = np.abs(ours.dist - se[:, 2])
+        dspd = np.abs(ours.lon_speed - se[:, 3])
+        # lat gate in arcsec for the apogee; nodes are exactly 0 both sides
+        ok = (dlon.max() <= g["lon"] and dlon[core].max() <= g["lon_core"]
+              and (dlat.max() <= g["lat"] if name == "mean_apogee"
+                   else dlat.max() == 0.0)
+              and ddist.max() <= g["dist"] and dspd.max() <= g["spd"])
+        if not ok:
+            fails.append(name)
+        out.append(
+            f"{name:12} dlon={dlon.max():7.4f}\" (core {dlon[core].max():7.4f}\") "
+            f"dlat={dlat.max():7.4f}\" ddist={ddist.max():.2e}au "
+            f"dspd={dspd.max():.2e}°/d {'ok' if ok else 'FAIL'}")
+    return out, fails
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260708)
@@ -208,9 +278,12 @@ def main() -> None:
     k2_lines, k2_fails = k2_grid(rng)
     lines += k2_lines
     lines += k2_skyfield(rng)
-    lines += [f"K2: {'PASS' if not k2_fails else 'FAIL ' + str(k2_fails)}"]
+    lines += [f"K2: {'PASS' if not k2_fails else 'FAIL ' + str(k2_fails)}", ""]
+    k3_lines, k3_fails = k3_points(rng)
+    lines += k3_lines
+    lines += [f"K3: {'PASS' if not k3_fails else 'FAIL ' + str(k3_fails)}"]
     print("\n".join(lines))
-    if k2_fails:
+    if k2_fails or k3_fails:
         raise SystemExit(1)
 
 

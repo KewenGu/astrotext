@@ -46,9 +46,10 @@ AU_KM = 149597870.7                    # IAU 2012 Resolution B2
 C_AUD = 299792.458 * 86400.0 / AU_KM   # speed of light, au/day
 _SPEED_H = 0.01                        # day; five-point stencil step
 
-#: engine body name → SPK chain spec
+#: engine body name → SPK chain spec ("chiron" comes from the fitted
+#: Horizons Chebyshev file, tools/fetch_chiron.py — see §6)
 BODIES = ("sun", "moon", "mercury", "venus", "mars", "jupiter",
-          "saturn", "uranus", "neptune", "pluto")
+          "saturn", "uranus", "neptune", "pluto", "chiron")
 
 
 class KernelEphemerisError(RuntimeError):
@@ -78,6 +79,38 @@ def _segments():
     }
 
 
+@functools.lru_cache(maxsize=1)
+def _chiron():
+    path = kernel_data_path() / "chiron_horizons.npz"
+    try:
+        z = np.load(path)
+    except OSError as exc:
+        raise KernelEphemerisError(
+            f"Chiron ephemeris missing: {path} — run tools/fetch_chiron.py"
+        ) from exc
+    return float(z["jd0"]), float(z["seg_days"]), z["coeffs"]
+
+
+def _chiron_state(jd):
+    """Barycentric ICRF Chiron state from the fitted Chebyshev segments;
+    velocity from the analytic derivative.  jd: (n,) -> (3, n), (3, n)."""
+    jd0, seg, coeffs = _chiron()
+    j = np.asarray(jd, dtype=float)
+    k = np.clip(((j - jd0) // seg).astype(int), 0, len(coeffs) - 1)
+    x = 2.0 * (j - (jd0 + k * seg)) / seg - 1.0
+    pos = np.empty((3, len(j)))
+    vel = np.empty((3, len(j)))
+    scale = 2.0 / seg                       # dx/djd
+    for ki in np.unique(k):
+        m = k == ki
+        for c in range(3):
+            cf = coeffs[ki, c]
+            pos[c, m] = np.polynomial.chebyshev.chebval(x[m], cf)
+            vel[c, m] = np.polynomial.chebyshev.chebval(
+                x[m], np.polynomial.chebyshev.chebder(cf)) * scale
+    return pos, vel
+
+
 def _seg_state(seg, jd):
     p, v = seg.compute_and_differentiate(jd)
     return p / AU_KM, v / AU_KM        # au, au/day
@@ -97,6 +130,8 @@ def state_ssb(body: str, jd):
         return p1 + p2, v1 + v2
     if body == "sun":
         return _seg_state(s["ssb"][10], jd)
+    if body == "chiron":
+        return _chiron_state(jd)
     if body == "mercury":
         p1, v1 = _seg_state(s["ssb"][1], jd)
         p2, v2 = _seg_state(s["mer"], jd)

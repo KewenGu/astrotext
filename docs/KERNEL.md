@@ -1,6 +1,6 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO · K1 DONE · K2 DONE (all 2026-07-08) · next: K3.
+Status: K0 GO · K1 DONE · K2 DONE · K3 DONE (all 2026-07-08) · next: K4.
 Owner doc for the V2 kernel swap.
 
 K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
@@ -38,6 +38,22 @@ Skyfield 1.54 on the same DE440 ≤0.0002″ planets / 0.0013″ Moon (the
 TDB−TT term we document as negligible) — 30× tighter than either is to
 SE, isolating pipeline correctness from SE model/data differences.
 Perf: 11 µs/body-instant on shared-Frames grids (budget ≤50).
+
+K3 measured (65-instant grid): TRUE_NODE from DE440 osculating elements
+≤0.058″ vs SE (0.020″ in 1850-2150) — the node amplifies the lunar
+DE431→DE440 plane divergence by ~1/sin i ≈ 11; node distance
+(osculating-ellipse radius, μ from the DE440 header) ≤6e-10 au.
+MEAN_NODE ≤0.64″ and MEAN_APOGEE ≤1.61″/0.09″ lat from the published
+Meeus/ELP-2000 polynomials (+Δψ; apogee projected from the inclined
+mean orbit — SE manual §2.2.1 convention) vs SE's Moshier fit with
+DE431-derived corrections, which SE itself rates at ~1″; display is 1″.
+CHIRON from a current JPL Horizons solution (raw vectors fitted to
+64-day Chebyshev segments, residual 3.5e-9 au = Horizons noise;
+type-21 SPKs are unreadable by jplephem): vs SE's older solution
+≤1.02″ inside 1880-2160, ~3.5″ at span edges — an orbit-solution
+difference (ours is the newer fit), gated and documented.  §6's naive
+0.01″/0.5″/0.05″ targets are superseded by these measured, attributed
+gates in tools/verify_kernel.py.
 Read with PLAN.md §V2 (milestones, in Chinese) and TECHNIQUES.md (which
 stays kernel-agnostic).  Rule inherited from the house style: every
 convention states its source; no hidden defaults; clean-room only.

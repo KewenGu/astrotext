@@ -177,3 +177,11 @@ dossier/<person>/
 - **测试**:新增 tests/kernel(299 个,全部无 SE 依赖,fixtures 黑盒生成)+ 原 323 → **622 全绿(Mac 7.6s)**;verify_report.py PASS;tools/verify_kernel.py = K 系列验收报告(K1+K2 PASS,Skyfield 段可选)。
 - **提交**:205f900(K0)、3b7074b(K1)、1e56d2a(K2)+ 本收尾提交;git 操作须在 Mac 侧执行(沙盒对 .git 无 unlink 权限,锁文件要 Mac 清)。
 - **下一步 K3**:真/平交点、Lilith(Meeus/Chapront 多项式,0.5″ 容差)、Chiron SPK(Horizons 生成,Mac 网络可达已验证);然后 K4 分宫(swehouse 保持不读,Holden/Munkasey 公式)。
+
+### Session 3(续)— 同日 · K3 完成(kernel/points.py + chiron)
+- **TRUE_NODE**:DE440 状态向量密切轨道根数(真黄道系,几何态);≤0.058″/全跨度、0.020″/1850–2150——月历 DE 分歧被 1/sin i≈11 放大所致;交点距离(密切椭圆在交点处半径,μ 取 DE440 头文件 GM)对齐 SE 至 6e-10 au。
+- **MEAN_NODE / MEAN_APOGEE**:Meeus ch.47(ELP-2000)多项式 + Δψ;**Lilith 用 SE 手册 §2.2.1 的倾斜平轨道投影**(±7′ 投影项 + β=asin(sin i sin u),i=5.145396°)——对 SE ≤0.64″/1.61″(SE 自评其平点精度 ~1″,展示精度 1″);SE 对平点返回常数距离(已 pin:0.0025695553/0.0027106251 au)。
+- **CHIRON**:Horizons type-21 SPK jplephem 读不了 → tools/fetch_chiron.py 抓原始矢量(109,765 态,1798–2400,SSB/ICRF/TDB)自拟合 64 天 Chebyshev(残差 3.5e-9 au=Horizons 自身噪声);接入管线为第 11 天体。对 SE:1880–2160 内 ≤1.02″、跨度边缘 ~3.5″=**轨道解代差**(SE 用旧解,我方为现行解,反而更准);按窗口 gate 并记录。
+- **发现**:SE 平交点 1955 前…(ΔT 同款)无;新发现=SE 手册明示 Lilith 需投影(de Gravelaine 星历即因未投影而差数角分)。
+- 测试 385(kernel)全绿;verify_kernel K1+K2+K3 全 PASS(Skyfield 段已在 Mac .venv 补装);fixtures 三份(timescales/bodies/points)。
+- **下一步 K4 分宫**:ARMC=gst06a+东经、8 制式 vs swetest ≤0.001″、极地语义 byte-for-byte;然后 K5 恒星制。

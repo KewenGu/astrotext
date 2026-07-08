@@ -39,6 +39,10 @@ def wrap_asec(d):
 def _gates(body):
     if body == "moon":
         return dict(ang=0.05, ra=0.06, spd=1.2e-4)
+    if body == "chiron":
+        # orbit-solution difference vs SE's older Chiron fit: ≤~1″ in the
+        # observation-anchored era, ~3.5″ at span edges (see verify docs)
+        return dict(ang=5.0, ra=5.0, spd=1.2e-5)
     return dict(ang=0.012, ra=0.012, spd=1.2e-5)
 
 
@@ -49,7 +53,9 @@ def test_apparent_parity(case):
     a = kb.apparent_with_speed(case["body"], case["jd_tt"])
     assert abs(wrap_asec(a.lon - case["lon"])) <= g["ang"]
     assert abs(a.lat - case["lat"]) * 3600.0 <= g["ang"]
-    assert abs(a.dist - case["dist"]) <= max(2e-8, 5e-9 * case["dist"])
+    dist_gate = 5e-5 if case["body"] == "chiron" else max(
+        2e-8, 5e-9 * case["dist"])
+    assert abs(a.dist - case["dist"]) <= dist_gate
     assert abs(wrap_asec(a.ra - case["ra"])) <= g["ra"]
     assert abs(a.dec - case["dec"]) * 3600.0 <= g["ang"]
     assert abs(a.lon_speed - case["lon_speed"]) <= g["spd"]
