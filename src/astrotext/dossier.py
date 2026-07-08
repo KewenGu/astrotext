@@ -70,6 +70,8 @@ def build_dossier(
     current_place: Place,
     settings: Settings = MODERN,
     fmt: str = "both",
+    vedic_settings=None,
+    tech=None,
 ) -> dict[str, str]:
     """Compute the complete dossier as {filename: content} without touching
     the filesystem — the shared engine behind the CLI writer and the MCP
@@ -81,6 +83,8 @@ def build_dossier(
     """
     if fmt not in ("text", "json", "both"):
         raise ValueError("fmt must be 'text', 'json', or 'both'")
+    from .options import TechOptions
+    tech = tech or TechOptions()
     want_text = fmt in ("text", "both")
     want_json = fmt in ("json", "both")
     eph = default_ephemeris()
@@ -113,23 +117,29 @@ def build_dossier(
          J.chart_to_dict(hell, name))
 
     # ---- timed layers --------------------------------------------------------
-    tr = compute_transits(natal, now)
+    tr = compute_transits(natal, now, orb=tech.transit_orb,
+                          window_days=tech.transit_window_days)
     emit("20_transits", render_transits(tr, name), J.transits_to_dict(tr, name))
-    sec = compute_progressed(natal, now, "secondary")
+    sec = compute_progressed(natal, now, "secondary",
+                             year=tech.progression_year,
+                             month=tech.progression_month)
     emit("21_secondary", render_progressed(sec, name),
          J.progressed_to_dict(sec, name))
-    ter = compute_progressed(natal, now, "tertiary")
+    ter = compute_progressed(natal, now, "tertiary",
+                             year=tech.progression_year,
+                             month=tech.progression_month)
     emit("22_tertiary", render_progressed(ter, name),
          J.progressed_to_dict(ter, name))
-    sa = compute_solar_arc(natal, now)
+    sa = compute_solar_arc(natal, now, year=tech.progression_year)
     emit("23_solar_arc", render_solar_arc(sa, name), J.solar_arc_to_dict(sa, name))
-    sr = compute_return(natal, now, "SUN")
+    sr = compute_return(natal, now, "SUN", precessed=tech.return_precessed)
     emit("30_solar_return", render_return(sr, name), J.return_to_dict(sr, name))
-    lr = compute_return(natal, now, "MOON")
+    lr = compute_return(natal, now, "MOON", precessed=tech.return_precessed)
     emit("31_lunar_return", render_return(lr, name), J.return_to_dict(lr, name))
     if natal.is_day is not None:
-        fd = firdaria(natal)
-        emit("40_firdaria", render_firdaria(fd, natal, name),
+        fd = firdaria(natal, nodes=tech.firdaria_nodes)
+        emit("40_firdaria",
+             render_firdaria(fd, natal, name, nodes=tech.firdaria_nodes),
              J.firdaria_to_dict(fd, natal, name))
     if natal.angles is not None:
         pf = profections(natal, now)
@@ -142,7 +152,8 @@ def build_dossier(
     )
     from .techniques.vedic import compute_vedic_chart, varga_table, vimshottari
 
-    vc = compute_vedic_chart(natal_m, unknown_time=natal.settings.unknown_time)
+    vc = compute_vedic_chart(natal_m, vedic_settings,
+                             unknown_time=natal.settings.unknown_time)
     emit("50_vedic_rashi", render_vedic_rashi(vc, name),
          J.vedic_chart_to_dict(vc, name))
     vlons = {k: vc.grahas[k].lon for k in vc.grahas}
@@ -152,7 +163,8 @@ def build_dossier(
     emit("51_vedic_vargas", render_vargas(vc, vtable, name),
          J.vargas_to_dict(vc, vtable, name))
     vd = vimshottari(vc.grahas["MOON"].lon, natal_m.jd_ut,
-                     vc.settings.dasha_year_days)
+                     vc.settings.dasha_year_days,
+                     max_level=tech.dasha_max_level)
     emit("52_vedic_vimshottari", render_vimshottari(vd, vc, now.jd_ut, name),
          J.vimshottari_to_dict(vd, vc, now.jd_ut, name))
 
@@ -234,11 +246,14 @@ def generate_dossier(
     out_dir: str | Path,
     settings: Settings = MODERN,
     fmt: str = "both",
+    vedic_settings=None,
+    tech=None,
 ) -> Path:
     """Write the complete dossier; returns its directory path."""
     out = Path(out_dir)
     out.mkdir(parents=True, exist_ok=True)
-    files = build_dossier(subject, now_utc, current_place, settings, fmt)
+    files = build_dossier(subject, now_utc, current_place, settings, fmt,
+                          vedic_settings, tech)
     for fname, text in files.items():
         (out / fname).write_text(text, encoding="utf-8")
     return out

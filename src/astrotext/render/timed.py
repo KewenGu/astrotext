@@ -116,12 +116,14 @@ def render_return(rep, subject: str | None = None, hour=None, stars=None) -> str
     return render_chart(rep.chart, subject, hour, stars, extra_meta=extra)
 
 
-def render_firdaria(periods, natal, subject: str | None = None) -> str:
+def render_firdaria(periods, natal, subject: str | None = None,
+                    nodes: str = "after-mars") -> str:
     L: list[str] = [f"== ASTROTEXT FIRDARIA {FORMAT_VERSION} =="]
     if subject:
         L.append(f"subject={subject}")
     L += _natal_ref(natal)
-    L.append(f"sect={'day' if natal.is_day else 'night'} sequence")
+    L.append(f"sect={'day' if natal.is_day else 'night'} sequence | "
+             f"node-placement={nodes}")
     L.append("# level | lord (major/sub) | ages | dates")
     L.append("")
     L.append("-- FIRDARIA TIMELINE --")

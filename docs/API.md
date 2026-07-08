@@ -208,6 +208,39 @@ the only parameterized GET is place resolution.  format=text returns the
 exact bytes the CLI writes (pinned by tests); errors are
 `{"error": "..."}` with 400/404/413/500.  Request bodies are never logged.
 
+#### Settings in requests
+
+Both POST routes (and the MCP tools) accept an optional `"settings"`
+object.  Every key is optional; unknown keys or bad values are 400s —
+a typo must never silently fall back to a default (axiom #2).  All chosen
+values are echoed in the output headers as always.
+
+```json
+"settings": {
+  "house_system": "P|W|K|O|R|C|A|B",        "polar_fallback": "O|W|A",
+  "node": "true|mean",                       "aspects": "majors|majors+minors",
+  "angle_orb": 3.0,
+  "transit_orb": 3.0,                        "transit_window_days": 400,
+  "progression_year": "tropical|julian",
+  "progression_month": "tropical|sidereal",
+  "return_precessed": false,
+  "firdaria_nodes": "after-mars|at-end",
+  "vedic": {
+    "ayanamsa": "lahiri|krishnamurti|raman|fagan-bradley",
+    "node": "mean|true",
+    "karaka_scheme": 8,
+    "dasha_year_days": 365.25,
+    "dasha_max_level": 3,
+    "vargas": [1, 9, 10]
+  }
+}
+```
+
+Parsing lives in `astrotext.options.parse_settings`, which returns the
+same frozen `(Settings, VedicSettings, TechOptions)` objects the Python
+API uses — facade requests and library calls are provably identical.
+Distinct settings produce distinct cache entries (canonical-JSON keys).
+
 ---
 
 ## Stability contract

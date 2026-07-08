@@ -92,6 +92,15 @@ TOOLS = [
                 "current": _CURRENT_SCHEMA,
                 "format": {"type": "string", "enum": ["text", "json"],
                            "default": "text"},
+                "settings": {"type": "object",
+                             "description": "optional knobs: house_system "
+                             "P|W|K|O|R|C|A|B, node true|mean, aspects, "
+                             "angle_orb, transit_orb, transit_window_days, "
+                             "progression_year|month, return_precessed, "
+                             "firdaria_nodes, vedic{ayanamsa,node,"
+                             "karaka_scheme,dasha_year_days,dasha_max_level,"
+                             "vargas} — see docs/API.md; unknown keys are "
+                             "rejected"},
             },
             "required": ["kind", "subject"],
         },
@@ -133,6 +142,8 @@ TOOLS = [
                 "include": {"type": "array", "items": {"type": "string"},
                             "description": "chart kinds to include (default: "
                                            "all); index+meta always included"},
+                "settings": {"type": "object",
+                             "description": "same knobs as astro_chart"},
             },
             "required": ["subject", "now", "current"],
         },
@@ -152,8 +163,11 @@ def _parse_dt(s: str) -> dt.datetime:
 
 @lru_cache(maxsize=32)
 def _dossier_cached(subject_key: tuple, now_s: str, cur_key: tuple,
-                    fmt: str) -> dict[str, str]:
+                    fmt: str, settings_json: str = "{}") -> dict[str, str]:
+    import json as _json
+
     from .dossier import Subject, build_dossier
+    from .options import parse_settings
     from .timespace import Place
     name, birth, lat, lon, tz, place_name, calendar, fold, unknown = subject_key
     subject = Subject(
@@ -162,9 +176,13 @@ def _dossier_cached(subject_key: tuple, now_s: str, cur_key: tuple,
         calendar=calendar, fold=fold, unknown_time=unknown,
     )
     clat, clon, cname = cur_key
+    settings, vedic, tech = parse_settings(_json.loads(settings_json) or None)
+    if unknown:
+        settings = settings.with_(unknown_time=True)
     return build_dossier(
         subject, _parse_dt(now_s).replace(tzinfo=dt.timezone.utc),
-        Place(clat, clon, cname), fmt=fmt,
+        Place(clat, clon, cname), settings=settings, fmt=fmt,
+        vedic_settings=vedic, tech=tech,
     )
 
 
@@ -186,9 +204,11 @@ def _call_astro_chart(args: dict) -> str:
         raise ValueError(f"kind {kind!r} needs 'now' (UTC)")
     cur = args.get("current") or {"lat": subject["lat"], "lon": subject["lon"],
                                   "name": subject.get("place_name")}
+    from .options import settings_cache_key
     files = _dossier_cached(_subject_key(subject), now,
                             (float(cur["lat"]), float(cur["lon"]),
-                             cur.get("name")), "both")
+                             cur.get("name")), "both",
+                            settings_cache_key(args.get("settings")))
     ext = "txt" if fmt == "text" else "json"
     fname = f"{_STEM[kind]}.{ext}"
     if fname not in files:
@@ -215,9 +235,11 @@ def _call_resolve_place(args: dict) -> str:
 def _call_astro_dossier(args: dict) -> str:
     subject = args["subject"]
     cur = args["current"]
+    from .options import settings_cache_key
     files = _dossier_cached(_subject_key(subject), args["now"],
                             (float(cur["lat"]), float(cur["lon"]),
-                             cur.get("name")), "text")
+                             cur.get("name")), "text",
+                            settings_cache_key(args.get("settings")))
     include = args.get("include")
     stems = ([_STEM[k] for k in include if k in _STEM] if include
              else list(_STEM.values()))

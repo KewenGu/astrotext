@@ -48,12 +48,14 @@ def _chart(payload: dict) -> tuple[int, str, str]:
 
 
 def _dossier(payload: dict) -> tuple[int, str, str]:
+    from .options import settings_cache_key
     subject = payload["subject"]
     cur = payload["current"]
     fmt = payload.get("format", "text")
     files = _dossier_cached(_subject_key(subject), payload["now"],
                             (float(cur["lat"]), float(cur["lon"]),
-                             cur.get("name")), fmt)
+                             cur.get("name")), fmt,
+                            settings_cache_key(payload.get("settings")))
     include = payload.get("include")
     stems = ([_STEM[k] for k in include if k in _STEM] if include
              else list(_STEM.values()))

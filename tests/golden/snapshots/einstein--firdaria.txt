@@ -1,7 +1,7 @@
 == ASTROTEXT FIRDARIA v0 ==
 subject=Albert Einstein
 natal-ref=1879-03-14 11:30:00 @ Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57 jd-ut=2407422.95142361
-sect=day sequence
+sect=day sequence | node-placement=after-mars
 # level | lord (major/sub) | ages | dates
 
 -- FIRDARIA TIMELINE --
