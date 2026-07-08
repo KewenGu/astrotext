@@ -105,3 +105,9 @@ No hidden defaults (design axiom).  [M2+] marks not-yet-implemented layers.
   Deeper levels (sookshma+) and other dashas (Yogini, Chara): backlog.
 * Backlog: shadbala, ashtakavarga, yogas catalog, bhava chalit (Sripati),
   KP sub-lords, muhurta tools.
+* Adversarially reviewed (independent BPHS re-derivation, incl. 7
+  hand-executed varga test cases and value-by-value start-sign tables):
+  zero mismatches.  Tradition-variant notes: dasha year length (365.25
+  default vs 360 savana), node drishti (none by default), MK/PiK order in
+  some karaka recensions, cyclical-hora / Somnath-drekkana alternatives —
+  all exposed as knobs or documented defaults.

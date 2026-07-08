@@ -122,3 +122,9 @@ dossier/<person>/
   3. **UAT**：用户在 astro.com 抽查 2-3 个真实案例（行星到分、宫头到分、返照时刻到分钟）；名人 fixtures 的出生数据凭记忆，需对 Astro-Databank 复核。
   4. **待办小项**：GeoNames 离线地名库（中文别名）；三限 Troinski II 变体考证；VOC 现代变体开关；次限四轴对 astro.com 缺省的最终对齐（UAT 时定）；1200-1799 星历文件（会话内 GitHub 被限流，vendor.sh 已有自愈逻辑）。
 - **环境备忘**：PyPI/npm 403；GitHub git 协议会话中途也变 403（vendor 需重试或换会话）；`make vendor` 从锁定 commit 重建一切。
+
+### Session 1（续）— 同日
+- **格式决策**：实测 JSON=2.48× 文本 token；定分工=text 喂模型 / JSON 喂代码，双视图默认并出（`--format`）。
+- **M5 完成（印度占星层）**：原生 FLG_SIDEREAL 恒星内核（手减 ayanamsa 有 ~14″ 章动坑，已规避并写入文档）、27宿+pada、panchanga、全 Shodashavarga 16 分盘、8-karaka、Parashari drishti、Vimshottari 三级 819 段；档案 15 组文件；288 测试全绿；swetest -sid1 逐位一致；对抗复核零错误。
+- **推送**：会话代理始终 403（仓库未绑入 session sources）；用户已建 public 仓库 KewenGu/astrotext 并用 bundle 推齐前 7 个 commit；M5 的新 commit 待用户从最新 bundle 推送。
+- **下一步候选**：西方 UAT（astro.com 抽查）+ Vedic UAT（drik-panchang 抽查）→ v1 格式冻结；GeoNames 中文地名库；VOC 现代变体；MCP server 化。
