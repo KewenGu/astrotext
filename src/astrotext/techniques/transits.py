@@ -55,6 +55,18 @@ class TransitHit:
 
 
 @dataclass(frozen=True, slots=True)
+class MoonVoidInfo:
+    """Void-of-course of the TRANSITING Moon (classical definition: no
+    exact major aspect to the seven before it leaves its current sign)."""
+    is_void: bool
+    moon_sign: int
+    sign_exit_jd: float
+    last_exact: tuple[str, str, float] | None   # (planet, aspect-abbr, jd) before now
+    next_exact: tuple[str, str, float] | None   # first after now (may be next sign)
+    next_is_after_sign_change: bool
+
+
+@dataclass(frozen=True, slots=True)
 class TransitReport:
     natal: Chart
     sky: Chart                  # transit-moment chart at current location
@@ -62,6 +74,7 @@ class TransitReport:
     hits: list[TransitHit]
     orb: float
     window_days: float
+    moon_void: MoonVoidInfo | None = None
 
 
 def _exact_times(eph: Ephemeris, key: str, natal_lon: float, theta: float,
@@ -78,6 +91,47 @@ def _exact_times(eph: Ephemeris, key: str, natal_lon: float, theta: float,
     for tgt in sorted(targets):
         roots += angular_roots(lon_of, tgt, t0, t1, step)
     return tuple(sorted(roots))
+
+
+_VOC_TARGETS = ("SUN", "MERCURY", "VENUS", "MARS", "JUPITER", "SATURN")
+_VOC_ANGLES = (0.0, 60.0, 90.0, 120.0, 180.0)
+
+
+def compute_moon_void(now_jd: float, eph: Ephemeris | None = None
+                      ) -> MoonVoidInfo:
+    """Classical (Lilly) VOC: the sky Moon perfects no major aspect to the
+    seven before leaving its sign.  Aspects are solved against the MOVING
+    planet (relative-longitude root), not a frozen position."""
+    eph = eph or default_ephemeris()
+    moon0 = eph.state(now_jd, "MOON")
+    sign = int(moon0.lon // 30) % 12
+    exit_lon = ((sign + 1) % 12) * 30.0
+    exits = angular_roots(lambda t: eph.state(t, "MOON").lon, exit_lon,
+                          now_jd, now_jd + 3.2, 0.5)
+    sign_exit = exits[0] if exits else now_jd + 2.7  # moon always exits < 2.7d
+
+    events: list[tuple[float, str, str]] = []
+    for pk in _VOC_TARGETS:
+        def rel(t: float, _pk=pk) -> float:
+            return norm360(eph.state(t, "MOON").lon - eph.state(t, _pk).lon)
+        for theta in _VOC_ANGLES:
+            targets = {theta} if theta in (0.0, 180.0) else {theta, 360.0 - theta}
+            for tgt in targets:
+                for r in angular_roots(rel, tgt, now_jd - 3.2, now_jd + 6.5, 0.5):
+                    abbr = {0.0: "con", 60.0: "sex", 90.0: "squ",
+                            120.0: "tri", 180.0: "opp"}[theta]
+                    events.append((r, pk, abbr))
+    events.sort()
+    past = [e for e in events if e[0] <= now_jd]
+    future = [e for e in events if e[0] > now_jd]
+    last = (past[-1][1], past[-1][2], past[-1][0]) if past else None
+    nxt = (future[0][1], future[0][2], future[0][0]) if future else None
+    is_void = not any(now_jd < e[0] <= sign_exit for e in events)
+    return MoonVoidInfo(
+        is_void=is_void, moon_sign=sign, sign_exit_jd=sign_exit,
+        last_exact=last, next_exact=nxt,
+        next_is_after_sign_change=bool(nxt and nxt[2] > sign_exit),
+    )
 
 
 def compute_transits(
@@ -128,4 +182,5 @@ def compute_transits(
                     exact_jds=_exact_times(eph, tk, nlon, a.angle, t0, t1),
                 ))
     return TransitReport(natal=natal, sky=sky, natal_wheel_houses=wheel,
-                         hits=hits, orb=orb, window_days=window_days)
+                         hits=hits, orb=orb, window_days=window_days,
+                         moon_void=compute_moon_void(now.jd_ut, eph))

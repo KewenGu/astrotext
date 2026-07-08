@@ -155,6 +155,13 @@ def build_timed(fx):
 
     _, natal, _, _ = build(fx)
     now = from_utc(TIMED_NOW_UTC, TIMED_PLACE)
+    from astrotext.render.timed import (
+        render_firdaria, render_profections, render_return,
+    )
+    from astrotext.techniques.firdaria import firdaria
+    from astrotext.techniques.profections import profections
+    from astrotext.techniques.returns import compute_return
+
     out = {
         "transits": render_transits(compute_transits(natal, now), fx.name),
         "secondary": render_progressed(
@@ -162,5 +169,11 @@ def build_timed(fx):
         "tertiary": render_progressed(
             compute_progressed(natal, now, "tertiary"), fx.name),
         "solar-arc": render_solar_arc(compute_solar_arc(natal, now), fx.name),
+        "solar-return": render_return(
+            compute_return(natal, now, "SUN"), fx.name),
+        "lunar-return": render_return(
+            compute_return(natal, now, "MOON"), fx.name),
+        "firdaria": render_firdaria(firdaria(natal), natal, fx.name),
+        "profections": render_profections(profections(natal, now), fx.name),
     }
     return out

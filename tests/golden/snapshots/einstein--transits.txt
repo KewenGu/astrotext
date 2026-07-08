@@ -60,4 +60,9 @@ t.CHIRON | squ 90 | n.TRUE_NODE | -2.171 | A | 2027-05-31 14:18Z
 t.CHIRON | squ 90 | n.SOUTH_NODE_TRUE | +2.171 | A | 2027-05-31 14:18Z
 t.CHIRON | con 0 | n.MEAN_APOGEE | +2.584 | S | 2026-05-09 05:19Z; 2026-11-03 03:31Z; 2027-03-09 22:35Z
 
+-- MOON VOID-OF-COURSE (classical: majors to the seven) --
+void=no | moon-sign=Ari | sign-exit=2026-07-08 20:31Z
+last-exact=squ MERCURY @ 2026-07-08 09:25Z
+next-exact=tri VENUS @ 2026-07-08 18:42Z
+
 == END ==

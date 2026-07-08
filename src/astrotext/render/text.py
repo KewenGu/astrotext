@@ -35,12 +35,14 @@ def dms(lon: float) -> str:
     return f"{d:02d}{SIGNS_ABBR[sign_no]}{m:02d}'{int(s):02d}\""
 
 
-def _meta(chart: Chart, subject: str | None) -> list[str]:
+def _meta(chart: Chart, subject: str | None,
+          extra_meta: tuple[str, ...] = ()) -> list[str]:
     m = chart.moment
     L: list[str] = []
     L.append(f"== ASTROTEXT {chart.kind.upper()} {FORMAT_VERSION} ==")
     if subject:
         L.append(f"subject={subject}")
+    L.extend(extra_meta)
     L.append(f"local={m.local.isoformat(sep=' ')} calendar={m.calendar}")
     L.append(f"place={m.place.label()} tz={m.tz_used}")
     off = m.utc_offset.total_seconds()
@@ -67,8 +69,9 @@ def _meta(chart: Chart, subject: str | None) -> list[str]:
 
 def render_chart(chart: Chart, subject: str | None = None,
                  hour: PlanetaryHour | None = None,
-                 stars: list[StarHit] | None = None) -> str:
-    L = _meta(chart, subject)
+                 stars: list[StarHit] | None = None,
+                 extra_meta: tuple[str, ...] = ()) -> str:
+    L = _meta(chart, subject, extra_meta)
     p = chart.points
 
     # ---- points -------------------------------------------------------------

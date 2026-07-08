@@ -1,0 +1,147 @@
+== ASTROTEXT MOON-RETURN v0 ==
+subject=Albert Einstein
+return-of=MOON natal-lon-used=254.526395 precessed=no
+active-return-jd=2461219.50126500 (2026-06-28 00:01:49Z) residual=0.0025arcsec
+next-return-jd=2461246.76888564 (2026-07-25 06:27:12Z)
+natal-ref-jd=2407422.95142361
+cast-at=New York NY (40.7128N 74.0060W) (current residence by default)
+local=2026-06-28 00:01:49.296289 calendar=gregorian
+place=New York NY (40.7128N 74.0060W) tz=UT
+utc=2026-06-28 00:01:49 offset=+00:00:00
+jd-ut=2461219.50126500 delta-t=+68.84s
+set:zodiac=tropical
+set:houses=P(polar-fallback=O)
+set:points=SUN,MOON,MERCURY,VENUS,MARS,JUPITER,SATURN,URANUS,NEPTUNE,PLUTO,TRUE_NODE,SOUTH_NODE_TRUE,CHIRON,MEAN_APOGEE
+set:angle-aspects=ASC,MC@3
+set:aspects=con0:8/10,sex60:5/6,squ90:7/8,tri120:7/8,opp180:8/10,ssx30:2/2,ssq45:2/2,sqq135:2/2,qcx150:2.5/2.5
+set:node=true
+set:unknown-time=false
+set:star-orb=1 antiscia-orb=1
+houses-used=P
+sect=day sun-altitude=+4.02
+obliquity=23.437913
+warning=(none)
+
+-- POINTS --
+# point | position | house | lon | lat | speed | decl | tags
+SUN | 06Can20'39" | H7 | 96.344044 | -0.000141 | +0.953441 | +23.2858 | -
+MOON | 14Sag31'35" | H12 | 254.526395 | -4.943326 | +11.867708 | -27.4499 | OOB
+MERCURY | 26Can08'30" | H7 | 116.141780 | -1.710795 | +0.133410 | +19.2395 | -
+VENUS | 16Leo47'00" | H8 | 136.783367 | +1.859910 | +1.140112 | +17.5778 | -
+MARS | 29Tau25'17" | H5 | 59.421256 | -0.335406 | +0.714297 | +19.6980 | -
+JUPITER | 29Can31'18" | H7 | 119.521769 | +0.435887 | +0.212528 | +20.6761 | -
+SATURN | 14Ari03'03" | H3 | 14.050751 | -2.369222 | +0.047660 | +3.3570 | -
+URANUS | 03Gem33'20" | H5 | 63.555636 | -0.156603 | +0.051242 | +20.7094 | -
+NEPTUNE | 04Ari23'37" | H3 | 4.393527 | -1.363707 | +0.005184 | +0.4943 | -
+PLUTO | 04Aqu56'11" | H1 | 304.936463 | -4.216926 | -0.019825 | -23.1200 | R
+TRUE_NODE | 01Pis20'07" | H2 | 331.335327 | +0.000000 | -0.172234 | -10.9993 | R
+SOUTH_NODE_TRUE | 01Vir20'07" | H8 | 151.335327 | -0.000000 | -0.172234 | +10.9993 | R
+CHIRON | 00Tau16'34" | H4 | 30.276229 | +0.275327 | +0.031134 | +11.8261 | -
+MEAN_APOGEE | 21Sag11'52" | H12 | 261.197653 | -4.882178 | +0.111970 | -28.0167 | OOB
+
+-- ANGLES --
+ASC | 00Cap36'06" | 270.601774
+MC | 24Lib21'35" | 204.359720
+DSC | 00Can36'06" | 90.601774
+IC | 24Ari21'35" | 24.359720
+VERTEX | 11Leo24'05" | 131.401349
+ARMC | 22Lib33'31" | 202.558739
+
+-- HOUSES (P) --
+H1 | 00Cap36'06" | 270.601774
+H2 | 09Aqu21'21" | 309.355900
+H3 | 20Pis45'17" | 350.754584
+H4 | 24Ari21'35" | 24.359720
+H5 | 19Tau42'22" | 49.706242
+H6 | 10Gem34'23" | 70.573033
+H7 | 00Can36'06" | 90.601774
+H8 | 09Leo21'21" | 129.355900
+H9 | 20Vir45'17" | 170.754584
+H10 | 24Lib21'35" | 204.359720
+H11 | 19Sco42'22" | 229.706242
+H12 | 10Sag34'23" | 250.573033
+
+-- ASPECTS --
+# p1 | aspect | p2 | orb(deg,signed=sep-exact) | A=applying S=separating E=exact
+SUN | squ 90 | SATURN | -7.707 | A
+SUN | squ 90 | NEPTUNE | +1.951 | S
+SUN | qcx 150 | PLUTO | +1.408 | S
+SUN | tri 120 | TRUE_NODE | +5.009 | S
+SUN | sex 60 | SOUTH_NODE_TRUE | -5.009 | S
+MOON | tri 120 | VENUS | -2.257 | A
+MOON | sqq 135 | JUPITER | +0.005 | E
+MOON | tri 120 | SATURN | -0.476 | S
+MOON | sqq 135 | CHIRON | +0.750 | A
+MOON | con 0 | MEAN_APOGEE | +6.671 | A
+MERCURY | sex 60 | MARS | -3.279 | S
+MERCURY | con 0 | JUPITER | +3.380 | S
+MERCURY | squ 90 | CHIRON | -4.134 | A
+MERCURY | squ 90 | MC | -1.782 | -
+VENUS | tri 120 | SATURN | +2.733 | S
+VENUS | tri 120 | MEAN_APOGEE | +4.414 | A
+VENUS | sqq 135 | ASC | -1.182 | -
+MARS | sex 60 | JUPITER | +0.101 | A
+MARS | ssq 45 | SATURN | +0.371 | S
+MARS | con 0 | URANUS | +4.134 | A
+MARS | sex 60 | NEPTUNE | -4.972 | A
+MARS | tri 120 | PLUTO | -5.515 | A
+MARS | squ 90 | TRUE_NODE | -1.914 | A
+MARS | squ 90 | SOUTH_NODE_TRUE | +1.914 | A
+MARS | ssx 30 | CHIRON | -0.855 | A
+MARS | qcx 150 | ASC | -1.181 | -
+JUPITER | sex 60 | URANUS | -4.034 | A
+JUPITER | tri 120 | NEPTUNE | -4.872 | A
+JUPITER | opp 180 | PLUTO | -5.415 | A
+JUPITER | qcx 150 | TRUE_NODE | -1.814 | A
+JUPITER | ssx 30 | SOUTH_NODE_TRUE | +1.814 | A
+JUPITER | squ 90 | CHIRON | -0.754 | A
+JUPITER | qcx 150 | ASC | +1.080 | -
+URANUS | sex 60 | NEPTUNE | -0.838 | A
+URANUS | tri 120 | PLUTO | -1.381 | A
+URANUS | squ 90 | TRUE_NODE | +2.220 | S
+URANUS | squ 90 | SOUTH_NODE_TRUE | -2.220 | S
+URANUS | qcx 150 | ASC | +2.954 | -
+NEPTUNE | sex 60 | PLUTO | -0.543 | A
+PLUTO | squ 90 | CHIRON | -4.660 | A
+PLUTO | ssq 45 | MEAN_APOGEE | -1.261 | S
+TRUE_NODE | opp 180 | SOUTH_NODE_TRUE | +0.000 | E
+TRUE_NODE | sex 60 | CHIRON | -1.059 | A
+TRUE_NODE | sex 60 | ASC | +0.734 | -
+SOUTH_NODE_TRUE | tri 120 | CHIRON | +1.059 | A
+SOUTH_NODE_TRUE | tri 120 | ASC | -0.734 | -
+CHIRON | tri 120 | ASC | -0.326 | -
+
+-- DIGNITIES (classical seven, day chart) --
+# planet | essential | score | rulers-of-its-position: sign/exalt/trip(day,night,part)/bound/decan
+SUN | peregrine | +0 | MOON/JUPITER/(VENUS,MARS,MOON)/MARS/VENUS
+MOON | decan | +1 | JUPITER/-/(SUN,JUPITER,SATURN)/VENUS/MOON
+MERCURY | peregrine | +0 | MOON/JUPITER/(VENUS,MARS,MOON)/SATURN/MOON
+VENUS | peregrine | +0 | SUN/-/(SUN,JUPITER,SATURN)/SATURN/JUPITER
+MARS | triplicity,bound,detriment | +0 | VENUS/MOON/(VENUS,MOON,MARS)/MARS/SATURN
+JUPITER | exaltation | +4 | MOON/JUPITER/(VENUS,MARS,MOON)/SATURN/MOON
+SATURN | triplicity,fall | -1 | MARS/SUN/(SUN,JUPITER,SATURN)/MERCURY/SUN
+# score weights: domicile+5 exaltation+4 triplicity+3 bound+2 decan+1 detriment-5 fall-4
+
+-- RECEPTIONS (mutual) --
+MOON <-> JUPITER | domicile
+
+-- DISPOSITORS (domicile chains) --
+SUN | SUN > MOON > JUPITER > MOON (loop)
+MOON | MOON > JUPITER > MOON (loop)
+MERCURY | MERCURY > MOON > JUPITER > MOON (loop)
+VENUS | VENUS > SUN > MOON > JUPITER > MOON (loop)
+MARS | MARS > VENUS > SUN > MOON > JUPITER > MOON (loop)
+JUPITER | JUPITER > MOON > JUPITER (loop)
+SATURN | SATURN > MARS > VENUS > SUN > MOON > JUPITER > MOON (loop)
+
+-- LOTS --
+FORTUNE | 08Gem47'03" | 68.784126 | H5
+SPIRIT | 22Can25'10" | 112.419423 | H7
+
+-- MOON --
+phase=Waxing Gibbous | waxing=yes | elongation=158.182 | illumination=0.964
+
+-- ANTISCIA (orb 1) --
+MERCURY | antiscia | URANUS | +0.303
+
+== END ==

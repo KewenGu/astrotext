@@ -86,14 +86,18 @@ class Ephemeris:
         return xx
 
     # -- public --------------------------------------------------------------
-    def state(self, jd_ut: float, key: str) -> BodyState:
+    def state(self, jd_ut: float, key: str, extra_flags: int = 0) -> BodyState:
         """Compute a point by registry key (Swiss-Ephemeris-backed keys only;
-        derived points like SOUTH_NODE_* are assembled in the core layer)."""
+        derived points like SOUTH_NODE_* are assembled in the core layer).
+
+        ``extra_flags`` are OR-ed into the Swiss Ephemeris flag word — e.g.
+        FLG_J2000|FLG_NONUT for the fixed-frame longitudes used by
+        precession-corrected returns."""
         p = get_point(key)
         if p.se_id is None:
             raise ValueError(f"{key} is a derived point; compute {p.derived_from} instead")
-        ecl = self._calc(jd_ut, p.se_id, BASE_FLAGS)
-        equ = self._calc(jd_ut, p.se_id, BASE_FLAGS | swe.FLG_EQUATORIAL)
+        ecl = self._calc(jd_ut, p.se_id, BASE_FLAGS | extra_flags)
+        equ = self._calc(jd_ut, p.se_id, BASE_FLAGS | extra_flags | swe.FLG_EQUATORIAL)
         return BodyState(
             key=key, jd_ut=jd_ut,
             lon=ecl[0], lat=ecl[1], dist_au=ecl[2],

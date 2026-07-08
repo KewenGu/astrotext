@@ -1,0 +1,51 @@
+== ASTROTEXT PROFECTIONS v0 ==
+subject=Beijing DST-era summer birth
+natal-ref=1988-06-15 14:30:00 @ Beijing (39.9042N 116.4074E) tz=Asia/Shanghai jd-ut=2447327.72916837
+year-boundaries=actual solar returns; months=year/12 equal parts
+current-year=age 38 | ASC-profects-to Sag | year-lord=JUPITER
+current-month=no.1 | Sag | month-lord=JUPITER
+profected-MC=Vir
+profected-FORTUNE=Sag
+
+-- PROFECTION YEARS (age | sign | lord | starts) --
+0 | Lib | VENUS | 1988-06-15
+1 | Sco | MARS | 1989-06-15
+2 | Sag | JUPITER | 1990-06-15
+3 | Cap | SATURN | 1991-06-15
+4 | Aqu | SATURN | 1992-06-15
+5 | Pis | JUPITER | 1993-06-15
+6 | Ari | MARS | 1994-06-15
+7 | Tau | VENUS | 1995-06-15
+8 | Gem | MERCURY | 1996-06-15
+9 | Can | MOON | 1997-06-15
+10 | Leo | SUN | 1998-06-15
+11 | Vir | MERCURY | 1999-06-15
+12 | Lib | VENUS | 2000-06-15
+13 | Sco | MARS | 2001-06-15
+14 | Sag | JUPITER | 2002-06-15
+15 | Cap | SATURN | 2003-06-15
+16 | Aqu | SATURN | 2004-06-15
+17 | Pis | JUPITER | 2005-06-15
+18 | Ari | MARS | 2006-06-15
+19 | Tau | VENUS | 2007-06-15
+20 | Gem | MERCURY | 2008-06-15
+21 | Can | MOON | 2009-06-15
+22 | Leo | SUN | 2010-06-15
+23 | Vir | MERCURY | 2011-06-15
+24 | Lib | VENUS | 2012-06-15
+25 | Sco | MARS | 2013-06-15
+26 | Sag | JUPITER | 2014-06-15
+27 | Cap | SATURN | 2015-06-15
+28 | Aqu | SATURN | 2016-06-15
+29 | Pis | JUPITER | 2017-06-15
+30 | Ari | MARS | 2018-06-15
+31 | Tau | VENUS | 2019-06-15
+32 | Gem | MERCURY | 2020-06-14
+33 | Can | MOON | 2021-06-15
+34 | Leo | SUN | 2022-06-15
+35 | Vir | MERCURY | 2023-06-15
+36 | Lib | VENUS | 2024-06-14
+37 | Sco | MARS | 2025-06-15
+38 | Sag | JUPITER | 2026-06-15 <== current
+
+== END ==

@@ -83,6 +83,82 @@ def render_transits(rep: TransitReport, subject: str | None = None) -> str:
                      f"n.{h.n_point} | {h.orb_signed:+.3f} | {h.phase} | {exacts}")
     else:
         L.append("(none)")
+
+    if rep.moon_void is not None:
+        v = rep.moon_void
+        from ..core.zodiac import SIGNS_ABBR
+        L.append("")
+        L.append("-- MOON VOID-OF-COURSE (classical: majors to the seven) --")
+        L.append(f"void={'yes' if v.is_void else 'no'} | moon-sign={SIGNS_ABBR[v.moon_sign]} | "
+                 f"sign-exit={jd_to_iso(v.sign_exit_jd)}")
+        if v.last_exact:
+            L.append(f"last-exact={v.last_exact[1]} {v.last_exact[0]} @ {jd_to_iso(v.last_exact[2])}")
+        if v.next_exact:
+            tag = " (after sign change)" if v.next_is_after_sign_change else ""
+            L.append(f"next-exact={v.next_exact[1]} {v.next_exact[0]} @ {jd_to_iso(v.next_exact[2])}{tag}")
+    L.append("")
+    L.append("== END ==")
+    return "\n".join(L) + "\n"
+
+
+def render_return(rep, subject: str | None = None, hour=None, stars=None) -> str:
+    """A return chart is a full chart; we prepend the return-specific meta."""
+    from .text import render_chart
+    extra = (
+        f"return-of={rep.body} natal-lon-used={rep.natal_lon_used:.6f} "
+        f"precessed={'yes' if rep.precessed else 'no'}",
+        f"active-return-jd={rep.active_jd:.8f} ({jd_to_iso(rep.active_jd, seconds=True)}) "
+        f"residual={rep.residual_deg * 3600:.4f}arcsec",
+        f"next-return-jd={rep.next_jd:.8f} ({jd_to_iso(rep.next_jd, seconds=True)})",
+        f"natal-ref-jd={rep.natal.moment.jd_ut:.8f}",
+        f"cast-at={rep.location.label()} (current residence by default)",
+    )
+    return render_chart(rep.chart, subject, hour, stars, extra_meta=extra)
+
+
+def render_firdaria(periods, natal, subject: str | None = None) -> str:
+    L: list[str] = [f"== ASTROTEXT FIRDARIA {FORMAT_VERSION} =="]
+    if subject:
+        L.append(f"subject={subject}")
+    L += _natal_ref(natal)
+    L.append(f"sect={'day' if natal.is_day else 'night'} sequence")
+    L.append("# level | lord (major/sub) | ages | dates")
+    L.append("")
+    L.append("-- FIRDARIA TIMELINE --")
+    for p in periods:
+        d0, d1 = jd_to_iso(p.start_jd)[:10], jd_to_iso(p.end_jd)[:10]
+        if p.level == 1:
+            L.append(f"MAJOR {p.lord} | {p.start_age:.2f}-{p.end_age:.2f} | {d0} .. {d1}")
+        else:
+            L.append(f"  sub {p.major_lord}/{p.lord} | {p.start_age:.2f}-{p.end_age:.2f} | {d0} .. {d1}")
+    L.append("")
+    L.append("== END ==")
+    return "\n".join(L) + "\n"
+
+
+def render_profections(rep, subject: str | None = None) -> str:
+    from ..core.zodiac import SIGNS_ABBR
+    L: list[str] = [f"== ASTROTEXT PROFECTIONS {FORMAT_VERSION} =="]
+    if subject:
+        L.append(f"subject={subject}")
+    L += _natal_ref(rep.natal)
+    L.append("year-boundaries=actual solar returns; months=year/12 equal parts")
+    cur = rep.current
+    if cur is not None:
+        L.append(f"current-year=age {cur.age} | ASC-profects-to {SIGNS_ABBR[cur.asc_sign]} "
+                 f"| year-lord={cur.year_lord}")
+        L.append(f"current-month=no.{rep.current_month_index + 1} | "
+                 f"{SIGNS_ABBR[rep.current_month_sign]} | month-lord={rep.current_month_lord}")
+        if rep.profected_mc_sign is not None:
+            L.append(f"profected-MC={SIGNS_ABBR[rep.profected_mc_sign]}")
+        if rep.profected_fortune_sign is not None:
+            L.append(f"profected-FORTUNE={SIGNS_ABBR[rep.profected_fortune_sign]}")
+    L.append("")
+    L.append("-- PROFECTION YEARS (age | sign | lord | starts) --")
+    for y in rep.years:
+        mark = " <== current" if cur is not None and y.age == cur.age else ""
+        L.append(f"{y.age} | {SIGNS_ABBR[y.asc_sign]} | {y.year_lord} | "
+                 f"{jd_to_iso(y.start_jd)[:10]}{mark}")
     L.append("")
     L.append("== END ==")
     return "\n".join(L) + "\n"
