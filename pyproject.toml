@@ -1,0 +1,13 @@
+[project]
+name = "astrotext"
+version = "0.1.0.dev0"
+description = "Plain-text astrology chart engine for AI agents"
+requires-python = ">=3.11"
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-ra"
+markers = [
+    "smoke: fast environment sanity checks",
+    "cross: comparisons against the swetest reference CLI",
+]
