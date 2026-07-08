@@ -87,7 +87,7 @@ def test_light_time_matters_for_moon():
     jd = 2451545.0
     pe, _ = kb.state_ssb("earth", np.atleast_1d(jd))
     pm, _ = kb.state_ssb("moon", np.atleast_1d(jd))
-    tau = float(np.linalg.norm(pm - pe, axis=0) / kb.C_AUD)
+    tau = (np.linalg.norm(pm - pe, axis=0) / kb.C_AUD).item()
     assert 1.1 / 86400.0 < tau < 1.5 / 86400.0   # ~1.28 light-seconds
 
 

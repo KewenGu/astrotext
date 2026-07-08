@@ -168,3 +168,12 @@ dossier/<person>/
 ### Session 2(续)— 同日 · V2 换核计划定稿
 - 换核动机与路线定稿:**DE440 + jplephem + pyerfa 自有归算管线**,swetest 降级 dev-only 参照 + 新增 Skyfield 三方互证;SE 变可选 backend;K8 后整仓 Apache-2.0。完整 normative spec 落在 **docs/KERNEL.md**(管线、时间尺度、分宫 clean-room、公差预算、K0–K8、风险表),PLAN.md 本文件加 V2 总览章节。
 - **下一步:K0 探针**(用户 Mac 一次性 venv:jplephem+pyerfa+de440 节选,3 天体 × ~20 时刻 vs swetest,拿误差与 µs/call 实数)。
+
+### Session 3 — 2026-07-08 · 换核 K0–K2 完成
+- **环境**:云端沙盒 PyPI/GitHub/JPL 全 403,但 osascript 可在用户 Mac 执行(真网络)→ 双环境工作流:Mac 抓数据/装依赖/跑 SE 真值与 git 提交,沙盒(Linux)写码跑测试(自建 Linux swetest;pyerfa 用 abi3 wheel 解包)。de440 节选(65MB, 1799–2400, SHA-256 pinned)+ jplephem/pyerfa sdist 落库(vendor/sdists gitignored;vendor/PINS.txt 记 pin;tools/fetch_kernel_data.py 可复取)。
+- **K0 GO**:太阳/火星 ≤0.002″/0.0014″(同一 TT 喂两边);月亮近 J2000 ≤0.0025″、跨度边缘 0.030″ = **DE431(SE 数据源)→DE440 长期月历差**(非管线误差,日期剖面已录);向量化 15.6 µs/body-instant(预算 50)。
+- **K1 完成**(src/astrotext/kernel/{timescales,frames}.py):ΔT 采用 **SE 2.10.03 黑盒 parity 网格**(§11 允许;SMH2016 样条系数 UKHO/RSPA 均取不到),8423 节点,随机 2 万点校验 ≤0.25 ms(验收 50 ms);实测并复刻三个 SE 行为:1955 前逐年线性+每年 1/1 ~1 ms 锯齿、utc_to_jd 内部用 JPLEPH 潮汐口径(与 SWIEPH 1955 前差 ~0.2s@1820)、2033 年冻结闰秒表失效转 UT1 语义;闰秒表嵌 USNO tai-utc.dat;日历双制 Fliegel/Van Flandern。utc_to_jd 5 千随机点 ≤0.21 ms。
+- **K2 完成**(src/astrotext/kernel/bodies.py):十天体全归算(光时×2→太阳偏折→周年光行差→pnm06a→黄道真分点),速度用全管线 5 点差分(h=0.01d)。65 时刻网格:行星 lon/lat/RA/dec ≤0.0074″;月亮 0.030″(核心窗 1850–2150 ≤0.01″);dist ≤5e-9 相对。**发现并量化:SE 报告的速度 ≠ 其自身位置曲线的导数**(月亮差至 ~0.18″/day,与其文档精度一致;lat 速度全天体一致差 ~2e-5°/day)→ 速度验收改为对"SE 位置数值导数"(行星 ≤3.2e-7°/day 地板,来自 SE 内部章动插值)。**三方互证落地**:同一 de440 下 ours vs Skyfield 1.54 ≤0.0002″(行星)/0.0013″(月亮=TDB−TT 项,已记为可忽略)——比两者对 SE 都紧 30 倍,管线正确性与 SE 模型差分离。性能 11 µs/body-instant(共享 Frames 网格)。
+- **测试**:新增 tests/kernel(299 个,全部无 SE 依赖,fixtures 黑盒生成)+ 原 323 → **622 全绿(Mac 7.6s)**;verify_report.py PASS;tools/verify_kernel.py = K 系列验收报告(K1+K2 PASS,Skyfield 段可选)。
+- **提交**:205f900(K0)、3b7074b(K1)、1e56d2a(K2)+ 本收尾提交;git 操作须在 Mac 侧执行(沙盒对 .git 无 unlink 权限,锁文件要 Mac 清)。
+- **下一步 K3**:真/平交点、Lilith(Meeus/Chapront 多项式,0.5″ 容差)、Chiron SPK(Horizons 生成,Mac 网络可达已验证);然后 K4 分宫(swehouse 保持不读,Holden/Munkasey 公式)。
