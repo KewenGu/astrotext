@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Pre-zone China LMT
 local=1850-03-10 12:00:00 calendar=gregorian
 place=Beijing (39.9042N 116.4074E) tz=LMT+07:45:38

@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Bruce Lee
 local=1940-11-27 07:12:00 calendar=gregorian
 place=San Francisco CA (37.7749N 122.4194W) tz=America/Los_Angeles

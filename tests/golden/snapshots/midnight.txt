@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Exact midnight London
 local=1970-01-01 00:00:00 calendar=gregorian
 place=London, UK (51.5074N 0.1278W) tz=Europe/London

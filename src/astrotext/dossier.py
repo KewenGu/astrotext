@@ -29,6 +29,7 @@ from .core.chart import Chart, default_ephemeris
 from .core.hours import planetary_hour
 from .core.stars import star_hits
 from .render import render_chart, render_glossary
+from .render.text import FORMAT_VERSION
 from .render.timed import (
     jd_to_iso, render_firdaria, render_profections, render_progressed,
     render_return, render_solar_arc, render_transits,
@@ -169,7 +170,7 @@ def build_dossier(
          J.vimshottari_to_dict(vd, vc, now.jd_ut, name))
 
     # ---- meta + index ---------------------------------------------------------
-    meta: list[str] = ["== ASTROTEXT DOSSIER-META v0 =="]
+    meta: list[str] = [f"== ASTROTEXT DOSSIER-META {FORMAT_VERSION} =="]
     meta.append(f"subject={name}")
     meta.append(f"engine=astrotext {__version__} | swisseph {eph.se_version} "
                 f"| ephe {eph.info()['ephe_files']}")
@@ -195,7 +196,7 @@ def build_dossier(
     meta.append("== END ==")
     files["00_meta.txt"] = "\n".join(meta) + "\n"
 
-    idx: list[str] = ["== ASTROTEXT DOSSIER-INDEX v0 =="]
+    idx: list[str] = [f"== ASTROTEXT DOSSIER-INDEX {FORMAT_VERSION} =="]
     idx.append(f"subject={name}")
     idx.append(f"formats={fmt} | text: docs/FORMAT.md, ends '== END ==' "
                f"(discard truncated) | json: same data, full float precision")

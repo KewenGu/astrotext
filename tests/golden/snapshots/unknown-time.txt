@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Unknown birth time (noon chart)
 local=1985-10-10 12:00:00 calendar=gregorian
 place=Shanghai (31.2304N 121.4737E) tz=Asia/Shanghai

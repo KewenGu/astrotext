@@ -1,4 +1,4 @@
-== ASTROTEXT MOON-RETURN v0 ==
+== ASTROTEXT MOON-RETURN v1 ==
 subject=Beijing DST-era summer birth
 return-of=MOON natal-lon-used=94.349481 precessed=no
 active-return-jd=2461207.29492101 (2026-06-15 19:04:41Z) residual=0.0084arcsec

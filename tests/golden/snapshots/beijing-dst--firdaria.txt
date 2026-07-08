@@ -1,4 +1,4 @@
-== ASTROTEXT FIRDARIA v0 ==
+== ASTROTEXT FIRDARIA v1 ==
 subject=Beijing DST-era summer birth
 natal-ref=1988-06-15 14:30:00 @ Beijing (39.9042N 116.4074E) tz=Asia/Shanghai jd-ut=2447327.72916837
 sect=day sequence | node-placement=after-mars

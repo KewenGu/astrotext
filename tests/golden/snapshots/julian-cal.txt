@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Julian calendar birth (Russia 1900)
 local=1900-06-01 06:00:00 calendar=julian
 place=St Petersburg (59.9311N 30.3609E) tz=LMT+02:01:27

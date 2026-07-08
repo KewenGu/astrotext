@@ -1,4 +1,4 @@
-== ASTROTEXT SUN-RETURN v0 ==
+== ASTROTEXT SUN-RETURN v1 ==
 subject=Albert Einstein
 return-of=SUN natal-lon-used=353.507782 precessed=no
 active-return-jd=2461113.59546833 (2026-03-14 02:17:28Z) residual=0.0001arcsec

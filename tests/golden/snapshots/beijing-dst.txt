@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Beijing DST-era summer birth
 local=1988-06-15 14:30:00 calendar=gregorian
 place=Beijing (39.9042N 116.4074E) tz=Asia/Shanghai

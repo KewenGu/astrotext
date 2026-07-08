@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Audrey Hepburn
 local=1929-05-04 03:00:00 calendar=gregorian
 place=Brussels, Belgium (50.8503N 4.3517E) tz=Europe/Brussels

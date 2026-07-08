@@ -1,4 +1,4 @@
-== ASTROTEXT PROFECTIONS v0 ==
+== ASTROTEXT PROFECTIONS v1 ==
 subject=Albert Einstein
 natal-ref=1879-03-14 11:30:00 @ Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57 jd-ut=2407422.95142361
 year-boundaries=actual solar returns; months=year/12 equal parts

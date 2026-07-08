@@ -1,4 +1,4 @@
-== ASTROTEXT VEDIC-RASHI v0 ==
+== ASTROTEXT VEDIC-RASHI v1 ==
 subject=Albert Einstein
 local=1879-03-14 11:30:00 calendar=gregorian
 place=Ulm, Germany (48.4011N 9.9876E) tz=LMT+00:39:57

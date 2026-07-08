@@ -22,7 +22,7 @@ def test_chart_json_full_precision_roundtrip():
     fx = next(f for f in ALL if f.slug == "beijing-dst")
     _, c, hour, stars = build(fx)
     doc = json.loads(to_json(chart_to_dict(c, fx.name, hour, stars)))
-    assert doc["format"] == "astrotext-json" and doc["format_version"] == 0
+    assert doc["format"] == "astrotext-json" and doc["format_version"] == 1
     for k, p in c.points.items():
         jp = doc["points"][k]
         assert jp["lon"] == p.lon            # exact doubles, no display rounding

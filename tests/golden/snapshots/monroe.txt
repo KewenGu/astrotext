@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Marilyn Monroe
 local=1926-06-01 09:30:00 calendar=gregorian
 place=Los Angeles CA (34.0522N 118.2437W) tz=America/Los_Angeles

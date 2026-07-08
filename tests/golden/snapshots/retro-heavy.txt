@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Retrograde-heavy moment
 local=2022-09-18 21:00:00 calendar=gregorian
 place=New York NY (40.7128N 74.0060W) tz=America/New_York

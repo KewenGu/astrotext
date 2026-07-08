@@ -1,4 +1,4 @@
-# AstroText plain-text format — v0 (normative)
+# AstroText plain-text format — v1 (normative; frozen 2026-07-08)
 
 The text IS the database.  Design goals, in priority order: (1) zero
 arithmetic left to the reader, (2) deterministic byte-for-byte output,
@@ -7,7 +7,7 @@ arithmetic left to the reader, (2) deterministic byte-for-byte output,
 ## Line grammar
 
 ```
-line 1     == ASTROTEXT <KIND> v0 ==       KIND: NATAL | TRANSITS | ...
+line 1     == ASTROTEXT <KIND> v1 ==       KIND: NATAL | TRANSITS | ...
 meta       key=value                        until the first section header
 section    -- NAME --
 row        field | field | ...              first field is the row key
@@ -71,7 +71,7 @@ so an agent can derive receptions and lordships without tables.
 `PLANET | A > B (final)` — final = self-ruling terminus; `(loop)` = closed
 cycle without a final dispositor.
 
-## The JSON view (v0)
+## The JSON view (v1)
 
 Every dossier data file has a `.json` sibling (`--format both`, the
 default; `text` / `json` narrow it).  Division of labor, measured on a
@@ -79,17 +79,22 @@ real dossier (10 data files):
 
 | view | bytes | ~tokens | role |
 |---|---|---|---|
-| text v0 | 40.0 KB | ~11.1k | LLM-context reading: token-lean, astrologese-native, human-checkable |
-| json v0 | 99.4 KB (2.48x) | ~27.6k | pipelines/code: standard tooling, schema-checkable, FULL float precision |
+| text v1 | 40.0 KB | ~11.1k | LLM-context reading: token-lean, astrologese-native, human-checkable |
+| json v1 | 99.4 KB (2.48x) | ~27.6k | pipelines/code: standard tooling, schema-checkable, FULL float precision |
 
 Rules: both views render from the same computed objects (neither is parsed
 from the other); JSON is `sort_keys` + compact separators + exact doubles,
 so it is byte-deterministic too; envelope keys `format: astrotext-json`,
-`format_version: 0`.  Feed TEXT to language models; hand JSON to code.
+`format_version: 1`.  Feed TEXT to language models; hand JSON to code.
 If JSON must enter an LLM context, prefer extracting the needed section,
 not the whole file.
 
 ## Versioning
 
-Breaking changes bump `v0` -> `v1` in line 1; readers must check it.
+v1 was frozen on 2026-07-08 after UAT cross-checks (see PLAN.md session
+log): astro.com swetest (tropical planets/cusps/angles <= 0.1"),
+drikpanchang.com (panchanga), vedicastrochart.com (grahas/vargas/dasha).
+The only change from v0 is the version label itself.
+
+Breaking changes bump `v1` -> `v2` in line 1; readers must check it.
 The engine writes exactly one format version per release.

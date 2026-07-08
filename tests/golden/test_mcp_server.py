@@ -57,7 +57,7 @@ def test_mcp_full_session():
     tools = {t["name"] for t in by_id[2]["result"]["tools"]}
     assert tools == {"astro_chart", "astro_dossier", "astro_resolve_place"}
     natal = by_id[3]["result"]["content"][0]["text"]
-    assert natal.startswith("== ASTROTEXT NATAL v0 ==") and natal.endswith("== END ==\n")
+    assert natal.startswith("== ASTROTEXT NATAL v1 ==") and natal.endswith("== END ==\n")
     rashi = by_id[4]["result"]["content"][0]["text"]
     assert "VEDIC-RASHI" in rashi.splitlines()[0]
     dossier = by_id[5]["result"]["content"][0]["text"]

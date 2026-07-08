@@ -23,7 +23,7 @@ covering three traditions:
 
 ```bash
 make vendor    # one-time: clone + build pyswisseph, swetest, ephemeris, pytest
-make test      # 321 tests
+make test      # 323 tests
 make verify    # regenerate verification_report.md against reference sources
 
 ./astrotext dossier \
@@ -126,8 +126,10 @@ and sources) · `docs/PLAN.md` (architecture plan + session log).
 
 ## Status
 
-v0 **feature-complete** across all three traditions (M0–M8b): engine,
-dossier generator, gazetteer, MCP + HTTP facades, request-level settings.
-Cross-platform validated (Linux/gcc and macOS/clang). Remaining before the
-v1 format freeze: user acceptance spot-checks against astro.com and
-drikpanchang.com.
+**v1 format frozen (2026-07-08); engine 1.0.0.** Feature-complete across
+all three traditions (M0–M8b): engine, dossier generator, gazetteer,
+MCP + HTTP facades, request-level settings. Cross-platform validated
+(Linux/gcc and macOS/clang). UAT cross-checks passed against astro.com
+(official hosted swetest: planets/cusps/angles <= 0.1"), drikpanchang.com
+(panchanga to the minute), vedicastrochart.com (grahas <= 0.4", vargas,
+vimshottari <= 1 day) and astro-seek. See CHANGELOG.md.

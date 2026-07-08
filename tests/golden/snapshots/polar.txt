@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Longyearbyen polar fallback
 local=1990-12-21 12:00:00 calendar=gregorian
 place=Longyearbyen, Svalbard (78.2232N 15.6267E) tz=Europe/Oslo

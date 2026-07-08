@@ -1,4 +1,4 @@
-== ASTROTEXT TRANSITS v0 ==
+== ASTROTEXT TRANSITS v1 ==
 subject=Beijing DST-era summer birth
 moment-utc=2026-07-08 12:00:00 jd-ut=2461230.00000397
 location=New York NY (40.7128N 74.0060W) (transit houses relocated here; natal-wheel houses use natal cusps)

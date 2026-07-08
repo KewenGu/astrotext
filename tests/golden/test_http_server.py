@@ -54,7 +54,7 @@ def test_chart_text_and_json(base_url):
     code, ctype, text = _post(f"{base_url}/v0/chart",
                               {"kind": "natal", "subject": SUBJECT})
     assert code == 200 and ctype == "text/plain"
-    assert text.startswith("== ASTROTEXT NATAL v0 ==")
+    assert text.startswith("== ASTROTEXT NATAL v1 ==")
     assert text.endswith("== END ==\n")
     code, ctype, body = _post(f"{base_url}/v0/chart",
                               {"kind": "natal", "subject": SUBJECT,

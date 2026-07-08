@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Sigmund Freud
 local=1856-05-06 18:30:00 calendar=gregorian
 place=Freiberg (Pribor), Moravia (49.6417N 18.3506E) tz=LMT+01:13:24

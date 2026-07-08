@@ -1,4 +1,4 @@
-== ASTROTEXT SUN-RETURN v0 ==
+== ASTROTEXT SUN-RETURN v1 ==
 subject=Beijing DST-era summer birth
 return-of=SUN natal-lon-used=84.332984 precessed=no
 active-return-jd=2461206.91680359 (2026-06-15 10:00:12Z) residual=0.0007arcsec

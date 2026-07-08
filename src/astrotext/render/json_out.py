@@ -1,9 +1,9 @@
 """JSON renderer — the machine-facing view of the same data model.
 
 Division of labor (docs/FORMAT.md):
-  * text v0  — the LLM-context format: token-lean, astrologese-native,
+  * text v1  — the LLM-context format: token-lean, astrologese-native,
                human-checkable. PRIMARY for interpretation agents.
-  * json v0  — the pipeline format: standard tooling, schema-checkable,
+  * json v1  — the pipeline format: standard tooling, schema-checkable,
                FULL float precision (text is display-rounded; JSON carries
                the raw doubles). PRIMARY for code, storage, RAG indexing.
 
@@ -24,7 +24,7 @@ __all__ = ["chart_to_dict", "to_json", "transits_to_dict", "progressed_to_dict",
            "solar_arc_to_dict", "return_to_dict", "firdaria_to_dict",
            "profections_to_dict"]
 
-_ENVELOPE = {"format": "astrotext-json", "format_version": 0}
+_ENVELOPE = {"format": "astrotext-json", "format_version": 1}
 
 
 def _moment(m) -> dict[str, Any]:

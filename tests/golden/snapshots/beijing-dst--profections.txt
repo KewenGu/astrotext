@@ -1,4 +1,4 @@
-== ASTROTEXT PROFECTIONS v0 ==
+== ASTROTEXT PROFECTIONS v1 ==
 subject=Beijing DST-era summer birth
 natal-ref=1988-06-15 14:30:00 @ Beijing (39.9042N 116.4074E) tz=Asia/Shanghai jd-ut=2447327.72916837
 year-boundaries=actual solar returns; months=year/12 equal parts

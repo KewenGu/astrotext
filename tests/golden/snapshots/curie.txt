@@ -1,4 +1,4 @@
-== ASTROTEXT NATAL v0 ==
+== ASTROTEXT NATAL v1 ==
 subject=Marie Curie
 local=1867-11-07 12:00:00 calendar=gregorian
 place=Warsaw, Poland (52.2297N 21.0122E) tz=LMT+01:24:03

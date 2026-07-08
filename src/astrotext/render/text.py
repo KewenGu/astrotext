@@ -1,7 +1,7 @@
-"""Plain-text renderer, format v0 — the product surface for AI agents.
+"""Plain-text renderer, format v1 — the product surface for AI agents.
 
 Grammar (docs/FORMAT.md is the normative spec):
-  line 1            == ASTROTEXT <KIND> v0 ==
+  line 1            == ASTROTEXT <KIND> v1 ==
   meta lines        key=value            (no '|' in values)
   section header    -- NAME --
   table row         field | field | ...  (first field is the row key)
@@ -23,7 +23,7 @@ from ..ephem.points import REGISTRY
 
 __all__ = ["dms", "sf", "render_chart"]
 
-FORMAT_VERSION = "v0"
+FORMAT_VERSION = "v1"
 
 
 def sf(x: float, nd: int) -> str:

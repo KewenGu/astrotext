@@ -1,4 +1,4 @@
-== ASTROTEXT MOON-RETURN v0 ==
+== ASTROTEXT MOON-RETURN v1 ==
 subject=Albert Einstein
 return-of=MOON natal-lon-used=254.526395 precessed=no
 active-return-jd=2461219.50126500 (2026-06-28 00:01:49Z) residual=0.0025arcsec

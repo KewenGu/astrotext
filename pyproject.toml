@@ -1,8 +1,12 @@
 [project]
 name = "astrotext"
-version = "0.1.0.dev0"
+version = "1.0.0"
 description = "Plain-text astrology chart engine for AI agents"
 requires-python = ">=3.11"
+dependencies = [
+    "pygments>=2.20.0",
+    "setuptools>=83.0.0",
+]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

@@ -1,4 +1,4 @@
-== ASTROTEXT SOLAR-ARC v0 ==
+== ASTROTEXT SOLAR-ARC v1 ==
 subject=Beijing DST-era summer birth
 target-jd-ut=2461230.00000397 (2026-07-08 12:00Z)
 arc=36.310068 (secondary Sun, year=tropical)

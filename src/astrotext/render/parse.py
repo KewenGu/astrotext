@@ -1,4 +1,4 @@
-"""Round-trip parser for format v0.
+"""Round-trip parser for the astrotext text format (any v<N> header).
 
 Not a consumer API — it exists so tests can prove the rendered text is
 faithful: parse(render(chart)) must reproduce every number at the printed

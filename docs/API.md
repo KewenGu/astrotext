@@ -256,8 +256,9 @@ Distinct settings produce distinct cache entries (canonical-JSON keys).
 ## Stability contract
 
 * Stable identifiers: point keys, chart kinds, dossier file stems, text
-  format `v0` (line 1 of every file), JSON envelope
-  `{"format":"astrotext-json","format_version":0}`.
+  format `v1` (line 1 of every file; frozen 2026-07-08), JSON envelope
+  `{"format":"astrotext-json","format_version":1}`.
+  (HTTP route prefix `/v0/` versions the REST contract independently.)
 * Breaking changes to any of these bump the format version; the engine
   emits exactly one format version per release.
 * Warnings are data: readers (human or agent) must surface `warning=`

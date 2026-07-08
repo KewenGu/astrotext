@@ -128,3 +128,19 @@ dossier/<person>/
 - **M5 完成（印度占星层）**：原生 FLG_SIDEREAL 恒星内核（手减 ayanamsa 有 ~14″ 章动坑，已规避并写入文档）、27宿+pada、panchanga、全 Shodashavarga 16 分盘、8-karaka、Parashari drishti、Vimshottari 三级 819 段；档案 15 组文件；288 测试全绿；swetest -sid1 逐位一致；对抗复核零错误。
 - **推送**：会话代理始终 403（仓库未绑入 session sources）；用户已建 public 仓库 KewenGu/astrotext 并用 bundle 推齐前 7 个 commit；M5 的新 commit 待用户从最新 bundle 推送。
 - **下一步候选**：西方 UAT（astro.com 抽查）+ Vedic UAT（drik-panchang 抽查）→ v1 格式冻结；GeoNames 中文地名库；VOC 现代变体；MCP server 化。
+
+### Session 2 — 2026-07-08 · UAT 交叉验证(sample: 1994-07-29 10:30 江阴,现居纽约)
+- **起因**:用户在某 app 看到"太阳处女"与我方恒星巨蟹不符 → 确认为把 Lagna(本盘 18°28′ 处女)误读作太阳;真实生日 07-29(某网站输入 07-30 亦被识别出,全部数值与我方 +1 天外推一致)。
+- **Vedic UAT 通过**:
+  - drikpanchang.com(day-panchang, UTC+8):Tithi Krishna Saptami 05:09 起(我方 20.5% elapsed 折算 10:31 吻合)、Nakshatra Revati 至 17:40 / pada-3 至 10:58(出生 10:30 ✓)、Yoga Dhriti、Karana Vishti 至 18:14、月亮 Meena、**太阳 Karka(巨蟹)**、Surya nakshatra Pushya——逐项一致。
+  - vedicastrochart.com(Lahiri/mean node, 用户手动复核过出生数据):九曜经度全部 ≤0.4″(多数 ≤0.05″),nakshatra-pada 9/9,whole-sign bhava 9/9,D9 varga 10/10;Lagna 差 ~1′(其城市坐标 120.2843/31.9192 vs 我方 gazetteer 120.2630/31.9110)。**Vimshottari 九个 mahadasha 边界全部 ≤1 天**(其 dasha 年长 365.256d vs 我方缺省 365.25d 的定义差),序列 Mercury(余 4.54y)→Ketu→Venus→Sun(2026-02-12 起)一致。
+  - drikpanchang kundali 组件:grahas 与我方一致差 ~10″(其 True-Chitrapaksha vs SE Lahiri 定义差)、Rahu ~25″(节点模型差);其 Lagna 偏 ~16′ 属其自家恒星时/ΔT 约定(行星一致故非输入问题),我方 ASC 已由 astro.com 证实;其 Vimshottari 标签需登录,未取数。
+- **Western UAT 通过(astro.com 官方在线 swetest 2.10.03)**:喂精确 jd_ut=2449562.60417523 后,行星(含 Chiron/Lilith/真节点)、12 个 Placidus 宫头、ASC/MC/ARMC/Vertex **全部 ≤0.1″**;裸 "02:30:00 UT" 输入时四轴系统性偏 ~10-11″,即我方经 swe_utc_to_jd 的 UTC→UT1(此日 +0.74s)修正所致——约定正确性得到确认。astro.com atlas 坐标(120°15′46.8″E, 31°54′39.6″N)与我方 gazetteer 完全一致。
+- **结论**:v1 冻结前的 UAT 抽查完成(西方 astro.com ✓ + Vedic drikpanchang/vedicastrochart ✓,另有 astro-seek 由用户先行核对 ✓)。
+- **待办沉淀**:MCP/HTTP 文档可加一条"解读须知:Lagna≠太阳星座"的教学注记(index.txt 已有雏形);dasha 年长变体(365.256/360)已是显式 knob,无需改动。
+
+### Session 2(续)— 同日 · v1 格式冻结
+- **v1 冻结完成(engine 1.0.0)**:`FORMAT_VERSION v0→v1`(text.py 单点常量;dossier meta/index 改用该常量)、JSON envelope `format_version 0→1`、parser 接受任意 `v<N>`;HTTP 路由前缀 `/v0/` 保留(REST 契约版本与文本格式版本独立)。
+- 20+timed+vedic 黄金快照重生成(diff 仅第一行)、sample 档案重出;**323 测试全绿(6.6s)**、`make verify` PASS(engine 1.0.0)。全部在用户 Mac 本地环境执行(云端 GitHub 403,无法 vendor)。
+- 文档:FORMAT.md 定稿为 v1(normative; frozen)、API.md 稳定性契约更新、README Status 更新、新增 CHANGELOG.md(1.0.0)。
+- 待用户:git commit + push(建议单 commit:"Freeze text format at v1; engine 1.0.0")。注:_to_delete/ 目录为本会话产生的垃圾箱(stale index.lock、跑批脚本与日志),可整体删除。
