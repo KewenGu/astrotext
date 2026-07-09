@@ -7,7 +7,6 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass, field
 
-import swisseph as swe
 
 from ..ephem.engine import BodyState, Ephemeris
 from ..ephem.points import REGISTRY
@@ -119,8 +118,7 @@ def compute_chart(
     flags: list[str] = list(moment.flags)
 
     # ---- obliquity of date (for out-of-bounds) ------------------------------
-    ecl, _ = swe.calc_ut(jd, swe.ECL_NUT, 0)
-    obliquity = ecl[0]
+    obliquity = eph.obliquity_true(jd)
 
     # ---- raw states ----------------------------------------------------------
     states: dict[str, BodyState] = {}
@@ -188,10 +186,9 @@ def compute_chart(
         # above horizon = on the MC side of the ASC-DSC ecliptic axis
         is_day = norm360(sun.lon - angles["ASC"]) > 180.0
         try:
-            az = swe.azalt(jd, swe.ECL2HOR,
-                           (moment.place.lon, moment.place.lat, moment.place.elevation_m),
-                           0.0, 0.0, (sun.lon, sun.lat, sun.dist_au))
-            sun_alt = az[1]  # true altitude
+            sun_alt = eph.true_altitude(
+                jd, sun.lon, sun.lat, moment.place.lat, moment.place.lon,
+                elevation_m=moment.place.elevation_m, dist_au=sun.dist_au)
             if abs(sun_alt) < 0.8:
                 flags.append(f"sun-near-horizon:alt {sun_alt:+.2f} deg — "
                              f"sect may flip with small birth-time errors")

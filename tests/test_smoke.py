@@ -3,21 +3,30 @@ import pytest
 pytestmark = pytest.mark.smoke
 
 
-def test_imports_and_versions():
-    import swisseph as swe
+def test_imports_and_versions(eph):
     import astrotext
-    assert swe.version == "2.10.03"
     assert astrotext.__version__
+    if eph.backend == "swiss":
+        import swisseph as swe
+        assert swe.version == "2.10.03"
 
 
 def test_ephemeris_files_present(eph):
     info = eph.info()
-    for f in ("sepl_18.se1", "semo_18.se1", "seas_18.se1"):
-        assert f in info["ephe_files"], f"missing {f}: run `make vendor`"
+    if eph.backend == "swiss":
+        needed = ("sepl_18.se1", "semo_18.se1", "seas_18.se1")
+        hint = "run `make vendor`"
+    else:
+        needed = ("de440_1799_2400.bsp", "chiron_horizons.npz",
+                  "se_deltat_parity.csv", "hipparcos_22.json")
+        hint = "run tools/fetch_kernel_data.py + tools/fetch_chiron.py"
+    for f in needed:
+        assert f in info["ephe_files"], f"missing {f}: {hint}"
 
 
 def test_no_silent_moshier_fallback(eph):
-    # engine constructed strict => this would have raised already; assert flag word
+    if eph.backend != "swiss":
+        __import__("pytest").skip("moshier fallback is a swiss-only hazard")
     import swisseph as swe
     _, retflags = swe.calc_ut(2451545.0, swe.MOON, swe.FLG_SWIEPH | swe.FLG_SPEED)
     assert retflags & swe.FLG_SWIEPH

@@ -5,7 +5,7 @@ import sys
 from pathlib import Path
 
 import pytest
-import swisseph as swe
+from astrotext.kernel import timescales as _ts
 
 sys.path.insert(0, str(Path(__file__).parents[1] / "golden"))
 
@@ -28,11 +28,16 @@ RNG = random.Random(5150)
 # ---- sidereal core ----------------------------------------------------------
 
 def test_sidereal_matches_swetest_sid1():
-    """Native FLG_SIDEREAL must agree with `swetest -sid1` bit-for-bit."""
+    """Native FLG_SIDEREAL must agree with `swetest -sid1` bit-for-bit.
+
+    swiss-backend cross-check: the de440 backend's sidereal parity
+    (~0.003") is gated in tools/verify_kernel.py instead."""
     eph = default_ephemeris()
+    if eph.backend != "swiss":
+        pytest.skip("bit-level swetest cross-check is swiss-profile only")
     eph.configure_sidereal("lahiri")
-    jds = [2451545.0, M.jd_ut] + [RNG.uniform(swe.julday(1900, 1, 5, 0),
-                                              swe.julday(2100, 12, 25, 0))
+    jds = [2451545.0, M.jd_ut] + [RNG.uniform(_ts.julday(1900, 1, 5, 0.0),
+                                              _ts.julday(2100, 12, 25, 0.0))
                                   for _ in range(6)]
     import subprocess
     from astrotext import config

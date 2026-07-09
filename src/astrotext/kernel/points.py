@@ -42,7 +42,7 @@ import numpy as np
 
 from . import bodies as kb
 from .bodies import Apparent, ApparentSpeed, _SPEED_H, _wrap_diff
-from .frames import Frames, ecl_matrix, nutation
+from .frames import Frames, bundle as _bundle, ecl_matrix, nutation
 
 # GM values, DE440 header (km^3/s^2), converted to au^3/day^2
 _GM_EARTH_KM = 398600.435507
@@ -71,7 +71,8 @@ def true_node(jd_tt) -> Apparent:
     """Osculating ascending node; vectorized like bodies.apparent."""
     jd = np.atleast_1d(np.asarray(jd_tt, dtype=float))
     r_icrs, v_icrs = _moon_geo_state(jd)             # (3, n)
-    recl = ecl_matrix(jd)                            # (n, 3, 3)
+    fr = _bundle(jd)
+    recl = fr.recl                                   # (n, 3, 3)
     r = np.einsum("nij,jn->ni", recl, r_icrs)        # (n, 3) ecliptic frame
     v = np.einsum("nij,jn->ni", recl, v_icrs)
     h = np.cross(r, v)                               # (n, 3)
@@ -91,7 +92,6 @@ def true_node(jd_tt) -> Apparent:
     lam = np.radians(lon)
     u_ecl = np.stack([np.cos(lam), np.sin(lam), np.zeros(len(jd))], axis=1)
     u_equ = np.einsum("nji,nj->ni", recl, u_ecl)     # transpose: ecl -> equ(ICRS)
-    fr = Frames.at(jd)
     u_equ = np.einsum("nij,nj->ni", fr.rbpn, u_equ)
     from .frames import vec_to_sph
     ra, dec, _ = vec_to_sph(u_equ)
@@ -113,7 +113,7 @@ def _mean_elements(jd):
 
 
 def _dpsi_deg(jd):
-    return np.degrees(nutation(jd)[0])
+    return np.degrees(np.atleast_1d(_bundle(jd).dpsi))
 
 
 def mean_node(jd_tt) -> Apparent:
@@ -140,11 +140,11 @@ def _mean_point_output(jd_orig, jd, lon, lat, dist) -> Apparent:
     """RA/dec via SE's convention: the true-equinox (lon, lat) pair is
     treated as ecliptic-of-date coordinates and rotated by the true
     obliquity to the true equator (swe_cotrans semantics)."""
-    from .frames import true_obliquity, vec_to_sph
+    from .frames import vec_to_sph
     lam, bet = np.radians(lon), np.radians(lat)
     u_ecl = np.stack([np.cos(bet) * np.cos(lam), np.cos(bet) * np.sin(lam),
                       np.sin(bet)], axis=1)
-    eps = true_obliquity(jd)
+    eps = np.atleast_1d(_bundle(jd).eps_true)
     ce, se = np.cos(eps), np.sin(eps)
     x, y, z = u_ecl[:, 0], u_ecl[:, 1], u_ecl[:, 2]
     u_equ = np.stack([x, ce * y - se * z, se * y + ce * z], axis=1)
@@ -166,25 +166,6 @@ def apparent(point: str, jd_tt) -> Apparent:
 
 
 def apparent_with_speed(point: str, jd_tt) -> ApparentSpeed:
+    from .bodies import stencil_speeds
     f = _FUNCS[point]
-    jd = np.atleast_1d(np.asarray(jd_tt, dtype=float))
-    now = f(jd)
-    m1, p1 = f(jd - _SPEED_H), f(jd + _SPEED_H)
-    m2, p2 = f(jd - 2 * _SPEED_H), f(jd + 2 * _SPEED_H)
-    den = 12.0 * _SPEED_H
-
-    def _five(fp1, fm1, fp2, fm2, wrap):
-        d1 = _wrap_diff(fp1, fm1) if wrap else np.asarray(fp1) - fm1
-        d2 = _wrap_diff(fp2, fm2) if wrap else np.asarray(fp2) - fm2
-        return (8.0 * d1 - d2) / den
-
-    def _o(x):
-        x = np.atleast_1d(x)
-        return float(x[0]) if np.ndim(jd_tt) == 0 else x
-
-    return ApparentSpeed(
-        lon=_o(now.lon), lat=_o(now.lat), dist=_o(now.dist),
-        ra=_o(now.ra), dec=_o(now.dec),
-        lon_speed=_o(_five(p1.lon, m1.lon, p2.lon, m2.lon, True)),
-        lat_speed=_o(_five(p1.lat, m1.lat, p2.lat, m2.lat, False)),
-        dist_speed=_o(_five(p1.dist, m1.dist, p2.dist, m2.dist, False)))
+    return stencil_speeds(lambda j: f(j), jd_tt)

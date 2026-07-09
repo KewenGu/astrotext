@@ -99,7 +99,7 @@ dossier/<person>/
 - **地名库获取**（download.geonames.org 可能被屏蔽）→ GitHub 镜像 → 你下载后拖进对话 → 兜底：始终支持直接输入经纬度+时区。
 - **1949 前中国多时区/民国夏令时** → LMT 模式 + 显式时区覆盖 + 档案头警告。
 - **三限/法达等存在流派变体** → 绝不隐藏默认：全部做成显式开关，文档注明出处，默认值对齐主流软件。
-- **Swiss Ephemeris 是 AGPL** → 私用无碍；将来若商业分发需购买 Astrodienst 许可或换内核（架构上 L0 已隔离，可换）。
+- **Swiss Ephemeris 是 AGPL** → 私用无碍；将来若商业分发需购买 Astrodienst 许可或换内核（架构上 L0 已隔离，可换）。**〔已由 V2 解决：K7 默认切 de440 内核，K8 整仓 Apache-2.0，SE 降级为可选 dev/verify 参照，不进发行物。见下文 V2 章节与 docs/KERNEL.md。〕**
 
 ## 验证方式（怎么确认这个计划做完了）
 

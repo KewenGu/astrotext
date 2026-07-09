@@ -14,15 +14,15 @@ warning=(none)
 
 -- GRAHAS (sidereal) --
 # graha | position | house | nakshatra-pada | nak-lord | lon | speed | tags
-SUN | 00Gem38'11" | H10 | Mrigashira-3 | MARS | 60.636269 | +0.955354 | -
-MOON | 10Gem39'10" | H10 | Ardra-2 | RAHU | 70.652765 | +12.707297 | -
-MARS | 21Aqu03'14" | H6 | Purva Bhadrapada-1 | JUPITER | 321.053922 | +0.588388 | -
+SUN | 00Gem38'11" | H10 | Mrigashira-3 | MARS | 60.636268 | +0.955353 | -
+MOON | 10Gem39'10" | H10 | Ardra-2 | RAHU | 70.652765 | +12.707346 | -
+MARS | 21Aqu03'14" | H6 | Purva Bhadrapada-1 | JUPITER | 321.053923 | +0.588387 | -
 MERCURY | 27Tau30'59" | H9 | Mrigashira-2 | MARS | 57.516389 | -0.539190 | R
 JUPITER | 29Ari01'19" | H8 | Krittika-1 | SUN | 29.021960 | +0.219257 | -
 VENUS | 27Tau07'04" | H9 | Mrigashira-2 | MARS | 57.117735 | -0.616125 | R
 SATURN | 05Sag56'21" | H4 | Mula-2 | KETU | 245.939054 | -0.073488 | R
-RAHU | 24Aqu40'09" | H6 | Purva Bhadrapada-2 | JUPITER | 324.669114 | -0.052992 | R(always)
-KETU | 24Leo40'09" | H12 | Purva Phalguni-4 | VENUS | 144.669114 | -0.052992 | R(always)
+RAHU | 24Aqu40'09" | H6 | Purva Bhadrapada-2 | JUPITER | 324.669104 | -0.052992 | R(always)
+KETU | 24Leo40'09" | H12 | Purva Phalguni-4 | VENUS | 144.669104 | -0.052992 | R(always)
 
 -- LAGNA & BHAVAS (whole sign) --
 LAGNA | 16Vir23'52" | 166.397888 | Hasta-2 | MOON

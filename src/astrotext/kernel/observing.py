@@ -102,6 +102,28 @@ def star_apparent(name: str, jd_tt) -> kb.Apparent:
                        np.inf)), ra=_o(ra), dec=_o(dec))
 
 
+def true_altitude(jd_ut: float, ecl_lon: float, ecl_lat: float,
+                  geolat: float, geolon: float) -> float:
+    """Geocentric true altitude (deg) of an ecliptic-of-date position —
+    swe_azalt(ECL2HOR)[1] parity (measured exact: SE applies no diurnal
+    parallax to the supplied geocentric coordinates)."""
+    jd_tt = kts.ut1_to_tt(jd_ut, "swieph")
+    from .frames import true_obliquity
+    eps = true_obliquity(jd_tt)
+    lam, bet = np.radians(ecl_lon), np.radians(ecl_lat)
+    x = np.cos(bet) * np.cos(lam)
+    y = np.cos(eps) * np.cos(bet) * np.sin(lam) - np.sin(eps) * np.sin(bet)
+    z = np.sin(eps) * np.cos(bet) * np.sin(lam) + np.cos(eps) * np.sin(bet)
+    ra = np.arctan2(y, x)
+    dec = np.arcsin(np.clip(z, -1.0, 1.0))
+    gast = gst06a(jd_ut, jd_tt)
+    h = gast + np.radians(geolon) - ra
+    phi = np.radians(geolat)
+    return float(np.degrees(np.arcsin(np.clip(
+        np.sin(phi) * np.sin(dec) + np.cos(phi) * np.cos(dec) * np.cos(h),
+        -1.0, 1.0))))
+
+
 # ------------------------------------------------------------- rise/set
 
 def _sun_alt_minus_target(jd_ut, lat, lon):

@@ -1,12 +1,12 @@
 # Vendored components (pinned)
+# --- kernel v2 (default profile; permissive) ---
+jplephem    2.24    (MIT)
+pyerfa      2.0.1.5 (BSD-3; bundles ERFA C)
+de440.bsp   excerpt 1799-2400 (JPL, public domain; tools/fetch_kernel_data.py)
+pytest      8.4.2 | pluggy 1.6.0 | iniconfig v2.1.0 (MIT)
+# --- swiss reference (--with-swiss; AGPL; dev/verify only, not shipped) ---
 pyswisseph  https://github.com/astrorigin/pyswisseph @ 91ec65631badc7faf4a4b913570c944a4c1b101d
   libswe    696bda432298d482d27e67a0cf1238920301a7dd
   swephelp  5db9f591c0b90bfee91eb17140d42fee42d688a3
 swisseph    https://github.com/aloistr/swisseph @ 59ac051b5a5812c684973ca0fcedb1c8c3e9c5dc
-pytest      8.4.2 | pluggy 1.6.0 | iniconfig v2.1.0
 ephemeris   data/ephe/{sepl_18,semo_18,seas_18}.se1 + sefstars.txt (SE 2.10.03, 1800-2399)
-
-# --- kernel v2 (K-series; KERNEL.md §3) ---
-jplephem    2.24    sdist sha256 354fe1adae022264ab46f18afb6af26211277cfd7b3ef90400755fcabe93bc11 (MIT)
-pyerfa      2.0.1.5 sdist sha256 17d6b24fe4846c65d5e7d8c362dcb08199dc63b30a236aedd73875cc83e1f6c0 (BSD-3; bundles ERFA C)
-de440.bsp   excerpt 1799-2400 sha256 5aadad33862e235633f72a0e64c6e56d333e22c38602efad143cca801daa06f9 (JPL, public domain; tools/fetch_kernel_data.py)

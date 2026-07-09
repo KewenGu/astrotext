@@ -1,7 +1,20 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO · K1–K6 DONE (all 2026-07-08) · next: K7 switchover.
+Status: K0 GO · K1–K7 DONE (all 2026-07-08) · engine 2.0.0-rc1 (default
+backend = de440) · K8 license flip IN PROGRESS (Apache-2.0 files staged;
+gated on the Mac-side git untrack of SE data + `make check-license` +
+`make verify` on the swiss profile before the 2.0.0 tag).
 Owner doc for the V2 kernel swap.
+
+K7 measured: default backend flipped to de440; format v1 unchanged.
+Golden snapshots regenerated with the §9 diff report — 99.451%
+byte-identical (633/115 375 bytes); DMS display byte-identical bar 7
+single ±1″ flips on MEAN_APOGEE/CHIRON (the K3 orbit-solution/fit
+differences), raw-field drift within the K2 lunar/ΔT gates; itemized in
+CHANGELOG. Fixed erfa.bp06 3-tuple unpack in the frame="j2000" path
+(precessed returns). Full de440 suite green (1329 tests); cross/swetest
+skip off the swiss profile. The swetest+Skyfield three-way reference
+gate (make verify) and vendor split land at K8 on the dev profile.
 
 K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
 identical TT): Sun ≤0.0020″, Mars ≤0.0014″ lon; lat ≤0.005″ (bounds the

@@ -1,12 +1,33 @@
 [project]
 name = "astrotext"
-version = "1.0.0"
+version = "2.0.0rc1"
 description = "Plain-text astrology chart engine for AI agents"
 requires-python = ">=3.11"
+license = "Apache-2.0"
+license-files = ["LICENSE", "NOTICE"]
+authors = [{ name = "Kewen Gu" }]
+classifiers = [
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3",
+    "Topic :: Scientific/Engineering :: Astronomy",
+]
+# Default (de440) backend is permissively licensed end to end:
+#   numpy, jplephem (MIT), pyerfa (BSD-3, bundles ERFA C).  No Swiss
+#   Ephemeris code or data.  The optional swiss reference backend is a
+#   dev/verify extra (see [project.optional-dependencies]).
 dependencies = [
+    "numpy>=1.24",
+    "jplephem>=2.22",
+    "pyerfa>=2.0.1",
     "pygments>=2.20.0",
     "setuptools>=83.0.0",
+    "pytest>=9.1.1",
 ]
+
+[project.optional-dependencies]
+# Cross-implementation reference harness only (AGPL; never in wheels).
+swiss = ["pyswisseph>=2.10"]
+verify = ["skyfield>=1.54"]
 
 [tool.pytest.ini_options]
 testpaths = ["tests"]

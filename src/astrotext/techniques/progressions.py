@@ -29,7 +29,11 @@ from __future__ import annotations
 import math
 from dataclasses import dataclass
 
-import swisseph as swe
+import numpy as np
+
+from ..kernel import frames as _kfr
+from ..kernel import houses as _kh
+from ..kernel import timescales as _ts
 
 from ..core.angles import angdiff, norm360
 from ..core.chart import Chart, compute_chart, default_ephemeris
@@ -83,8 +87,8 @@ def progressed_moment(natal: Moment, prog_jd_ut: float) -> Moment:
     datetime fields are display labels derived from the JD.
     """
     import datetime as dt
-    delta_days = swe.deltat(prog_jd_ut)
-    y, mo, d, h = swe.revjul(prog_jd_ut, swe.GREG_CAL)
+    delta_days = _ts.deltat(prog_jd_ut)
+    y, mo, d, h = _ts.revjul(prog_jd_ut, _ts.GREGORIAN)
     hh = int(h); mi = int((h - hh) * 60); ss = (h - hh) * 3600 - mi * 60
     micro = min(999999, max(0, round((ss - int(ss)) * 1e6)))
     label = dt.datetime(y, mo, d, hh, mi, int(ss), micro, tzinfo=dt.timezone.utc)
@@ -135,18 +139,21 @@ def progressed_angles_solar_arc_mc(
     obliquity of the progressed date."""
     if natal_chart.angles is None:
         raise ValueError("natal chart has no angles (unknown birth time?)")
-    ecl, _ = swe.calc_ut(prog_jd_ut, swe.ECL_NUT, 0)
-    eps = ecl[0]
+    # kernel house math is backend-free (exact swe_houses_armc parity, K4)
+    eps = float(np.degrees(_kfr.true_obliquity(
+        _ts.ut1_to_tt(prog_jd_ut, "swieph"))))
     mc = norm360(natal_chart.angles["MC"] + arc)
     armc = _armc_from_mc(mc, eps)
     lat = natal_chart.moment.place.lat
     h = hsys or natal_chart.house_system_used or "P"
     try:
-        cusps, ascmc = swe.houses_armc(armc, lat, eps, h.encode("ascii"))
-    except Exception:
-        cusps, ascmc = swe.houses_armc(armc, lat, eps, b"O")
+        cusps = _kh.cusps(armc, eps, lat, h)
+        ang = _kh.angles(armc, eps, lat)
+    except _kh.PolarHousesError:
         h = "O"
-    return ProgressedAngles(method=f"solar-arc-mc/{h}", mc=mc, asc=ascmc[0],
+        cusps = _kh.cusps(armc, eps, lat, h)
+        ang = _kh.angles(armc, eps, lat)
+    return ProgressedAngles(method=f"solar-arc-mc/{h}", mc=mc, asc=ang["ASC"],
                             armc=armc, cusps=tuple(cusps), obliquity=eps)
 
 

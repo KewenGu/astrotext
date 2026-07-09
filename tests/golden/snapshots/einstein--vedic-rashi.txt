@@ -14,15 +14,15 @@ warning=lmt-used:+00:39:57(lon +9.9876)
 
 -- GRAHAS (sidereal) --
 # graha | position | house | nakshatra-pada | nak-lord | lon | speed | tags
-SUN | 01Pis20'01" | H10 | Purva Bhadrapada-4 | JUPITER | 331.333541 | +0.995893 | -
-MOON | 22Sco21'08" | H6 | Jyeshtha-2 | MERCURY | 232.352154 | +13.918820 | -
-MARS | 04Cap44'24" | H8 | Uttara Ashadha-3 | SUN | 274.740007 | +0.728588 | -
-MERCURY | 10Pis58'11" | H10 | Uttara Bhadrapada-3 | SATURN | 340.969712 | +1.951823 | -
-JUPITER | 05Aqu18'36" | H9 | Dhanishta-4 | MARS | 305.309868 | +0.227305 | -
-VENUS | 24Pis48'39" | H10 | Revati-3 | MERCURY | 354.810812 | +1.231765 | -
-SATURN | 12Pis00'56" | H10 | Uttara Bhadrapada-3 | SATURN | 342.015592 | +0.123513 | -
-RAHU | 09Cap18'22" | H8 | Uttara Ashadha-4 | SUN | 279.306121 | -0.052992 | R(always)
-KETU | 09Can18'22" | H2 | Pushya-2 | SATURN | 99.306121 | -0.052992 | R(always)
+SUN | 01Pis20'01" | H10 | Purva Bhadrapada-4 | JUPITER | 331.333542 | +0.995892 | -
+MOON | 22Sco21'08" | H6 | Jyeshtha-2 | MERCURY | 232.352153 | +13.918805 | -
+MARS | 04Cap44'24" | H8 | Uttara Ashadha-3 | SUN | 274.740007 | +0.728586 | -
+MERCURY | 10Pis58'11" | H10 | Uttara Bhadrapada-3 | SATURN | 340.969712 | +1.951817 | -
+JUPITER | 05Aqu18'36" | H9 | Dhanishta-4 | MARS | 305.309868 | +0.227304 | -
+VENUS | 24Pis48'39" | H10 | Revati-3 | MERCURY | 354.810812 | +1.231762 | -
+SATURN | 12Pis00'56" | H10 | Uttara Bhadrapada-3 | SATURN | 342.015592 | +0.123512 | -
+RAHU | 09Cap18'22" | H8 | Uttara Ashadha-4 | SUN | 279.306088 | -0.052993 | R(always)
+KETU | 09Can18'22" | H2 | Pushya-2 | SATURN | 99.306088 | -0.052993 | R(always)
 
 -- LAGNA & BHAVAS (whole sign) --
 LAGNA | 19Gem28'24" | 79.473265 | Ardra-4 | RAHU

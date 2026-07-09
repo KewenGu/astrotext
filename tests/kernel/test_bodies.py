@@ -70,11 +70,15 @@ def test_apparent_parity(case):
 
 
 def test_vectorized_matches_scalar():
+    """Scalar calls use the 0.5-day nutation interpolation grid (hot-path
+    cache, error bound 1.3 mas — frames._nut_interp); grids run the full
+    series.  Angles agree within that bound; distance is frame-free and
+    must match exactly."""
     jds = np.array([c["jd_tt"] for c in CASES if c["body"] == "mars"])[:6]
     vec = kb.apparent("mars", jds)
     for i, j in enumerate(jds):
         one = kb.apparent("mars", float(j))
-        assert vec.lon[i] == pytest.approx(one.lon, abs=1e-12)
+        assert vec.lon[i] == pytest.approx(one.lon, abs=2e-3 / 3600.0)
         assert vec.dist[i] == pytest.approx(one.dist, abs=1e-15)
 
 

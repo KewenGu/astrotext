@@ -7,7 +7,7 @@ The Chinese historical cases matter most for this project's users:
 import datetime as dt
 
 import pytest
-import swisseph as swe
+from astrotext.kernel import timescales as _ts
 
 from astrotext.timespace import (
     JULIAN, Moment, NonexistentLocalTime, Place, TimezoneResolutionError,
@@ -89,7 +89,7 @@ def test_j2000_jd_and_delta_t():
 def test_julian_calendar_input():
     m = resolve(dt.datetime(1500, 2, 20, 12, 0), Place(lat=51.5, lon=0.0, tz="LMT"),
                 calendar=JULIAN)
-    assert abs(m.jd_ut - swe.julday(1500, 2, 20, 12.0, swe.JUL_CAL)) < 1e-9
+    assert abs(m.jd_ut - _ts.julday(1500, 2, 20, 12.0, _ts.JULIAN)) < 1e-9
     assert "julian-calendar-input" in m.flags
     # Julian 1500-02-20 == Gregorian 1500-03-01 (10-day gap)
     assert (m.utc.month, m.utc.day) == (3, 1)

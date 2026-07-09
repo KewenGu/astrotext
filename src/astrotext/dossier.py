@@ -172,7 +172,7 @@ def build_dossier(
     # ---- meta + index ---------------------------------------------------------
     meta: list[str] = [f"== ASTROTEXT DOSSIER-META {FORMAT_VERSION} =="]
     meta.append(f"subject={name}")
-    meta.append(f"engine=astrotext {__version__} | swisseph {eph.se_version} "
+    meta.append(f"engine=astrotext {__version__} | {eph.se_version} "
                 f"| ephe {eph.info()['ephe_files']}")
     meta.append(f"birth-input={subject.local.isoformat(sep=' ')} "
                 f"calendar={subject.calendar} fold={subject.fold} "

@@ -102,20 +102,36 @@ def tai_minus_utc(jd_utc: float) -> float:
     return float(_LEAP_VALS[i])
 
 
+def _parabola(jd):
+    """Long-term ΔT estimate, −20 + 32·t² s, t in centuries from 1820
+    (Stephenson 1997 as cited in the SE manual) — used only OUTSIDE the
+    parity span, anchored for continuity at the grid edges."""
+    t = (np.asarray(jd, dtype=float) - 2385800.5) / 36525.0   # ~1820.0
+    return -20.0 + 32.0 * t * t
+
+
 def deltat_sec(jd_ut, flavor: str = "swieph"):
     """ΔT = TT − UT1 in seconds at jd (UT). Vectorized.
 
     flavor: "swieph" (plain swe_deltat / engine.delta_t parity) or
     "jpleph" (the flavour swe_utc_to_jd applies internally).
+
+    Inside 1799–2402 this is the SE-parity grid (≤0.25 ms).  Outside,
+    a continuity-anchored long-term parabola serves as an ESTIMATE —
+    the engine cannot compute positions there anyway (ephemeris span),
+    but Moment resolution stays total, as with SE.
     """
     grid_jd, dt_swi, dt_jpl = _parity_grid()
     col = {"swieph": dt_swi, "jpleph": dt_jpl}[flavor]
     j = np.asarray(jd_ut, dtype=float)
-    if np.any(j < grid_jd[0]) or np.any(j > grid_jd[-1]):
-        raise KernelTimeError(
-            f"jd {j!r} outside ΔT parity grid span "
-            f"[{grid_jd[0]:.1f}, {grid_jd[-1]:.1f}] (≈1799–2402)")
     out = np.interp(j, grid_jd, col)
+    lo, hi = j < grid_jd[0], j > grid_jd[-1]
+    if np.any(lo):
+        out = np.where(lo, _parabola(j) + (col[0] - _parabola(grid_jd[0])),
+                       out)
+    if np.any(hi):
+        out = np.where(hi, _parabola(j) + (col[-1] - _parabola(grid_jd[-1])),
+                       out)
     return float(out) if np.isscalar(jd_ut) or j.ndim == 0 else out
 
 

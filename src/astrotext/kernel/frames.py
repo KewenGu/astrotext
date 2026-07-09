@@ -25,6 +25,7 @@ grid and reuse it across bodies (the BPN series dominate cost — §10).
 from __future__ import annotations
 
 import dataclasses
+import functools
 
 import erfa
 import numpy as np
@@ -100,18 +101,25 @@ class Frames:
     """Per-instant frame bundle, computed once and shared across bodies.
 
     ``jd_tt`` may be a scalar or an array; matrices broadcast accordingly.
+    The IAU-2000A nutation series (the dominant cost) is evaluated
+    exactly once per instant: dψ/dε feed both the BPN matrix (via
+    `erfa.pn06`) and the true obliquity.
     """
     jd_tt: object
     rbpn: np.ndarray
     eps_true: object
     recl: np.ndarray
+    dpsi: object = 0.0            # nutation in longitude, radians
 
     @classmethod
     def at(cls, jd_tt) -> "Frames":
-        rbpn = bpn_matrix(jd_tt)
-        eps = true_obliquity(jd_tt)
+        j1, j2 = _split(jd_tt)
+        dpsi, deps = erfa.nut06a(j1, j2)
+        epsa, _rb, _rp, _rbp, _rn, rbpn = erfa.pn06(j1, j2, dpsi, deps)
+        eps = epsa + deps
         recl = _rx(eps) @ rbpn
-        return cls(jd_tt=jd_tt, rbpn=rbpn, eps_true=eps, recl=recl)
+        return cls(jd_tt=jd_tt, rbpn=rbpn, eps_true=eps, recl=recl,
+                   dpsi=dpsi)
 
     def icrs_to_equ(self, vec):
         """ICRS vector(s) → true equator/equinox of date."""
@@ -120,3 +128,49 @@ class Frames:
     def icrs_to_ecl(self, vec):
         """ICRS vector(s) → ecliptic-of-date."""
         return np.einsum("...ij,...j->...i", self.recl, vec)
+
+
+_NUT_GRID_STEP = 0.5      # days; see _frame_node
+
+
+@functools.lru_cache(maxsize=16384)
+def _frame_node(idx: int):
+    """Exact Frames quantities at a 0.5-day grid node (full IAU series)."""
+    jd = idx * _NUT_GRID_STEP
+    f = Frames.at(np.array([jd]))
+    return (f.rbpn[0], f.recl[0], float(np.atleast_1d(f.eps_true)[0]),
+            float(np.atleast_1d(f.dpsi)[0]))
+
+
+@functools.lru_cache(maxsize=8192)
+def _frames_scalar(jd_tt: float) -> Frames:
+    """Scalar Frames via linear blending between exact 0.5-day nodes.
+
+    Error budget (documented; verified end-to-end by
+    tools/verify_kernel.py): the fastest nutation term (13.66 d, 0.21″)
+    bounds interpolation at f″h²/8 ≈ 1.3 mas; the frame rotates ~0.07″
+    across a node gap, so blending rotation matrices linearly leaves
+    them orthonormal to ~1e-14.  Used ONLY on the scalar hot path
+    (root-finding); instant grids, houses (ε, GST) and every K-series
+    acceptance path evaluate the full series.
+    """
+    g = jd_tt / _NUT_GRID_STEP
+    i0 = int(np.floor(g))
+    f = g - i0
+    r0, e0, o0, d0 = _frame_node(i0)
+    r1, e1, o1, d1 = _frame_node(i0 + 1)
+    rbpn = (r0 + (r1 - r0) * f)[None, :, :]
+    recl = (e0 + (e1 - e0) * f)[None, :, :]
+    return Frames(jd_tt=np.array([jd_tt]), rbpn=rbpn,
+                  eps_true=np.array([o0 + (o1 - o0) * f]), recl=recl,
+                  dpsi=np.array([d0 + (d1 - d0) * f]))
+
+
+def bundle(jd_tt) -> Frames:
+    """Frames for an instant array; single-instant requests are memoized
+    (root-finding and states() revisit identical jds across ~14 bodies —
+    the nutation series then runs once, not 14×)."""
+    j = np.atleast_1d(np.asarray(jd_tt, dtype=float))
+    if j.size == 1:
+        return _frames_scalar(float(j[0]))
+    return Frames.at(j)

@@ -28,10 +28,19 @@ _NUM = re.compile(r"-?\d+\.\d+")
 
 
 def _run(args: list[str]) -> str:
-    cmd = [str(config.swetest_bin()), f"-edir{config.ephe_path()}", *args]
+    bin_path = config.swetest_bin()
+    if not bin_path.exists():
+        raise RuntimeError(
+            f"swetest binary not found at {bin_path}. Build the reference "
+            f"harness with `make vendor-swiss` (dev/verify profile).")
+    cmd = [str(bin_path), f"-edir{config.ephe_path()}", *args]
     out = subprocess.run(cmd, capture_output=True, text=True, timeout=60)
     if out.returncode != 0:
-        raise RuntimeError(f"swetest failed: {' '.join(cmd)}\n{out.stderr or out.stdout}")
+        detail = (out.stderr or out.stdout or "").strip() or "(no output)"
+        raise RuntimeError(
+            f"swetest exited {out.returncode}: {' '.join(cmd)}\n{detail}\n"
+            f"Hint: swetest needs the .se1 data in {config.ephe_path()} "
+            f"(sepl/semo/seas_18.se1 + sefstars.txt) — re-run `make vendor-swiss`.")
     return out.stdout
 
 

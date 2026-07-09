@@ -5,7 +5,7 @@ prefixed t. / p. / d. (transiting / progressed / directed), natal side n.
 """
 from __future__ import annotations
 
-import swisseph as swe
+from ..kernel import timescales as _ts
 
 from ..techniques.progressions import ProgressedReport, SolarArcReport
 from ..techniques.transits import TransitReport
@@ -15,7 +15,7 @@ __all__ = ["render_transits", "render_progressed", "render_solar_arc", "jd_to_is
 
 
 def jd_to_iso(jd_ut: float, seconds: bool = False) -> str:
-    y, mo, d, h = swe.revjul(jd_ut, swe.GREG_CAL)
+    y, mo, d, h = _ts.revjul(jd_ut, _ts.GREGORIAN)
     hh = int(h)
     mi_f = (h - hh) * 60
     mi = int(mi_f)

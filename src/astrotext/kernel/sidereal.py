@@ -80,3 +80,16 @@ def sidereal_lon(tropical_lon_deg, jd_tt, mode: str = "lahiri"):
     """Apparent (true-equinox) tropical longitude → sidereal longitude."""
     return (np.asarray(tropical_lon_deg, dtype=float)
             - ayanamsa_deg(jd_tt, mode, True)) % 360.0
+
+
+def ayanamsa_speed(jd_tt, mode: str = "lahiri") -> float:
+    """d(ayanamsa_true)/dt in °/day — the p_A rate plus the nutation
+    rate (up to ±4e-5 °/day).  SE's sidereal speeds subtract exactly
+    this from the tropical speeds (measured)."""
+    h = 0.01
+    j = np.asarray(jd_tt, dtype=float)
+    d1 = ayanamsa_deg(j + h, mode, True) - ayanamsa_deg(j - h, mode, True)
+    d2 = ayanamsa_deg(j + 2 * h, mode, True) - ayanamsa_deg(j - 2 * h,
+                                                            mode, True)
+    out = (8.0 * d1 - d2) / (12.0 * h)
+    return float(out) if np.ndim(jd_tt) == 0 else out

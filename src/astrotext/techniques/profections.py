@@ -53,7 +53,7 @@ def _solar_return_boundaries(natal: Chart, up_to_jd: float,
     birth = natal.moment.jd_ut
     natal_sun = natal.points["SUN"].lon
     horizon = up_to_jd + 400.0
-    roots = angular_roots(lambda t: eph.state(t, "SUN").lon, natal_sun,
+    roots = angular_roots(lambda t: eph.lon(t, "SUN"), natal_sun,
                           birth + 300.0, horizon, 12.0)
     return [birth] + roots
 

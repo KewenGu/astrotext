@@ -19,7 +19,8 @@ errors come from timezones, not astronomy), so its behavior is explicit:
   built with Swiss Ephemeris' Julian-calendar conversion (no datetime
   arithmetic across calendars).
 
-Julian days: ``swe.utc_to_jd`` converts UTC -> (JD_TT, JD_UT1) including the
+Julian days: ``kernel.timescales.utc_to_jd`` converts UTC -> (JD_TT, JD_UT1)
+(swe_utc_to_jd parity <=0.21 ms, K1) including the
 leap-second table and the Swiss Ephemeris delta-T model — the same model the
 swetest reference CLI and astro.com use.
 """
@@ -30,7 +31,7 @@ import re
 from dataclasses import dataclass, field
 from zoneinfo import ZoneInfo
 
-import swisseph as swe
+from ..kernel import timescales as _ts
 
 from .place import Place
 
@@ -126,8 +127,8 @@ def _utc_to_jds(utc: dt.datetime) -> tuple[float, float, float]:
     """UTC (aware) -> (jd_ut1, jd_tt, delta_t_seconds) via Swiss Ephemeris."""
     u = utc.astimezone(_UTC)
     sec = u.second + u.microsecond / 1e6
-    jd_tt, jd_ut1 = swe.utc_to_jd(u.year, u.month, u.day, u.hour, u.minute, sec,
-                                  swe.GREG_CAL)
+    jd_tt, jd_ut1 = _ts.utc_to_jd(u.year, u.month, u.day, u.hour, u.minute,
+                                  sec)
     return jd_ut1, jd_tt, (jd_tt - jd_ut1) * 86400.0
 
 
@@ -234,13 +235,14 @@ def _resolve_julian(local: dt.datetime, place: Place, tzspec: str,
     flags.append("julian-calendar-input")
 
     hours_local = local.hour + local.minute / 60.0 + (local.second + local.microsecond / 1e6) / 3600.0
-    jd_local = swe.julday(local.year, local.month, local.day, hours_local, swe.JUL_CAL)
+    jd_local = _ts.julday(local.year, local.month, local.day, hours_local,
+                          _ts.JULIAN)
     jd_ut = jd_local - offset.total_seconds() / 86400.0
-    delta_t_days = swe.deltat(jd_ut)
+    delta_t_days = _ts.deltat(jd_ut)
     jd_tt = jd_ut + delta_t_days
 
     # Gregorian relabeling of the instant, for display only.
-    y, mo, d, h = swe.revjul(jd_ut, swe.GREG_CAL)
+    y, mo, d, h = _ts.revjul(jd_ut, _ts.GREGORIAN)
     hh = int(h); mm = int((h - hh) * 60); ss = (h - hh) * 3600 - mm * 60
     micro = min(999999, max(0, round((ss - int(ss)) * 1e6)))
     utc = dt.datetime(y, mo, d, hh, mm, int(ss), micro, tzinfo=_UTC)

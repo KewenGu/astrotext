@@ -13,3 +13,7 @@ data/kernel/fetch.log
 vendor/sdists/
 _to_delete/
 dossiers/
+# Swiss Ephemeris data is AGPL — dev/verify only (make vendor-swiss), never
+# committed or shipped (K8 relicense). Fetched into data/ephe/ on demand.
+data/ephe/*.se1
+data/ephe/sefstars.txt

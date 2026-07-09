@@ -1,14 +1,12 @@
 """Fixed stars — conjunctions (by ecliptic longitude) to points and angles.
 
 The traditional technique uses tight longitude conjunctions only; 1 degree
-default orb.  Star positions come from Swiss Ephemeris' sefstars.txt
-(vendored with the ephemeris files).
+default orb.  Star positions come from the engine backend (de440: the in-repo
+van Leeuwen 2007 Hipparcos rows; swiss: sefstars.txt).
 """
 from __future__ import annotations
 
 from dataclasses import dataclass
-
-import swisseph as swe
 
 from .angles import angdiff
 
@@ -31,19 +29,17 @@ class StarHit:
     delta: float          # star_lon - target_lon, signed, within orb
 
 
-def star_positions(jd_ut: float, stars: tuple[str, ...] = MAJOR_STARS
-                   ) -> dict[str, float]:
-    out: dict[str, float] = {}
-    for name in stars:
-        xx, _retname, _flg = swe.fixstar_ut(name, jd_ut, swe.FLG_SWIEPH)
-        out[name] = xx[0]
-    return out
+def star_positions(jd_ut: float, stars: tuple[str, ...] = MAJOR_STARS,
+                   eph=None) -> dict[str, float]:
+    from .chart import default_ephemeris
+    e = eph or default_ephemeris()
+    return e.star_lons(jd_ut, stars)
 
 
 def star_hits(jd_ut: float, targets: dict[str, float], orb: float = 1.0,
-              stars: tuple[str, ...] = MAJOR_STARS) -> list[StarHit]:
+              stars: tuple[str, ...] = MAJOR_STARS, eph=None) -> list[StarHit]:
     """Deterministic order: star list order, then target insertion order."""
-    pos = star_positions(jd_ut, stars)
+    pos = star_positions(jd_ut, stars, eph=eph)
     hits: list[StarHit] = []
     for name in stars:
         for tkey, tlon in targets.items():

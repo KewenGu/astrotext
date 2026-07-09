@@ -50,11 +50,13 @@ def test_deltat_flavors_differ_before_1955():
                - ts.deltat_sec(2378500.0, "jpleph")) > 0.05
 
 
-def test_deltat_outside_span_raises():
-    with pytest.raises(ts.KernelTimeError):
-        ts.deltat_sec(2300000.0)
-    with pytest.raises(ts.KernelTimeError):
-        ts.deltat_sec(2700000.0)
+def test_deltat_outside_span_estimates_continuously():
+    """Out-of-span ΔT is a continuity-anchored long-term estimate (the
+    engine can't compute positions there, but Moments stay resolvable)."""
+    grid_lo, grid_hi = 2378131.5, 2598372.5
+    for edge, outside in ((grid_lo, grid_lo - 1.0), (grid_hi, grid_hi + 1.0)):
+        assert abs(ts.deltat_sec(outside) - ts.deltat_sec(edge)) < 0.1
+    assert 100.0 < ts.deltat_sec(2268983.0) < 600.0    # year 1500: O(200 s)
 
 
 def test_deltat_vectorized_matches_scalar():

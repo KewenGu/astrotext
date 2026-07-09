@@ -6,12 +6,21 @@ ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 export PYTHONPATH="$ROOT/src:$ROOT/vendor/py:$ROOT/vendor/lib${PYTHONPATH:+:$PYTHONPATH}"
 export SE_EPHE_PATH="${SE_EPHE_PATH:-$ROOT/data/ephe}"
 
-if ! python3 -c "import swisseph" 2>/dev/null; then
+# Default backend is de440: needs jplephem + pyerfa + the DE440 excerpt.
+# (The optional swiss backend needs the compiled swisseph module from
+#  `make vendor-swiss`; the engine checks for it lazily when selected.)
+if ! python3 -c "import jplephem, erfa" 2>/dev/null; then
   {
-    echo "astrotext: compiled swisseph module not found for $(python3 -V 2>&1)."
-    echo "Run 'make vendor' first — and with the SAME python you are running"
-    echo "now: the C extension is built per Python version, so if you built"
-    echo "inside a venv, run ./astrotext with that venv active (or rebuild)."
+    echo "astrotext: kernel deps missing for $(python3 -V 2>&1)."
+    echo "Run 'make vendor' first — and with the SAME python you run now"
+    echo "(install into the venv you'll use, or export its paths)."
+  } >&2
+  exit 1
+fi
+if [ ! -f "$ROOT/data/kernel/de440_1799_2400.bsp" ]; then
+  {
+    echo "astrotext: DE440 excerpt not found (data/kernel/de440_1799_2400.bsp)."
+    echo "Run 'make vendor' (or python tools/fetch_kernel_data.py) to fetch it."
   } >&2
   exit 1
 fi

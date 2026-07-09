@@ -11,7 +11,10 @@ import datetime as dt
 import random
 import sys
 
-import swisseph as swe
+try:
+    import swisseph as swe
+except ImportError:          # de440-only environment: the swiss
+    swe = None               # reference harness needs `make vendor`
 
 from .. import __version__, config
 from ..core.angles import angdiff

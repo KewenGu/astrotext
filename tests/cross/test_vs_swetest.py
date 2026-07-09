@@ -5,7 +5,8 @@ or time handling is wrong — not a matter of opinion."""
 import random
 
 import pytest
-import swisseph as swe
+swe = __import__("pytest").importorskip(
+    "swisseph", reason="swiss backend not available (dev profile)")
 
 from astrotext.core.angles import angdiff
 from astrotext.ephem import SE_POINTS

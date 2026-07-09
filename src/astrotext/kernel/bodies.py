@@ -111,14 +111,119 @@ def _chiron_state(jd):
     return pos, vel
 
 
+_SEG_TABLES: dict[int, tuple[float, float, np.ndarray]] = {}
+
+
+def _seg_table(seg):
+    """Extract a Type-2 segment's Chebyshev table once (numpy arrays).
+
+    jplephem's per-call ``generate`` costs ~30-90 µs of Python/DAF
+    bookkeeping; root-finding makes 10⁵ scalar segment evaluations per
+    dossier, so we evaluate the same coefficients ourselves (identical
+    math — differences at the 1e-15 au float floor; the kernel fixture
+    suite guards this).  SPK Type 2 record layout: [MID, RADIUS,
+    x-coeffs…, y…, z…]; segment footer [INIT, INTLEN, RSIZE, N].
+    """
+    tbl = _SEG_TABLES.get(id(seg))
+    if tbl is None:
+        arr = np.array(seg.daf.map_array(seg.start_i, seg.end_i))
+        init, intlen, rsize, n = arr[-4:]
+        n, rsize = int(n), int(rsize)
+        ncoef = (rsize - 2) // 3
+        coef = np.ascontiguousarray(
+            arr[: n * rsize].reshape(n, rsize)[:, 2:].reshape(n, 3, ncoef))
+        # derivative coefficients precomputed once (chebder equivalent)
+        der = np.zeros((n, 3, ncoef))
+        if ncoef >= 2:
+            der[..., ncoef - 2] = 2.0 * (ncoef - 1) * coef[..., ncoef - 1]
+            for j in range(ncoef - 3, -1, -1):
+                der[..., j] = der[..., j + 2] + 2.0 * (j + 1) * coef[..., j + 1]
+            der[..., 0] *= 0.5
+        tbl = (float(init), float(intlen), coef, der)
+        _SEG_TABLES[id(seg)] = tbl
+    return tbl
+
+
+def _clenshaw(c, x):
+    """Chebyshev series at x; c shape (..., ncoef), x broadcastable."""
+    b1 = np.zeros_like(c[..., 0])
+    b2 = np.zeros_like(b1)
+    x2 = 2.0 * x
+    for j in range(c.shape[-1] - 1, 0, -1):
+        b1, b2 = x2 * b1 - b2 + c[..., j], b1
+    return x * b1 - b2 + c[..., 0]
+
+
+_REC_CACHE: dict[tuple[int, int], tuple] = {}
+
+
+def _clenshaw_py(c, x):
+    b1 = 0.0
+    b2 = 0.0
+    x2 = 2.0 * x
+    for j in range(len(c) - 1, 0, -1):
+        b1, b2 = x2 * b1 - b2 + c[j], b1
+    return x * b1 - b2 + c[0]
+
+
 def _seg_state(seg, jd):
-    p, v = seg.compute_and_differentiate(jd)
-    return p / AU_KM, v / AU_KM        # au, au/day
+    """Type-2 Chebyshev state (au, au/day) via the cached tables.
+
+    Scalars run a pure-float Clenshaw over per-record coefficient lists
+    (numpy's small-array op overhead is ~20× the arithmetic here;
+    root-finding revisits the same records constantly, so the lists are
+    memoized).  Arrays use the vectorized Clenshaw."""
+    init, intlen, coef, der = _seg_table(seg)
+    dscale = (2.0 / intlen) * 86400.0          # d/dx -> per day
+    if np.ndim(jd) == 0 or (hasattr(jd, "size") and jd.size == 1):
+        jd_s = float(jd if np.ndim(jd) == 0 else np.asarray(jd).ravel()[0])
+        t = (jd_s - 2451545.0) * 86400.0
+        k = int((t - init) // intlen)
+        k = 0 if k < 0 else (len(coef) - 1 if k >= len(coef) else k)
+        key = (id(seg), k)
+        rec = _REC_CACHE.get(key)
+        if rec is None:
+            rec = (coef[k].tolist(), der[k].tolist())
+            _REC_CACHE[key] = rec
+        x = 2.0 * (t - init - k * intlen) / intlen - 1.0
+        cl, dl = rec
+        pos = np.array([_clenshaw_py(cl[0], x), _clenshaw_py(cl[1], x),
+                        _clenshaw_py(cl[2], x)]) / AU_KM
+        vel = np.array([_clenshaw_py(dl[0], x) * dscale,
+                        _clenshaw_py(dl[1], x) * dscale,
+                        _clenshaw_py(dl[2], x) * dscale]) / AU_KM
+        if np.ndim(jd) == 0:
+            return pos, vel
+        return pos[:, None], vel[:, None]
+    t = (np.asarray(jd, dtype=float) - 2451545.0) * 86400.0
+    k = np.clip(((t - init) // intlen).astype(int), 0, len(coef) - 1)
+    x = 2.0 * (t - init - k * intlen) / intlen - 1.0
+    c = coef[k]                                # (n, 3, ncoef)
+    d = der[k]
+    xx = x[:, None]                            # broadcast over axes
+    pos = _clenshaw(c, xx).T                   # (3, n)
+    vel = (_clenshaw(d, xx) * dscale).T
+    return pos / AU_KM, vel / AU_KM
+
+
+@functools.lru_cache(maxsize=16384)
+def _earth_sun_scalar(body: str, jd: float):
+    return _state_ssb_raw(body, np.array([jd]))
 
 
 def state_ssb(body: str, jd):
     """Barycentric ICRF (position, velocity) in au, au/day. Vectorized:
-    jd may be scalar or (n,); arrays come back as (3,) / (3, n)."""
+    jd may be scalar or (n,); arrays come back as (3,) / (3, n).
+    Scalar earth/sun states are memoized: every body at the same instant
+    reuses them (14x fan-out in states()/root-finding)."""
+    if body in ("earth", "sun"):
+        j = np.atleast_1d(np.asarray(jd, dtype=float))
+        if j.size == 1:
+            return _earth_sun_scalar(body, float(j[0]))
+    return _state_ssb_raw(body, jd)
+
+
+def _state_ssb_raw(body: str, jd):
     s = _segments()
     if body == "earth":
         p1, v1 = _seg_state(s["ssb"][3], jd)
@@ -155,11 +260,31 @@ class Apparent:
     dec: object
 
 
-def apparent(body: str, jd_tt, frames: Frames | None = None) -> Apparent:
-    """Full §4 reduction at jd_tt (scalar or (n,) array)."""
+@functools.lru_cache(maxsize=1)
+def _j2000_matrices():
+    """Fixed rotations for the frame='j2000' mode (SE FLG_J2000|FLG_NONUT
+    semantics, pinned black-box: frame bias IS applied — without it SE
+    differs by ~6.5 mas).  Returns (rb, recl_j2000)."""
+    rb, _, _ = erfa.bp06(2451545.0, 0.0)
+    eps0 = erfa.obl06(2451545.0, 0.0)
+    ce, se = np.cos(eps0), np.sin(eps0)
+    r1 = np.array([[1.0, 0.0, 0.0], [0.0, ce, se], [0.0, -se, ce]])
+    return rb, r1 @ rb
+
+
+def apparent(body: str, jd_tt, frames: Frames | None = None,
+             frame: str = "of-date") -> Apparent:
+    """Full §4 reduction at jd_tt (scalar or (n,) array).
+
+    frame="of-date" (default): true equator/equinox + ecliptic of date.
+    frame="j2000": mean ecliptic & equinox of J2000, no nutation — the
+    fixed frame used by precession-corrected returns (SE
+    FLG_J2000|FLG_NONUT parity ≤0.0002″, measured).
+    """
     jd = np.atleast_1d(np.asarray(jd_tt, dtype=float))
-    if frames is None:
-        frames = Frames.at(jd)
+    if frames is None and frame == "of-date":
+        from .frames import bundle
+        frames = bundle(jd)
     pe, ve = state_ssb("earth", jd)                    # (3, n)
     pb, _ = state_ssb(body, jd)
     tau = np.linalg.norm(pb - pe, axis=0) / C_AUD
@@ -179,9 +304,14 @@ def apparent(body: str, jd_tt, frames: Frames | None = None) -> Apparent:
     v = (ve / C_AUD).T
     bm1 = np.sqrt(1.0 - np.sum(v * v, axis=1))
     u = erfa.ab(u, v, em, bm1)
-    u_equ = np.einsum("...ij,...j->...i", frames.rbpn, u)
+    if frame == "j2000":
+        rb, recl0 = _j2000_matrices()
+        u_equ = np.einsum("ij,...j->...i", rb, u)
+        u_ecl = np.einsum("ij,...j->...i", recl0, u)
+    else:
+        u_equ = np.einsum("...ij,...j->...i", frames.rbpn, u)
+        u_ecl = np.einsum("...ij,...j->...i", frames.recl, u)
     ra, dec, _ = vec_to_sph(u_equ)
-    u_ecl = np.einsum("...ij,...j->...i", frames.recl, u)
     lon, lat, _ = vec_to_sph(u_ecl)
 
     def _out(x):
@@ -196,6 +326,8 @@ class ApparentSpeed(Apparent):
     lon_speed: object    # °/day (ecliptic lon; negative = retrograde)
     lat_speed: object    # °/day
     dist_speed: object   # au/day
+    ra_speed: object = 0.0     # °/day (internal consumers only)
+    dec_speed: object = 0.0    # °/day
 
 
 def _wrap_diff(a, b):
@@ -203,30 +335,23 @@ def _wrap_diff(a, b):
     return (np.asarray(a) - np.asarray(b) + 180.0) % 360.0 - 180.0
 
 
-def apparent_with_speed(body: str, jd_tt) -> ApparentSpeed:
-    """§4 step 7: light-time-consistent speeds, five-point stencil.
+def stencil_speeds(f, jd_tt, **kw) -> ApparentSpeed:
+    """Five-point-stencil speeds of any Apparent-producing function.
 
     f'(t) = [8(f(t+h) − f(t−h)) − (f(t+2h) − f(t−2h))] / 12h, with
-    longitude differences taken wrap-safe.  One Frames per sample
-    instant (shared across bodies only when the caller batches
-    instants — the dossier path batches, root-finding refines).
+    lon/RA differences taken wrap-safe.  Shared by bodies, derived
+    points and sidereal speeds.
     """
     jd = np.atleast_1d(np.asarray(jd_tt, dtype=float))
-    now = apparent(body, jd)
-    m1 = apparent(body, jd - _SPEED_H)
-    p1 = apparent(body, jd + _SPEED_H)
-    m2 = apparent(body, jd - 2.0 * _SPEED_H)
-    p2 = apparent(body, jd + 2.0 * _SPEED_H)
+    now = f(jd, **kw)
+    m1, p1 = f(jd - _SPEED_H, **kw), f(jd + _SPEED_H, **kw)
+    m2, p2 = f(jd - 2.0 * _SPEED_H, **kw), f(jd + 2.0 * _SPEED_H, **kw)
     den = 12.0 * _SPEED_H
 
     def _five(f_p1, f_m1, f_p2, f_m2, wrap):
         d1 = _wrap_diff(f_p1, f_m1) if wrap else np.asarray(f_p1) - f_m1
         d2 = _wrap_diff(f_p2, f_m2) if wrap else np.asarray(f_p2) - f_m2
         return (8.0 * d1 - d2) / den
-
-    lon_s = _five(p1.lon, m1.lon, p2.lon, m2.lon, True)
-    lat_s = _five(p1.lat, m1.lat, p2.lat, m2.lat, False)
-    dist_s = _five(p1.dist, m1.dist, p2.dist, m2.dist, False)
 
     def _out(x):
         x = np.atleast_1d(x)
@@ -235,4 +360,18 @@ def apparent_with_speed(body: str, jd_tt) -> ApparentSpeed:
     return ApparentSpeed(
         lon=_out(now.lon), lat=_out(now.lat), dist=_out(now.dist),
         ra=_out(now.ra), dec=_out(now.dec),
-        lon_speed=_out(lon_s), lat_speed=_out(lat_s), dist_speed=_out(dist_s))
+        lon_speed=_out(_five(p1.lon, m1.lon, p2.lon, m2.lon, True)),
+        lat_speed=_out(_five(p1.lat, m1.lat, p2.lat, m2.lat, False)),
+        dist_speed=_out(_five(p1.dist, m1.dist, p2.dist, m2.dist, False)),
+        ra_speed=_out(_five(p1.ra, m1.ra, p2.ra, m2.ra, True)),
+        dec_speed=_out(_five(p1.dec, m1.dec, p2.dec, m2.dec, False)))
+
+
+def apparent_with_speed(body: str, jd_tt, frame: str = "of-date"
+                        ) -> ApparentSpeed:
+    """§4 step 7: light-time-consistent speeds (see stencil_speeds).
+    One Frames per sample instant (shared across bodies only when the
+    caller batches instants — the dossier path batches, root-finding
+    refines)."""
+    return stencil_speeds(
+        lambda j, **kw: apparent(body, j, **kw), jd_tt, frame=frame)

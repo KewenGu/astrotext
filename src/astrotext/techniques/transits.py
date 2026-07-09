@@ -82,7 +82,7 @@ def _exact_times(eph: Ephemeris, key: str, natal_lon: float, theta: float,
     step = min(35.0, max(0.4, 15.0 / MAX_DAILY_SPEED.get(key, 1.0)))
 
     def lon_of(t: float) -> float:
-        return eph.state(t, key).lon
+        return eph.lon(t, key)
 
     roots: list[float] = []
     targets = {norm360(natal_lon + theta)}
@@ -106,14 +106,14 @@ def compute_moon_void(now_jd: float, eph: Ephemeris | None = None
     moon0 = eph.state(now_jd, "MOON")
     sign = int(moon0.lon // 30) % 12
     exit_lon = ((sign + 1) % 12) * 30.0
-    exits = angular_roots(lambda t: eph.state(t, "MOON").lon, exit_lon,
+    exits = angular_roots(lambda t: eph.lon(t, "MOON"), exit_lon,
                           now_jd, now_jd + 3.2, 0.5)
     sign_exit = exits[0] if exits else now_jd + 2.7  # moon always exits < 2.7d
 
     events: list[tuple[float, str, str]] = []
     for pk in _VOC_TARGETS:
         def rel(t: float, _pk=pk) -> float:
-            return norm360(eph.state(t, "MOON").lon - eph.state(t, _pk).lon)
+            return norm360(eph.lon(t, "MOON") - eph.lon(t, _pk))
         for theta in _VOC_ANGLES:
             targets = {theta} if theta in (0.0, 180.0) else {theta, 360.0 - theta}
             for tgt in targets:

@@ -14,17 +14,17 @@ covering three traditions:
   (Egyptian bounds, Dorothean triplicities, Chaldean decans), receptions,
   dispositor chains, lots, antiscia, planetary hours, firdaria, annual
   profections with true solar-return year boundaries, Moon void-of-course.
-* **Vedic (Jyotish)** — sidereal (Lahiri default, native Swiss Ephemeris
-  mode), nakshatras + padas, panchanga, the full 16 Shodashavarga
+* **Vedic (Jyotish)** — sidereal (Lahiri default, SE-parity ayanamsa),
+  nakshatras + padas, panchanga, the full 16 Shodashavarga
   divisional charts, chara karakas, graha drishti, and a three-level
   Vimshottari dasha timeline (819 periods).
 
 ## Quick start
 
 ```bash
-make vendor    # one-time: clone + build pyswisseph, swetest, ephemeris, pytest
-make test      # 323 tests
-make verify    # regenerate verification_report.md against reference sources
+make vendor        # one-time: kernel deps (numpy/jplephem/pyerfa) + DE440 excerpt + pytest
+make test          # full suite
+make check-license # prove the default build ships no Swiss Ephemeris code/data
 
 ./astrotext dossier \
   --name "Sample" --birth "1988-06-15 14:30" --birth-place 北京 \
@@ -86,11 +86,14 @@ strictly validated, and echoed into every output header.
 
 ## How it is verified
 
-* **Bit-level agreement with `swetest`** — the Swiss Ephemeris reference
-  CLI, compiled from Astrodienst's sources and driven as an independent
-  process: planets, houses, angles, and sidereal positions agree to
-  ≤ 5×10⁻⁸ ° across a 1800–2399 sample grid (`make verify` regenerates
-  the report).
+* **Three-way agreement (de440 vs `swetest` vs Skyfield)** — the `de440`
+  kernel is checked module-by-module against the Swiss Ephemeris reference
+  CLI *and* Skyfield on the same DE440, over a 1800–2399 sample grid, with
+  measured and individually-attributed sub-arcsecond gates (planets ≤0.01″,
+  houses/angles exact, sidereal ≤0.01″; documented drifts are the
+  DE431→DE440 lunar term and newer Lilith/Chiron orbit solutions). See
+  `docs/KERNEL.md`; `make vendor-swiss` then `make verify` regenerates the
+  report.
 * **Adversarial table review** — independent subagents re-derived every
   classical and Vedic rule table (Egyptian bounds, triplicities, the 16
   varga mappings, dasha years, karakas, drishti) from the sources without
@@ -106,17 +109,29 @@ strictly validated, and echoed into every output header.
 
 ## Engine & data
 
-[Swiss Ephemeris](https://www.astro.com/swisseph/) via `pyswisseph`, both
-**built from pinned sources** by `tools/vendor.sh` (works in
-network-restricted environments; recursive submodules handled — see the
-macOS note in that script). Ephemeris data files (1800–2399) are committed
-with provenance. Gazetteer compiled from GeoNames (CC-BY 4.0) by
-`tools/build_gazetteer.py`; a curated zh-exonym supplement covers Chinese
-names of world cities, every entry machine-verified.
+Default backend **`de440`**: a clean-room computation core — the
+[JPL DE440](https://ssd.jpl.nasa.gov/planets/eph_export.html) ephemeris
+(public domain) read via `jplephem` (MIT), with
+[ERFA](https://github.com/liberfa/pyerfa)/IAU-2006/2000A reductions
+(BSD-3), plus the engine's own houses, sidereal, fixed-star (Hipparcos /
+van Leeuwen 2007) and rise/set implementations. Permissively licensed end
+to end; `tools/vendor.sh` fetches the DE440 excerpt and installs the
+kernel deps. Accuracy is verified module-by-module against Swiss Ephemeris
+with measured, attributed sub-arcsecond gates (see `docs/KERNEL.md`).
 
-> **License:** AGPL-3.0 (see LICENSE and NOTICE) — inherited from Swiss
-> Ephemeris. Commercial closed-source distribution would require an
-> Astrodienst license or an engine swap (the `ephem` layer isolates it).
+An optional `backend="swiss"` reference ([Swiss
+Ephemeris](https://www.astro.com/swisseph/) via `pyswisseph`) is built
+only by `make vendor-swiss` for cross-implementation verification; it is
+**AGPL and never shipped** — no Swiss Ephemeris code or data is committed
+or included in wheels (`make check-license` enforces this). Gazetteer
+compiled from GeoNames (CC-BY 4.0) by `tools/build_gazetteer.py`; a
+curated zh-exonym supplement covers Chinese names of world cities, every
+entry machine-verified.
+
+> **License:** Apache-2.0 (see LICENSE and NOTICE). The default
+> distribution is permissively licensed and free to embed, host and
+> commercialize; the AGPL Swiss Ephemeris is an optional dev/verify
+> reference, isolated in the `ephem` layer and excluded from releases.
 
 ## Docs
 
@@ -126,10 +141,13 @@ and sources) · `docs/PLAN.md` (architecture plan + session log).
 
 ## Status
 
-**v1 format frozen (2026-07-08); engine 1.0.0.** Feature-complete across
-all three traditions (M0–M8b): engine, dossier generator, gazetteer,
-MCP + HTTP facades, request-level settings. Cross-platform validated
-(Linux/gcc and macOS/clang). UAT cross-checks passed against astro.com
-(official hosted swetest: planets/cusps/angles <= 0.1"), drikpanchang.com
-(panchanga to the minute), vedicastrochart.com (grahas <= 0.4", vargas,
-vimshottari <= 1 day) and astro-seek. See CHANGELOG.md.
+**v1 format frozen (2026-07-08); engine 2.0.0-rc1.** Feature-complete
+across all three traditions (M0–M8b): engine, dossier generator,
+gazetteer, MCP + HTTP facades, request-level settings. The default
+backend is now the permissively-licensed `de440` kernel (K7 switchover);
+golden snapshots regenerated with a fully-attributed diff (99.45%
+byte-identical, DMS displays unchanged bar ±1" on Lilith/Chiron). UAT
+cross-checks passed against astro.com (official hosted swetest:
+planets/cusps/angles <= 0.1"), drikpanchang.com (panchanga to the
+minute), vedicastrochart.com (grahas <= 0.4", vargas, vimshottari <= 1
+day) and astro-seek. See CHANGELOG.md and docs/KERNEL.md.

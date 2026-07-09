@@ -6,8 +6,8 @@ Conventions (classical, cited in docs/TECHNIQUES.md):
 * Daylight is divided into 12 equal "day hours", night into 12 "night hours".
 * The first hour of the day belongs to the day ruler; subsequent hours follow
   the Chaldean descending order Saturn-Jupiter-Mars-Sun-Venus-Mercury-Moon.
-* Sunrise/sunset = apparent rise/set of the solar disc center with refraction
-  (Swiss Ephemeris rise_trans defaults).
+* Sunrise/sunset = the engine backend's apparent solar rise/set
+  (swe_rise_trans default convention; de440 parity <=0.55 s, K6).
 * Beyond the polar circles the sun may not rise/set for months — we then
   return polar=True and no hour (flagged upstream).
 """
@@ -15,7 +15,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import swisseph as swe
 
 from ..timespace.moment import Moment
 
@@ -39,18 +38,15 @@ class PlanetaryHour:
     next_sunrise_jd: float | None = None
 
 
-def _next_event(jd_start: float, rsmi: int, geopos: tuple[float, float, float]
-                ) -> float | None:
-    try:
-        ret, tret = swe.rise_trans(jd_start, swe.SUN, rsmi, geopos)
-    except Exception:
-        return None
-    if ret != 0:
-        return None  # circumpolar
-    return tret[0]
+def _next_event(eph, jd_start: float, kind: str,
+                geopos: tuple[float, float, float]) -> float | None:
+    return eph.next_sun_event(jd_start, geopos[1], geopos[0], kind,
+                              elevation_m=geopos[2])
 
 
-def planetary_hour(moment: Moment) -> PlanetaryHour:
+def planetary_hour(moment: Moment, eph=None) -> PlanetaryHour:
+    from .chart import default_ephemeris
+    eph = eph or default_ephemeris()
     jd = moment.jd_ut
     p = moment.place
     geo = (p.lon, p.lat, p.elevation_m)
@@ -59,7 +55,7 @@ def planetary_hour(moment: Moment) -> PlanetaryHour:
     t = jd - 2.2
     last_rise = None
     while True:
-        r = _next_event(t, swe.CALC_RISE, geo)
+        r = _next_event(eph, t, "rise", geo)
         if r is None:
             return PlanetaryHour(polar=True)
         if r > jd:
@@ -70,7 +66,7 @@ def planetary_hour(moment: Moment) -> PlanetaryHour:
     if last_rise is None or (jd - last_rise) > 1.2:
         return PlanetaryHour(polar=True)  # no rise within a day: polar regime
 
-    sunset = _next_event(last_rise + 1e-5, swe.CALC_SET, geo)
+    sunset = _next_event(eph, last_rise + 1e-5, "set", geo)
     if sunset is None or sunset > next_rise:
         return PlanetaryHour(polar=True)
 

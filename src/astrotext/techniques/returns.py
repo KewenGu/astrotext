@@ -17,7 +17,6 @@ from __future__ import annotations
 
 from dataclasses import dataclass
 
-import swisseph as swe
 
 from ..core.chart import Chart, compute_chart, default_ephemeris
 from ..core.settings import Settings
@@ -36,7 +35,7 @@ SYNODIC_HINT = {
     "MARS": 687.0, "JUPITER": 4332.0, "SATURN": 10759.0,
 }
 
-_FIXED_FRAME = swe.FLG_J2000 | swe.FLG_NONUT
+_FIXED_FRAME = "fixed"
 
 
 @dataclass(frozen=True, slots=True)
@@ -74,8 +73,8 @@ def compute_return(
     if target.jd_ut < natal_jd:
         raise ValueError("return target predates birth")
 
-    extra = _FIXED_FRAME if precessed else 0
-    natal_lon = eph.state(natal_jd, body, extra).lon
+    frame = _FIXED_FRAME if precessed else "of-date"
+    natal_lon = eph.state(natal_jd, body, frame).lon
 
     cycle = SYNODIC_HINT.get(body)
     if cycle is None:
@@ -83,7 +82,7 @@ def compute_return(
     step = min(35.0, max(0.4, 15.0 / MAX_DAILY_SPEED.get(body, 1.0)))
 
     def lon_of(t: float) -> float:
-        return eph.state(t, body, extra).lon
+        return eph.lon(t, body, frame)
 
     # bracket generously: 1.3 cycles back, 1.3 cycles forward
     t0 = max(natal_jd, target.jd_ut - 1.3 * cycle)
