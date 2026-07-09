@@ -1,0 +1,182 @@
+{
+ "source": "VizieR I/311/hip2 (van Leeuwen 2007), ICRS J1991.25",
+ "epoch_jd_tt": 2448349.0625,
+ "stars": {
+  "Algol": {
+   "hip": 14576,
+   "ra_deg": 47.04220893,
+   "dec_deg": 40.95565071,
+   "pmra_masyr": 2.99,
+   "pmde_masyr": -1.66,
+   "plx_mas": 36.27
+  },
+  "Alcyone": {
+   "hip": 17702,
+   "ra_deg": 56.87110081,
+   "dec_deg": 24.10524179,
+   "pmra_masyr": 19.34,
+   "pmde_masyr": -43.67,
+   "plx_mas": 8.09
+  },
+  "Aldebaran": {
+   "hip": 21421,
+   "ra_deg": 68.98000194,
+   "dec_deg": 16.50976158,
+   "pmra_masyr": 63.45,
+   "pmde_masyr": -188.94,
+   "plx_mas": 48.94
+  },
+  "Rigel": {
+   "hip": 24436,
+   "ra_deg": 78.63446385,
+   "dec_deg": -8.20163958,
+   "pmra_masyr": 1.31,
+   "pmde_masyr": 0.5,
+   "plx_mas": 3.78
+  },
+  "Capella": {
+   "hip": 24608,
+   "ra_deg": 79.17206466,
+   "dec_deg": 45.99902905,
+   "pmra_masyr": 75.25,
+   "pmde_masyr": -426.89,
+   "plx_mas": 76.2
+  },
+  "Betelgeuse": {
+   "hip": 27989,
+   "ra_deg": 88.79287149,
+   "dec_deg": 7.40703653,
+   "pmra_masyr": 27.54,
+   "pmde_masyr": 11.3,
+   "plx_mas": 6.55
+  },
+  "Sirius": {
+   "hip": 32349,
+   "ra_deg": 101.28854105,
+   "dec_deg": -16.71314306,
+   "pmra_masyr": -546.01,
+   "pmde_masyr": -1223.07,
+   "plx_mas": 379.21
+  },
+  "Canopus": {
+   "hip": 30438,
+   "ra_deg": 95.9878779,
+   "dec_deg": -52.69571787,
+   "pmra_masyr": 19.93,
+   "pmde_masyr": 23.24,
+   "plx_mas": 10.55
+  },
+  "Castor": {
+   "hip": 36850,
+   "ra_deg": 113.65001968,
+   "dec_deg": 31.88863511,
+   "pmra_masyr": -191.45,
+   "pmde_masyr": -145.19,
+   "plx_mas": 64.12
+  },
+  "Pollux": {
+   "hip": 37826,
+   "ra_deg": 116.33068294,
+   "dec_deg": 28.02631022,
+   "pmra_masyr": -626.55,
+   "pmde_masyr": -45.8,
+   "plx_mas": 96.54
+  },
+  "Procyon": {
+   "hip": 37279,
+   "ra_deg": 114.82724202,
+   "dec_deg": 5.22750758,
+   "pmra_masyr": -714.59,
+   "pmde_masyr": -1036.8,
+   "plx_mas": 284.56
+  },
+  "Alphard": {
+   "hip": 46390,
+   "ra_deg": 141.89688204,
+   "dec_deg": -8.65868307,
+   "pmra_masyr": -15.23,
+   "pmde_masyr": 34.37,
+   "plx_mas": 18.09
+  },
+  "Regulus": {
+   "hip": 49669,
+   "ra_deg": 152.09358042,
+   "dec_deg": 11.96719519,
+   "pmra_masyr": -248.73,
+   "pmde_masyr": 5.59,
+   "plx_mas": 41.13
+  },
+  "Denebola": {
+   "hip": 57632,
+   "ra_deg": 177.2661596,
+   "dec_deg": 14.57233678,
+   "pmra_masyr": -497.68,
+   "pmde_masyr": -114.67,
+   "plx_mas": 90.91
+  },
+  "Spica": {
+   "hip": 65474,
+   "ra_deg": 201.29835228,
+   "dec_deg": -11.16124494,
+   "pmra_masyr": -42.35,
+   "pmde_masyr": -30.67,
+   "plx_mas": 13.06
+  },
+  "Arcturus": {
+   "hip": 69673,
+   "ra_deg": 213.91811408,
+   "dec_deg": 19.18727046,
+   "pmra_masyr": -1093.39,
+   "pmde_masyr": -2000.06,
+   "plx_mas": 88.83
+  },
+  "Antares": {
+   "hip": 80763,
+   "ra_deg": 247.35194829,
+   "dec_deg": -26.43194598,
+   "pmra_masyr": -12.11,
+   "pmde_masyr": -23.3,
+   "plx_mas": 5.89
+  },
+  "Vega": {
+   "hip": 91262,
+   "ra_deg": 279.23410825,
+   "dec_deg": 38.78299326,
+   "pmra_masyr": 200.94,
+   "pmde_masyr": 286.23,
+   "plx_mas": 130.23
+  },
+  "Altair": {
+   "hip": 97649,
+   "ra_deg": 297.69450819,
+   "dec_deg": 8.86738473,
+   "pmra_masyr": 536.23,
+   "pmde_masyr": 385.29,
+   "plx_mas": 194.95
+  },
+  "Fomalhaut": {
+   "hip": 113368,
+   "ra_deg": 344.41177299,
+   "dec_deg": -29.6218368,
+   "pmra_masyr": 328.95,
+   "pmde_masyr": -164.67,
+   "plx_mas": 129.81
+  },
+  "Deneb Algedi": {
+   "hip": 107556,
+   "ra_deg": 326.7595222,
+   "dec_deg": -16.12656594,
+   "pmra_masyr": 261.7,
+   "pmde_masyr": -296.7,
+   "plx_mas": 84.27
+  },
+  "Achernar": {
+   "hip": 7588,
+   "ra_deg": 24.42813208,
+   "dec_deg": -57.23665985,
+   "pmra_masyr": 87.0,
+   "pmde_masyr": -38.24,
+   "plx_mas": 23.39
+  }
+ }
+}

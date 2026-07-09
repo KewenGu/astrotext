@@ -1,6 +1,6 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO · K1–K5 DONE (all 2026-07-08) · next: K6.
+Status: K0 GO · K1–K6 DONE (all 2026-07-08) · next: K7 switchover.
 Owner doc for the V2 kernel swap.
 
 K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
@@ -83,6 +83,19 @@ Moon 0.036″ (the K2 lunar divergence, unchanged).  a0 constants are
 black-box SE samples at the published epochs (§11); manual prose
 defining values are approximate (Fagan's differs 3.7″ from SE's
 internal constant — documented in kernel/sidereal.py).
+
+K6 measured: 22 fixed stars from van Leeuwen 2007 (VizieR I/311/hip2,
+fetched with provenance; replaces sefstars.txt as shipped source at
+K8) through the §4 reduction (pmpx/ldsun/ab/BPN): vs swe_fixstar
+≤0.08″ in 1850-2150, ≤0.55″ full-span — zero at the catalog epoch,
+growing ∝ pm·|t−epoch|: sefstars' Hipparcos-1997 proper motions vs
+our van Leeuwen values; ours ≡ Skyfield on the same rows to 0.0001″
+even at 2399, so the drift is SE-side (gates 0.2″/0.8″, attributed).
+Sun rise/set: altitude root against an effective horizon of
+−0.61233° − SD(t), the constant calibrated black-box from SE's own
+rise instants (stable ±0.7″ across latitudes/seasons/centuries; the
+textbook −34′ would miss SE by ~9 s): parity ≤0.55 s over 30 random
+configs (gate 1 s); circumpolar None-semantics preserved.
 Read with PLAN.md §V2 (milestones, in Chinese) and TECHNIQUES.md (which
 stays kernel-agnostic).  Rule inherited from the house style: every
 convention states its source; no hidden defaults; clean-room only.

@@ -200,3 +200,9 @@ dossier/<person>/
 - **端到端**:恒星黄经 vs swe_calc:日/土 ≤0.0032″,月 0.036″(K2 月历差原样传导)。a0 = t0 处黑盒采样(lahiri 与手册值差 0.14″,fagan 手册散文值本身粗略、差 3.7″,已记录)。
 - 测试 880(kernel)全绿;verify_kernel K1–K5 全 PASS。
 - **下一步 K6**:恒星(Hipparcos 22 颗 + pmsafe 自行)vs sefstars ≤0.5″;日出日落(−0.8333° 盘心)±1s → 行星时。
+
+### Session 3(续)— 同日 · K6 完成(kernel/observing.py)
+- **恒星**:22 颗取 van Leeuwen 2007(VizieR I/311/hip2,tools/fetch_hipparcos.py,K8 起替代 sefstars.txt);pmpx(自行+视差)→ ldsun→ab→BPN。对 swe_fixstar:1850–2150 内 ≤0.08″、全跨度 ≤0.55″(Altair)——**在星表历元处为零、随 pm·|t−历元| 线性增长** = sefstars 的 Hipparcos-1997 自行 vs 我方 2007 值;同表喂 Skyfield 与我方一致 0.0001″@2399 → 差在 SE 侧(gate 0.2″/0.8″ 记录)。坑:VizieR 的 RArad 列实为**度**。
+- **日出日落**:高度根查找,有效地平高度 = **−0.61233° − SD(t)**(黑盒标定:在 SE 自己的升落时刻反算我方高度,跨纬度/季节/世纪稳定 ±0.7″;教科书 −34′ 会差 ~9 秒);视差项 8.794″/dist。30 随机配置 ≤0.55 s(验收 1 s);极夜返回 None 语义保留。
+- 测试 1043(kernel)全绿;verify_kernel K1–K6 全 PASS。
+- **下一步 K7 切换**:engine backend 开关(de440 缺省/swiss dev)、timespace/techniques 的 swe 调用换 kernel、三方 verify 整合、20+timed+vedic 快照 diff 报告(预期 ≥95% byte-identical,余者逐条归因)、性能门 ≤5s、2.0.0-rc;K8 许可切换。

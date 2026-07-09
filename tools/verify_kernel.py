@@ -393,6 +393,65 @@ def k5_sidereal(rng, n_instants=40) -> tuple[list[str], list[str]]:
     return out, fails
 
 
+def k6_observing(rng, n_star_jds=12, n_rise=30) -> tuple[list[str], list[str]]:
+    """K6 gate.
+
+    * fixed stars vs swe_fixstar: ≤0.2″ within 1850-2150, ≤0.8″
+      full-span.  The residual is zero at the catalog epoch and grows
+      ∝ pm·|t−epoch| (Altair 0.62″, Sirius 0.47″ at 2399) — sefstars'
+      older Hipparcos-1997 proper motions vs our van Leeuwen 2007;
+      ours matches Skyfield on the same catalog rows to 0.0001″ even at
+      the span edges, so the gap is SE-side (measured).  Display 1″,
+      conjunction orb 1°.
+    * sun rise/set ≤1 s vs swe_rise_trans (default flags = engine
+      usage; the −0.61233° effective horizon is black-box-calibrated,
+      see kernel/observing.py)."""
+    from astrotext.kernel import observing as ko
+    out, fails = [], []
+    jds = np.sort(rng.uniform(JD0 + 200, JD1 - 200, n_star_jds))
+    core = (jds > 2396758.5) & (jds < 2506332.5)
+    worst_star, worst_name, worst_core = 0.0, "", 0.0
+    for name in ko.STAR_NAMES:
+        se = np.array([swe.fixstar(name, float(j),
+                                   swe.FLG_SWIEPH)[0][:2] for j in jds])
+        ours = ko.star_apparent(name, jds)
+        dd = np.hypot(_wrap_asec(ours.lon - se[:, 0]),
+                      (ours.lat - se[:, 1]) * 3600.0)
+        worst_core = max(worst_core, float(dd[core].max()))
+        if float(dd.max()) > worst_star:
+            worst_star, worst_name = float(dd.max()), name
+    ok_star = worst_star <= 0.8 and worst_core <= 0.2
+    out.append(f"fixed stars (22, {n_star_jds} instants): worst "
+               f"{worst_star:.3f}\" ({worst_name}), core {worst_core:.3f}\" "
+               f"(gates 0.8/0.2\") {'ok' if ok_star else 'FAIL'}")
+    if not ok_star:
+        fails.append(f"stars: {worst_name} {worst_star:.3f}\"")
+    worst_rs = 0.0
+    n_polar_agree = 0
+    for _ in range(n_rise):
+        jd = rng.uniform(JD0 + 200, JD1 - 200)
+        lat = rng.uniform(-65.0, 65.0)
+        lon = rng.uniform(-180.0, 180.0)
+        for kind, rsmi in (("rise", swe.CALC_RISE), ("set", swe.CALC_SET)):
+            try:
+                ret, tret = swe.rise_trans(jd, swe.SUN, rsmi,
+                                           (lon, lat, 0.0))
+                se_t = tret[0] if ret == 0 else None
+            except Exception:
+                se_t = None
+            our_t = ko.next_sun_event(jd, lat, lon, kind)
+            if se_t is None or our_t is None:
+                n_polar_agree += int((se_t is None) == (our_t is None))
+                continue
+            worst_rs = max(worst_rs, abs(our_t - se_t) * 86400.0)
+    ok_rs = worst_rs <= 1.0
+    out.append(f"sun rise/set ({n_rise} configs): worst |dt| = "
+               f"{worst_rs:.3f} s  gate 1 s {'ok' if ok_rs else 'FAIL'}")
+    if not ok_rs:
+        fails.append(f"rise/set: {worst_rs:.3f} s")
+    return out, fails
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260708)
@@ -415,9 +474,12 @@ def main() -> None:
     lines += [f"K4: {'PASS' if not k4_fails else 'FAIL ' + str(k4_fails)}", ""]
     k5_lines, k5_fails = k5_sidereal(rng)
     lines += k5_lines
-    lines += [f"K5: {'PASS' if not k5_fails else 'FAIL ' + str(k5_fails)}"]
+    lines += [f"K5: {'PASS' if not k5_fails else 'FAIL ' + str(k5_fails)}", ""]
+    k6_lines, k6_fails = k6_observing(rng)
+    lines += k6_lines
+    lines += [f"K6: {'PASS' if not k6_fails else 'FAIL ' + str(k6_fails)}"]
     print("\n".join(lines))
-    if k2_fails or k3_fails or k4_fails or k5_fails:
+    if k2_fails or k3_fails or k4_fails or k5_fails or k6_fails:
         raise SystemExit(1)
 
 

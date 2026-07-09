@@ -179,6 +179,34 @@ def gen_sidereal() -> None:
     print(f"wrote {out} ({len(ay_cases)}+{len(sid_cases)} cases)")
 
 
+def gen_observing() -> None:
+    rng = np.random.default_rng(99)
+    star_jds = np.sort(rng.uniform(2378700.0, 2597400.0, 6))
+    star_cases = []
+    names = json.loads(
+        (ROOT / "data" / "kernel" / "hipparcos_22.json").read_text())["stars"]
+    for name in names:
+        for jd in star_jds:
+            xx = swe.fixstar(name, float(jd), swe.FLG_SWIEPH)[0]
+            star_cases.append({"star": name, "jd_tt": float(jd),
+                               "lon": xx[0], "lat": xx[1]})
+    rise_cases = []
+    for _ in range(12):
+        jd = float(rng.uniform(2378700.0, 2597400.0))
+        lat = float(rng.uniform(-65.0, 65.0))
+        lon = float(rng.uniform(-180.0, 180.0))
+        for kind, rsmi in (("rise", swe.CALC_RISE), ("set", swe.CALC_SET)):
+            ret, tret = swe.rise_trans(jd, swe.SUN, rsmi, (lon, lat, 0.0))
+            if ret == 0:
+                rise_cases.append({"jd_ut": jd, "lat": lat, "lon": lon,
+                                   "kind": kind, "t": tret[0]})
+    out = ROOT / "tests" / "kernel" / "fixtures" / "observing.json"
+    out.write_text(json.dumps(
+        {"se_version": swe.version, "stars": star_cases,
+         "rise_set": rise_cases}, indent=1))
+    print(f"wrote {out} ({len(star_cases)}+{len(rise_cases)} cases)")
+
+
 def main() -> None:
     out = {"se_version": swe.version, "utc_to_jd": [], "deltat": [],
            "julday": [], "revjul": []}
@@ -204,6 +232,7 @@ def main() -> None:
     gen_bodies()
     gen_houses()
     gen_sidereal()
+    gen_observing()
 
 
 if __name__ == "__main__":
