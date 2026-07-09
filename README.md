@@ -141,7 +141,7 @@ and sources) · `docs/PLAN.md` (architecture plan + session log).
 
 ## Status
 
-**v1 format frozen (2026-07-08); engine 2.0.0-rc1.** Feature-complete
+**v1 format frozen (2026-07-08); engine 2.0.0 (Apache-2.0).** Feature-complete
 across all three traditions (M0–M8b): engine, dossier generator,
 gazetteer, MCP + HTTP facades, request-level settings. The default
 backend is now the permissively-licensed `de440` kernel (K7 switchover);

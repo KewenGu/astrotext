@@ -4,7 +4,7 @@ All notable behavior changes to the engine and its output formats.
 Engine follows semver; the text/JSON format carries its own version
 (`v1` in line 1 of every text file; `format_version` in the JSON envelope).
 
-## 2.0.0 — unreleased (K8 license flip)
+## 2.0.0 — 2026-07-08 (K8 license flip)
 
 - **Relicensed AGPL-3.0 → Apache-2.0** (LICENSE + NOTICE rewritten). The
   default distribution is permissively licensed end to end and free to

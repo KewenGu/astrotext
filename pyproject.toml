@@ -1,6 +1,6 @@
 [project]
 name = "astrotext"
-version = "2.0.0rc1"
+version = "2.0.0"
 description = "Plain-text astrology chart engine for AI agents"
 requires-python = ">=3.11"
 license = "Apache-2.0"

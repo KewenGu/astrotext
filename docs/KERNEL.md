@@ -1,9 +1,10 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO · K1–K7 DONE (all 2026-07-08) · engine 2.0.0-rc1 (default
-backend = de440) · K8 license flip IN PROGRESS (Apache-2.0 files staged;
-gated on the Mac-side git untrack of SE data + `make check-license` +
-`make verify` on the swiss profile before the 2.0.0 tag).
+Status: K0 GO · K1–K8 DONE (all 2026-07-08) · engine 2.0.0 (default
+backend = de440, Apache-2.0). Swiss Ephemeris removed from the default
+distribution (`make check-license` PASS); optional swiss reference builds
+via `make vendor-swiss`, `make verify` backend-aware and green. V2 kernel
+swap complete.
 Owner doc for the V2 kernel swap.
 
 K7 measured: default backend flipped to de440; format v1 unchanged.

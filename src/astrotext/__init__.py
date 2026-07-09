@@ -12,6 +12,6 @@ Layer map (see docs/PLAN.md):
   verify         cross-checks against the swetest reference CLI
 """
 
-__version__ = "2.0.0-rc1"
+__version__ = "2.0.0"
 
 ENGINE_NAME = "astrotext"
