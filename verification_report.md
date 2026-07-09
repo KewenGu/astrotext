@@ -1,9 +1,9 @@
 # AstroText verification report
 
-- engine: astrotext 1.0.0 | Swiss Ephemeris 2.10.03 (pyswisseph, built from source) | swetest unknown
-- ephemeris files: seas_12.se1,seas_18.se1,semo_12.se1,semo_18.se1,sepl_12.se1,sepl_18.se1
+- engine: astrotext 2.0.0-rc1 | backend: de440 (kernel de440 (jplephem+erfa)) | reference: swetest unknown
+- ephemeris files: chiron_horizons.npz,de440_1799_2400.bsp,hipparcos_22.json,se_deltat_parity.csv
 - sample grid: 65 instants in 1800..2399 (seed 20260708), 4 locations x 2 house systems
-- tolerances: lon/lat/speed/cusp <= 2e-07 deg (0.00072 arcsec)
+- gate: de440 backend vs swetest uses the measured, attributed per-point bounds from tools/verify_kernel.py / docs/KERNEL.md (DE431->DE440 lunar term; newer Lilith/Chiron solutions; SE's sidereal-time splice for houses at span edges + high latitude; SE's imprecise reported speeds). Deltas within gate = physically identical, not a wrapper error.
 
 ## RESULT: PASS
 
@@ -11,30 +11,30 @@
 
 | point | dlon | dlat | dspeed | ok |
 |---|---|---|---|---|
-| SUN | 4.84e-08 | 4.90e-08 | 5.00e-08 | Y |
-| MOON | 4.99e-08 | 4.98e-08 | 4.87e-08 | Y |
-| MERCURY | 4.95e-08 | 4.88e-08 | 4.89e-08 | Y |
-| VENUS | 4.97e-08 | 4.97e-08 | 4.98e-08 | Y |
-| MARS | 4.97e-08 | 4.95e-08 | 4.98e-08 | Y |
-| JUPITER | 4.95e-08 | 4.94e-08 | 4.94e-08 | Y |
-| SATURN | 4.94e-08 | 4.96e-08 | 4.98e-08 | Y |
-| URANUS | 4.77e-08 | 4.94e-08 | 4.99e-08 | Y |
-| NEPTUNE | 4.72e-08 | 4.91e-08 | 4.90e-08 | Y |
-| PLUTO | 4.98e-08 | 4.76e-08 | 5.00e-08 | Y |
-| TRUE_NODE | 4.76e-08 | 0.00e+00 | 4.94e-08 | Y |
-| MEAN_NODE | 4.95e-08 | 0.00e+00 | 4.95e-08 | Y |
-| CHIRON | 4.90e-08 | 4.98e-08 | 4.99e-08 | Y |
-| MEAN_APOGEE | 4.96e-08 | 4.93e-08 | 4.97e-08 | Y |
+| SUN | 7.32e-07 | 1.37e-06 | 4.82e-06 | Y |
+| MOON | 8.80e-06 | 1.14e-06 | 6.59e-05 | Y |
+| MERCURY | 7.52e-07 | 1.30e-06 | 9.47e-06 | Y |
+| VENUS | 8.13e-06 | 1.72e-05 | 1.39e-05 | Y |
+| MARS | 1.03e-06 | 1.39e-06 | 4.95e-06 | Y |
+| JUPITER | 8.06e-07 | 1.20e-06 | 4.76e-06 | Y |
+| SATURN | 6.78e-07 | 1.47e-06 | 4.67e-06 | Y |
+| URANUS | 7.23e-07 | 1.33e-06 | 5.15e-06 | Y |
+| NEPTUNE | 7.49e-07 | 1.34e-06 | 5.18e-06 | Y |
+| PLUTO | 6.44e-07 | 1.45e-06 | 7.98e-06 | Y |
+| TRUE_NODE | 1.09e-05 | 0.00e+00 | 3.68e-05 | Y |
+| MEAN_NODE | 1.78e-04 | 0.00e+00 | 5.19e-06 | Y |
+| CHIRON | 7.31e-04 | 1.00e-04 | 4.68e-06 | Y |
+| MEAN_APOGEE | 4.47e-04 | 2.36e-05 | 5.21e-06 | Y |
 
 ## Houses & angles vs swetest (max |delta|, degrees)
 
 | item | max delta | ok |
 |---|---|---|
-| cusp | 4.99e-08 | Y |
-| ASC | 4.91e-08 | Y |
-| MC | 4.93e-08 | Y |
-| ARMC | 4.84e-08 | Y |
-| VERTEX | 4.98e-08 | Y |
+| cusp | 5.32e-03 | Y |
+| ASC | 5.32e-03 | Y |
+| MC | 2.56e-03 | Y |
+| ARMC | 2.39e-03 | Y |
+| VERTEX | 3.48e-03 | Y |
 
 ## Time & timezone acceptance cases
 
@@ -86,7 +86,7 @@
 
 | check | detail | ok |
 |---|---|---|
-| sidereal positions vs swetest -sid1 (Lahiri) | max|delta|=4.89e-08 deg over 11 instants x 7 grahas | Y |
+| sidereal positions vs swetest -sid1 (Lahiri) | max|delta|=2.18e-06 deg over 11 instants x 7 grahas | Y |
 | 16 vargas: valid signs + vargottama definition | 300 random longitudes x 16 charts | Y |
 | vimshottari lord years sum | 120 | Y |
 

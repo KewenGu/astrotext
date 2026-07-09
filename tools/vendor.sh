@@ -122,6 +122,14 @@ if [ ! -d vendor/src/swisseph ]; then
 fi
 (cd vendor/src/swisseph && make -s swetest)
 cp vendor/src/swisseph/swetest vendor/lib/
+# macOS (esp. Apple Silicon) kills unsigned/invalidly-signed Mach-O binaries
+# with SIGKILL at exec; ad-hoc re-sign and clear any quarantine so the freshly
+# built swetest runs.  No-ops off macOS.
+if command -v codesign >/dev/null 2>&1; then
+  xattr -cr vendor/lib/swetest 2>/dev/null || true
+  codesign --force --sign - vendor/lib/swetest 2>/dev/null \
+    || echo "WARN: could not ad-hoc sign swetest; if it is SIGKILLed, run: codesign --force --sign - vendor/lib/swetest"
+fi
 cp vendor/src/swisseph/ephe/* data/ephe/
 # extended range 1200-1799 (optional; some proxies block large blob fetches)
 (cd vendor/src/swisseph \

@@ -26,6 +26,16 @@ Engine follows semver; the text/JSON format carries its own version
 - `./astrotext` launcher no longer requires the compiled `swisseph`
   module; it checks the de440 kernel deps (jplephem, erfa) and the DE440
   excerpt instead. pyproject declares `license = "Apache-2.0"`.
+- **`make verify` is now backend-aware** (§9 "backend column"): the swiss
+  wrapper is still gated bit-for-bit vs swetest, but de440-vs-swetest uses
+  the measured, attributed per-point bounds from `verify_kernel.py`
+  (DE431->DE440 lunar term, newer Lilith/Chiron solutions, SE's
+  sidereal-time splice at span edges/high latitude, SE's imprecise
+  reported speeds). Report header names the backend; deltas within gate
+  are annotated as physically identical. `swetest_ref` now surfaces the
+  real error on failure.
+- `vendor.sh --with-swiss` ad-hoc code-signs the freshly built `swetest`
+  on macOS (Apple Silicon SIGKILLs unsigned Mach-O binaries at exec).
 
 ## 2.0.0-rc1 — 2026-07-08 (K7 switchover)
 
