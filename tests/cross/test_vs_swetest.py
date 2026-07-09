@@ -1,7 +1,13 @@
-"""Cross-verification: the Python engine must agree with the swetest reference
-CLI to print precision (7 decimals => 2e-7 deg tolerance) for every point,
-every sampled instant, and every house cusp.  A failure here means our wrapper
-or time handling is wrong — not a matter of opinion."""
+"""Cross-verification: the *swiss* backend must agree with the swetest
+reference CLI to print precision (7 decimals => 2e-7 deg tolerance) for every
+point, every sampled instant, and every house cusp.  A failure here means our
+Swiss Ephemeris wrapper or time handling is wrong — not a matter of opinion.
+
+This is a swiss-profile bit-parity check: it skips unless `swisseph` is built
+(`make vendor-swiss`) and it pins `backend="swiss"`.  The de440 default backend
+is *not* bit-identical to Swiss Ephemeris by design — its attributed
+sub-arcsecond differences are gated in tools/verify_kernel.py and `make verify`
+(backend-aware), not here."""
 import random
 
 import pytest
@@ -15,6 +21,14 @@ from astrotext.verify import swetest_ref
 pytestmark = pytest.mark.cross
 
 TOL = 2e-7
+
+
+@pytest.fixture
+def eph():
+    """Swiss-backed engine — overrides the session (de440) fixture so this
+    module compares the Swiss wrapper against swetest bit-for-bit."""
+    from astrotext.ephem import Ephemeris
+    return Ephemeris(backend="swiss")
 
 FIXED_JDS = [
     2451545.0,                       # J2000

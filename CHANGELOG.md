@@ -33,7 +33,9 @@ Engine follows semver; the text/JSON format carries its own version
   sidereal-time splice at span edges/high latitude, SE's imprecise
   reported speeds). Report header names the backend; deltas within gate
   are annotated as physically identical. `swetest_ref` now surfaces the
-  real error on failure.
+  real error on failure. `tests/cross/test_vs_swetest.py` (the bit-parity
+  cross-check) now pins `backend="swiss"` so it verifies the wrapper, not
+  the intentionally-different de440 default.
 - `vendor.sh --with-swiss` ad-hoc code-signs the freshly built `swetest`
   on macOS (Apple Silicon SIGKILLs unsigned Mach-O binaries at exec).
 
