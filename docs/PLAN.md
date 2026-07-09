@@ -193,3 +193,10 @@ dossier/<person>/
 - **ARMC 时间链**:1886–2050 内对 SE ≤0.0014″;跨度边缘 SE 长期恒星时拼接自身偏离(1800:−0.36″、2100:+1.79″、2399:−8.5″)——**我方与 Skyfield 独立实现全跨度一致 ≤0.0005″**,故差异归 SE 模型,按窗口 gate(10″)记录。
 - 测试 735(kernel)全绿;fixtures 四份;verify_kernel K1–K4 全 PASS。
 - **下一步 K5 恒星制**:4 ayanamsa(lahiri/krishnamurti/raman/fagan-bradley)定义常数(t0, ayan_t0)自 SE 手册,vs swetest -sid ≤0.01″;注意 TECHNIQUES.md 已记录的 ~14″ 章动坑。
+
+### Session 3(续)— 同日 · K5 完成(kernel/sidereal.py)
+- **算法定谳(黑盒淘汰赛)**:SE 缺省(传统)ayanamsa = a0 + p_A(t) − p_A(t0),p_A 用 IAU-2006 黄经总岁差多项式(Capitaine 2003,公开)→ 全跨度四模式 ≤0.0031″;对照组:刚性 3D 基准点变换 0.05″、IAE-1989 多项式 1.3″、Vondrák 帧 0.05″——全被淘汰。
+- **恒等式实测**:ay_true = ay_mean + Δψ(逐位);native FLG_SIDEREAL = tropical(真分点) − ay_true。M5 的"~14″ 坑"即口径混用,内核按构造免疫。
+- **端到端**:恒星黄经 vs swe_calc:日/土 ≤0.0032″,月 0.036″(K2 月历差原样传导)。a0 = t0 处黑盒采样(lahiri 与手册值差 0.14″,fagan 手册散文值本身粗略、差 3.7″,已记录)。
+- 测试 880(kernel)全绿;verify_kernel K1–K5 全 PASS。
+- **下一步 K6**:恒星(Hipparcos 22 颗 + pmsafe 自行)vs sefstars ≤0.5″;日出日落(−0.8333° 盘心)±1s → 行星时。

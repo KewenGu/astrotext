@@ -346,6 +346,53 @@ def k4_houses(rng, n_configs=40) -> tuple[list[str], list[str]]:
     return out, fails
 
 
+def k5_sidereal(rng, n_instants=40) -> tuple[list[str], list[str]]:
+    """K5 gate: ayanamsas + native-sidereal parity (KERNEL.md §8).
+
+    * ayanamsa (both flavours) vs swe_get_ayanamsa_ex: ≤0.01″ — the
+      IAU-2006 p_A accumulation reproduces SE's traditional algorithm
+      at ≤0.002″ (measured).
+    * end-to-end sidereal longitudes (our apparent lon − ayanamsa_true)
+      vs swe_calc FLG_SIDEREAL: planets ≤0.015″ (tropical parity 0.0074
+      + ayanamsa 0.002); Moon ≤0.06″ full-span (the K2 lunar DE
+      divergence rides on top unchanged)."""
+    from astrotext.kernel import sidereal as ks
+    sid_ids = {"fagan_bradley": swe.SIDM_FAGAN_BRADLEY,
+               "lahiri": swe.SIDM_LAHIRI, "raman": swe.SIDM_RAMAN,
+               "krishnamurti": swe.SIDM_KRISHNAMURTI}
+    jds = np.sort(rng.uniform(JD0, JD1, n_instants))
+    out, fails = [], []
+    for mode, sid in sid_ids.items():
+        swe.set_sid_mode(sid, 0, 0)
+        wt = wm = 0.0
+        for j in jds:
+            rt = swe.get_ayanamsa_ex(float(j), swe.FLG_SWIEPH)
+            rn = swe.get_ayanamsa_ex(float(j),
+                                     swe.FLG_SWIEPH | swe.FLG_NONUT)
+            se_t = rt[1] if isinstance(rt, tuple) else rt
+            se_n = rn[1] if isinstance(rn, tuple) else rn
+            wt = max(wt, abs(_wrap_asec(ks.ayanamsa_deg(float(j), mode, True)
+                                        - se_t)))
+            wm = max(wm, abs(_wrap_asec(ks.ayanamsa_deg(float(j), mode, False)
+                                        - se_n)))
+        wsid = {}
+        for name, ipl in (("sun", 0), ("moon", 1), ("saturn", 6)):
+            se_sid = np.array([swe.calc(float(j), ipl,
+                                        swe.FLG_SWIEPH | swe.FLG_SIDEREAL
+                                        )[0][0] for j in jds])
+            ours = kb.apparent(name, jds)
+            our_sid = ks.sidereal_lon(ours.lon, jds, mode)
+            wsid[name] = np.max(np.abs(_wrap_asec(our_sid - se_sid)))
+        ok = (wt <= 0.01 and wm <= 0.01 and wsid["sun"] <= 0.015
+              and wsid["saturn"] <= 0.015 and wsid["moon"] <= 0.06)
+        if not ok:
+            fails.append(mode)
+        out.append(f"{mode:14} d_ay(true)={wt:.4f}\" d_ay(mean)={wm:.4f}\" "
+                   f"sid: sun={wsid['sun']:.4f}\" moon={wsid['moon']:.4f}\" "
+                   f"saturn={wsid['saturn']:.4f}\" {'ok' if ok else 'FAIL'}")
+    return out, fails
+
+
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--seed", type=int, default=20260708)
@@ -365,9 +412,12 @@ def main() -> None:
     lines += [f"K3: {'PASS' if not k3_fails else 'FAIL ' + str(k3_fails)}", ""]
     k4_lines, k4_fails = k4_houses(rng)
     lines += k4_lines
-    lines += [f"K4: {'PASS' if not k4_fails else 'FAIL ' + str(k4_fails)}"]
+    lines += [f"K4: {'PASS' if not k4_fails else 'FAIL ' + str(k4_fails)}", ""]
+    k5_lines, k5_fails = k5_sidereal(rng)
+    lines += k5_lines
+    lines += [f"K5: {'PASS' if not k5_fails else 'FAIL ' + str(k5_fails)}"]
     print("\n".join(lines))
-    if k2_fails or k3_fails or k4_fails:
+    if k2_fails or k3_fails or k4_fails or k5_fails:
         raise SystemExit(1)
 
 

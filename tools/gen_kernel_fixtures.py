@@ -149,6 +149,36 @@ def gen_houses() -> None:
     print(f"wrote {out} ({len(cases)} cases + {len(chain)} chain)")
 
 
+SID_MODES = {"fagan_bradley": 0, "lahiri": 1, "raman": 3, "krishnamurti": 5}
+
+
+def gen_sidereal() -> None:
+    rng = np.random.default_rng(77)
+    jds = np.sort(rng.uniform(2378497.0, 2597641.0, 14))
+    ay_cases, sid_cases = [], []
+    for mode, sid in SID_MODES.items():
+        swe.set_sid_mode(sid, 0, 0)
+        for jd in jds:
+            rt = swe.get_ayanamsa_ex(float(jd), swe.FLG_SWIEPH)
+            rn = swe.get_ayanamsa_ex(float(jd),
+                                     swe.FLG_SWIEPH | swe.FLG_NONUT)
+            ay_cases.append({
+                "mode": mode, "jd_tt": float(jd),
+                "true": rt[1] if isinstance(rt, tuple) else rt,
+                "mean": rn[1] if isinstance(rn, tuple) else rn})
+        for jd in jds[::2]:
+            for name, ipl in (("sun", 0), ("moon", 1), ("saturn", 6)):
+                lon = swe.calc(float(jd), ipl,
+                               swe.FLG_SWIEPH | swe.FLG_SIDEREAL)[0][0]
+                sid_cases.append({"mode": mode, "body": name,
+                                  "jd_tt": float(jd), "lon": lon})
+    out = ROOT / "tests" / "kernel" / "fixtures" / "sidereal.json"
+    out.write_text(json.dumps(
+        {"se_version": swe.version, "ayanamsa": ay_cases,
+         "sidereal_lon": sid_cases}, indent=1))
+    print(f"wrote {out} ({len(ay_cases)}+{len(sid_cases)} cases)")
+
+
 def main() -> None:
     out = {"se_version": swe.version, "utc_to_jd": [], "deltat": [],
            "julday": [], "revjul": []}
@@ -173,6 +203,7 @@ def main() -> None:
     print(f"wrote {OUT}")
     gen_bodies()
     gen_houses()
+    gen_sidereal()
 
 
 if __name__ == "__main__":

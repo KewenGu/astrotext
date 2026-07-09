@@ -1,7 +1,7 @@
 # Kernel v2 — replacing Swiss Ephemeris (plan & normative spec)
 
-Status: K0 GO · K1 DONE · K2 DONE · K3 DONE · K4 DONE (all 2026-07-08)
-· next: K5.  Owner doc for the V2 kernel swap.
+Status: K0 GO · K1–K5 DONE (all 2026-07-08) · next: K6.
+Owner doc for the V2 kernel swap.
 
 K0 measured (tools/k0_probe.py, 20 instants 1800-2399, vs swetest at
 identical TT): Sun ≤0.0020″, Mars ≤0.0014″ lon; lat ≤0.005″ (bounds the
@@ -69,6 +69,20 @@ long-term sidereal-time splice then deviates (−0.36″@1800, +1.79″@2100,
 −8.5″@2399) — ours matches Skyfield's independent IAU-2006/2000A GAST
 to ≤0.0005″ across the full span, so the far-era gap is SE's model,
 gated at 10″ with this attribution.
+
+K5 measured: SE's traditional (default) ayanamsa pinned as
+a0 + p_A(t) − p_A(t0) with the published IAU-2006 general-precession-
+in-longitude polynomial — parity ≤0.0031″ (both flavours, four modes,
+full span; the rigorous-3D fiducial transform and the IAE-1989
+polynomial were tested and rejected at 0.05″/1.3″).  Measured exact
+identities: ayanamsa_true = ayanamsa_mean + Δψ, and native
+FLG_SIDEREAL = tropical(true) − ayanamsa_true — the TECHNIQUES.md
+"~14″ trap" was a flavour mix, now impossible by construction.
+End-to-end sidereal longitudes vs swe_calc: Sun/Saturn ≤0.0032″,
+Moon 0.036″ (the K2 lunar divergence, unchanged).  a0 constants are
+black-box SE samples at the published epochs (§11); manual prose
+defining values are approximate (Fagan's differs 3.7″ from SE's
+internal constant — documented in kernel/sidereal.py).
 Read with PLAN.md §V2 (milestones, in Chinese) and TECHNIQUES.md (which
 stays kernel-agnostic).  Rule inherited from the house style: every
 convention states its source; no hidden defaults; clean-room only.
